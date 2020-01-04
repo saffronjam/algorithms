@@ -272,7 +272,8 @@ void UI::RadioButtonSet::UpdateRadioButtons()
             {
                 if (old[i] != *m_values[i])
                 {
-                    m_invokeOnChange();
+                    if (m_invokeOnChange)
+                        m_invokeOnChange();
                     break;
                 }
             }
