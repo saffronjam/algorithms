@@ -2,7 +2,7 @@
 Visualizing Bubble-sort, Insertion-sort, Selection-sort, Shell-sort, Merge-sort, Heap-sort, Quick-sort
 
 This is a simple program visualizing the most common sorting algorithms used.
-It was created to better understand the importance of optimized applications by visualizing the immence diffenerence between algorithms made for the exact same purpose.
+It was created to better understand the importance of optimizing applications by visualizing the immense diffeerence between algorithms made for the exact same purpose.
 
 <img src="https://github.com/viesa/SortingAlgorithmsVisualization/blob/master/image.png">
 
