@@ -10,6 +10,7 @@
 #include "MergeSort.hpp"
 #include "HeapSort.hpp"
 #include "QuickSort.hpp"
+#include "ShittySort.hpp"
 
 class SortingController
 {
@@ -23,6 +24,7 @@ public:
         ALG_MergeSort,
         ALG_HeapSort,
         ALG_QuickSort,
+        ALG_BogoSort,
         ALG_Count
     };
 

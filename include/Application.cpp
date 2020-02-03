@@ -1,4 +1,6 @@
 #include "Application.hpp"
+#include <stdlib.h>
+#include <time.h>
 
 Application::Application(sf::Time &dt)
 	: m_gfx(m_camera),
@@ -10,6 +12,7 @@ Application::Application(sf::Time &dt)
 	  m_camera_follow(0.0f, 0.0f),
 	  m_sortingController(m_gfx, SortingController::SortingAlgorithm::ALG_MergeSort, m_dt)
 {
+	srand(time(NULL));
 	m_ui.CreateStaticRadioButtonSet(0,
 									{m_sortingController.GetSortingNumberPtr(SortingController::SortingNumber::NUM_10),
 									 m_sortingController.GetSortingNumberPtr(SortingController::SortingNumber::NUM_100),
@@ -30,11 +33,12 @@ Application::Application(sf::Time &dt)
 	m_ui.CreateStaticCheckbox(4, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_MergeSort), true, sf::Vector2f(Graphics::ScreenWidth - 510, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
 	m_ui.CreateStaticCheckbox(5, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_HeapSort), true, sf::Vector2f(Graphics::ScreenWidth - 490, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
 	m_ui.CreateStaticCheckbox(6, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_QuickSort), true, sf::Vector2f(Graphics::ScreenWidth - 470, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
+	m_ui.CreateStaticCheckbox(7, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_BogoSort), true, sf::Vector2f(Graphics::ScreenWidth - 450, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
 	m_sortingController.PositionSortingContainers();
-	m_ui.CreateStaticButton(0, std::bind(&SortingController::StartAll, &m_sortingController), "Start", sf::Vector2f(Graphics::ScreenWidth - 440, 10.0f));
-	m_ui.CreateStaticButton(1, std::bind(&SortingController::PauseAll, &m_sortingController), "Pause", sf::Vector2f(Graphics::ScreenWidth - 390, 10.0f));
-	m_ui.CreateStaticButton(2, std::bind(&SortingController::ResetAll, &m_sortingController), "Reset", sf::Vector2f(Graphics::ScreenWidth - 340, 10.0f));
-	m_ui.CreateStaticButton(3, std::bind(&SortingController::NewValues, &m_sortingController), "New", sf::Vector2f(Graphics::ScreenWidth - 290, 10.0f));
+	m_ui.CreateStaticButton(0, std::bind(&SortingController::StartAll, &m_sortingController), "Start", sf::Vector2f(Graphics::ScreenWidth - 390, 10.0f));
+	m_ui.CreateStaticButton(1, std::bind(&SortingController::PauseAll, &m_sortingController), "Pause", sf::Vector2f(Graphics::ScreenWidth - 340, 10.0f));
+	m_ui.CreateStaticButton(2, std::bind(&SortingController::ResetAll, &m_sortingController), "Reset", sf::Vector2f(Graphics::ScreenWidth - 290, 10.0f));
+	m_ui.CreateStaticButton(3, std::bind(&SortingController::NewValues, &m_sortingController), "New", sf::Vector2f(Graphics::ScreenWidth - 240, 10.0f));
 	m_ui.CreateStaticIntSlider(1, m_sortingController.GetStepTimeRef(), 1, 50000, 1000, sf::Vector2f(Graphics::ScreenWidth - 230, 10.0f));
 }
 
