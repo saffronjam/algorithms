@@ -11,6 +11,7 @@
 #include "HeapSort.hpp"
 #include "QuickSort.hpp"
 #include "ShittySort.hpp"
+#include "RadixSort.hpp"
 
 class SortingController
 {
@@ -24,7 +25,8 @@ public:
         ALG_MergeSort,
         ALG_HeapSort,
         ALG_QuickSort,
-        ALG_BogoSort,
+        ALG_ShittySort,
+        ALG_RadixSort,
         ALG_Count
     };
 

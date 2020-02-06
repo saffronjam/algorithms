@@ -25,6 +25,7 @@ SortingController::SortingController(Graphics &gfx, SortingAlgorithm const &algo
     m_allAlgorithms.push_back(std::make_unique<HeapSort>(HeapSort("Heap Sort")));
     m_allAlgorithms.push_back(std::make_unique<QuickSort>(QuickSort("Quick Sort")));
     m_allAlgorithms.push_back(std::make_unique<ShittySort>(ShittySort("Shitty Sort")));
+    m_allAlgorithms.push_back(std::make_unique<RadixSort>(RadixSort("Radix Sort")));
 
     m_allAlgorithms[SortingAlgorithm::ALG_BubbleSort]->SetIsActive(true);
     m_allAlgorithms[SortingAlgorithm::ALG_SelectionSort]->SetIsActive(true);
@@ -33,7 +34,8 @@ SortingController::SortingController(Graphics &gfx, SortingAlgorithm const &algo
     m_allAlgorithms[SortingAlgorithm::ALG_MergeSort]->SetIsActive(true);
     m_allAlgorithms[SortingAlgorithm::ALG_HeapSort]->SetIsActive(true);
     m_allAlgorithms[SortingAlgorithm::ALG_QuickSort]->SetIsActive(true);
-    m_allAlgorithms[SortingAlgorithm::ALG_BogoSort]->SetIsActive(true);
+    m_allAlgorithms[SortingAlgorithm::ALG_ShittySort]->SetIsActive(true);
+    m_allAlgorithms[SortingAlgorithm::ALG_RadixSort]->SetIsActive(true);
 
     for (int i = 0; i < SortingAlgorithm::ALG_Count; i++)
     {
@@ -239,6 +241,21 @@ void SortingController::PositionSortingContainers()
         allVisualizationBoxes.push_back(sf::IntRect(sf::Vector2i(0, Camera::OffsetY / 3) + offset, size - offset * 2));
         break;
     }
+    case 9:
+    {
+        sf::Vector2i size(2 * Camera::GetOffset() / 3);
+        sf::Vector2i offset(40, 60);
+        allVisualizationBoxes.push_back(sf::IntRect(sf::Vector2i(-Camera::OffsetX, -Camera::OffsetY) + offset, size - offset * 2));
+        allVisualizationBoxes.push_back(sf::IntRect(sf::Vector2i(-Camera::OffsetX / 3, -Camera::OffsetY) + offset, size - offset * 2));
+        allVisualizationBoxes.push_back(sf::IntRect(sf::Vector2i(Camera::OffsetX / 3, -Camera::OffsetY) + offset, size - offset * 2));
+        allVisualizationBoxes.push_back(sf::IntRect(sf::Vector2i(-Camera::OffsetX, -Camera::OffsetY / 3) + offset, size - offset * 2));
+        allVisualizationBoxes.push_back(sf::IntRect(sf::Vector2i(-Camera::OffsetX / 3, -Camera::OffsetY / 3) + offset, size - offset * 2));
+        allVisualizationBoxes.push_back(sf::IntRect(sf::Vector2i(Camera::OffsetX / 3, -Camera::OffsetY / 3) + offset, size - offset * 2));
+        allVisualizationBoxes.push_back(sf::IntRect(sf::Vector2i(-Camera::OffsetX, Camera::OffsetY / 3) + offset, size - offset * 2));
+        allVisualizationBoxes.push_back(sf::IntRect(sf::Vector2i(-Camera::OffsetX / 3, Camera::OffsetY / 3) + offset, size - offset * 2));
+        allVisualizationBoxes.push_back(sf::IntRect(sf::Vector2i(Camera::OffsetX / 3, Camera::OffsetY / 3) + offset, size - offset * 2));
+        break;
+    }
     default:
         break;
     }
@@ -351,6 +368,10 @@ void SortingController::SendOutWorkers()
             else if (ShittySort *shittySort = dynamic_cast<ShittySort *>(m_allAlgorithms[i].get()))
             {
                 m_allWorkers[i] = std::thread(&ShittySort::WorkerUpdate, shittySort, std::ref(m_dt));
+            }
+            else if (RadixSort *radixSort = dynamic_cast<RadixSort *>(m_allAlgorithms[i].get()))
+            {
+                m_allWorkers[i] = std::thread(&RadixSort::WorkerUpdate, radixSort, std::ref(m_dt));
             }
         }
     }

@@ -1,5 +1,5 @@
 # SortingAlgorithmsVisualization
-Visualizing Bubble Sort, Insertion Sort, Selection Sort, Shell Sort, Merge Sort, Heap Sort, Quick Sort and Shitty Sort using interactive tools
+Visualizing Bubble Sort, Insertion Sort, Selection Sort, Shell Sort, Merge Sort, Heap Sort, Quick Sort, Shitty Sort and Radix Sort using interactive tools
 
 <img src="https://github.com/viesa/SortingAlgorithmsVisualization/blob/master/image.png">
 
@@ -11,6 +11,3 @@ Visualizing Bubble Sort, Insertion Sort, Selection Sort, Shell Sort, Merge Sort,
 
 ### Windows
 <b> 1. </b> Run command <i>make br</i> (See "MakeFile")
-
-### Mac
-Should be similar to Linux ;)

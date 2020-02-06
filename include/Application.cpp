@@ -19,26 +19,27 @@ Application::Application(sf::Time &dt)
 									 m_sortingController.GetSortingNumberPtr(SortingController::SortingNumber::NUM_1000),
 									 m_sortingController.GetSortingNumberPtr(SortingController::SortingNumber::NUM_10000)},
 									{false, true, false, false},
-									{sf::Vector2f(Graphics::ScreenWidth - 700, 10.0f),
-									 sf::Vector2f(Graphics::ScreenWidth - 680, 10.0f),
-									 sf::Vector2f(Graphics::ScreenWidth - 660, 10.0f),
-									 sf::Vector2f(Graphics::ScreenWidth - 640, 10.0f)},
+									{sf::Vector2f(Graphics::ScreenWidth - 760, 10.0f),
+									 sf::Vector2f(Graphics::ScreenWidth - 740, 10.0f),
+									 sf::Vector2f(Graphics::ScreenWidth - 720, 10.0f),
+									 sf::Vector2f(Graphics::ScreenWidth - 700, 10.0f)},
 									std::bind(&SortingController::GenerateRandomBars, &m_sortingController));
 
 	std::function<void()> invokeOnTrueAndFalse = std::bind(&SortingController::PositionSortingContainers, &m_sortingController);
-	m_ui.CreateStaticCheckbox(0, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_BubbleSort), true, sf::Vector2f(Graphics::ScreenWidth - 590, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
-	m_ui.CreateStaticCheckbox(1, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_SelectionSort), true, sf::Vector2f(Graphics::ScreenWidth - 570, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
-	m_ui.CreateStaticCheckbox(2, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_InsertionSort), true, sf::Vector2f(Graphics::ScreenWidth - 550, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
-	m_ui.CreateStaticCheckbox(3, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_ShellSort), true, sf::Vector2f(Graphics::ScreenWidth - 530, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
-	m_ui.CreateStaticCheckbox(4, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_MergeSort), true, sf::Vector2f(Graphics::ScreenWidth - 510, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
-	m_ui.CreateStaticCheckbox(5, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_HeapSort), true, sf::Vector2f(Graphics::ScreenWidth - 490, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
-	m_ui.CreateStaticCheckbox(6, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_QuickSort), true, sf::Vector2f(Graphics::ScreenWidth - 470, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
-	m_ui.CreateStaticCheckbox(7, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_BogoSort), true, sf::Vector2f(Graphics::ScreenWidth - 450, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
+	m_ui.CreateStaticCheckbox(0, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_BubbleSort), true, sf::Vector2f(Graphics::ScreenWidth - 650, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
+	m_ui.CreateStaticCheckbox(1, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_SelectionSort), true, sf::Vector2f(Graphics::ScreenWidth - 630, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
+	m_ui.CreateStaticCheckbox(2, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_InsertionSort), true, sf::Vector2f(Graphics::ScreenWidth - 610, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
+	m_ui.CreateStaticCheckbox(3, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_ShellSort), true, sf::Vector2f(Graphics::ScreenWidth - 590, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
+	m_ui.CreateStaticCheckbox(4, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_MergeSort), true, sf::Vector2f(Graphics::ScreenWidth - 570, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
+	m_ui.CreateStaticCheckbox(5, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_HeapSort), true, sf::Vector2f(Graphics::ScreenWidth - 550, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
+	m_ui.CreateStaticCheckbox(6, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_QuickSort), true, sf::Vector2f(Graphics::ScreenWidth - 530, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
+	m_ui.CreateStaticCheckbox(7, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_ShittySort), true, sf::Vector2f(Graphics::ScreenWidth - 510, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
+	m_ui.CreateStaticCheckbox(8, m_sortingController.GetActiveAlgorithmRef(SortingController::SortingAlgorithm::ALG_RadixSort), true, sf::Vector2f(Graphics::ScreenWidth - 490, 10.0f), invokeOnTrueAndFalse, invokeOnTrueAndFalse);
 	m_sortingController.PositionSortingContainers();
-	m_ui.CreateStaticButton(0, std::bind(&SortingController::StartAll, &m_sortingController), "Start", sf::Vector2f(Graphics::ScreenWidth - 390, 10.0f));
-	m_ui.CreateStaticButton(1, std::bind(&SortingController::PauseAll, &m_sortingController), "Pause", sf::Vector2f(Graphics::ScreenWidth - 340, 10.0f));
-	m_ui.CreateStaticButton(2, std::bind(&SortingController::ResetAll, &m_sortingController), "Reset", sf::Vector2f(Graphics::ScreenWidth - 290, 10.0f));
-	m_ui.CreateStaticButton(3, std::bind(&SortingController::NewValues, &m_sortingController), "New", sf::Vector2f(Graphics::ScreenWidth - 240, 10.0f));
+	m_ui.CreateStaticButton(0, std::bind(&SortingController::StartAll, &m_sortingController), "Start", sf::Vector2f(Graphics::ScreenWidth - 440, 10.0f));
+	m_ui.CreateStaticButton(1, std::bind(&SortingController::PauseAll, &m_sortingController), "Pause", sf::Vector2f(Graphics::ScreenWidth - 390, 10.0f));
+	m_ui.CreateStaticButton(2, std::bind(&SortingController::ResetAll, &m_sortingController), "Reset", sf::Vector2f(Graphics::ScreenWidth - 330, 10.0f));
+	m_ui.CreateStaticButton(3, std::bind(&SortingController::NewValues, &m_sortingController), "New", sf::Vector2f(Graphics::ScreenWidth - 280, 10.0f));
 	m_ui.CreateStaticIntSlider(1, m_sortingController.GetStepTimeRef(), 1, 50000, 1000, sf::Vector2f(Graphics::ScreenWidth - 230, 10.0f));
 }
 
