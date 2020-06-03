@@ -34,6 +34,7 @@ void IAlgorithm::DrawName(const sf::FloatRect &rect)
 
 void IAlgorithm::Start()
 {
+    Reset();
     m_state = State::Sorting;
     m_sorter = std::thread(SortThreadFn, this);
 }
