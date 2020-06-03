@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include "Window.h"
 #include "EventMgr.h"
 #include "Keyboard.h"
@@ -8,10 +10,14 @@
 #include "Lib.h"
 
 #include <SFML/Graphics.hpp>
+#include <SFGUI/Adjustment.hpp>
 #include <SFGUI/Box.hpp>
 #include <SFGUI/Button.hpp>
+#include <SFGUI/CheckButton.hpp>
 #include <SFGUI/Desktop.hpp>
 #include <SFGUI/Label.hpp>
+#include <SFGUI/Scale.hpp>
+#include <SFGUI/Scrollbar.hpp>
 #include <SFGUI/SFGUI.hpp>
 #include <SFGUI/Window.hpp>
 

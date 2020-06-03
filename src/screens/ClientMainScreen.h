@@ -1,9 +1,9 @@
 #pragma once
 
+#include <future>
+
 #include "IScreen.h"
-
 #include "Camera.h"
-
 #include "AlgorithmMgr.h"
 
 class AppClient;

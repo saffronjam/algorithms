@@ -22,6 +22,7 @@ public:
     enum class State
     {
         Sorting,
+        WaitingForStart,
         Paused,
         Finished,
         BeingCollected
@@ -38,15 +39,23 @@ public:
     bool IsActive() const noexcept { return m_isActive; }
 
     void Start();
+    void Restart();
     void Pause();
     void Resume();
     void Reset();
 
     void Resize(size_t size);
+    void PopPushUntil(size_t size);
+
     void Shuffle(std::mt19937 generator);
 
     virtual std::string GetName() = 0;
-    void SetSleepTime(sf::Time seconds) noexcept { m_sleepTime = seconds; }
+    void SetSleepDelay(sf::Time delay) noexcept
+    {
+        if (delay.asMicroseconds() < 1000)
+            int x = 10;
+        m_sleepDelay = delay;
+    }
 
 protected:
     virtual void Sort() = 0;
@@ -58,13 +67,15 @@ private:
     // Calls overridden Sort() and later OnFinish() upon finish
     void SortThreadFn();
     void OnFinish();
+    void CollectSorter();
 
 protected:
     std::vector<Bar> m_bars;
-    std::vector<Bar> m_barsCopy;
+    std::vector<Bar> m_barsRestart;
+    std::vector<Bar> m_barsReset;
     std::thread m_sorter;
 
-    sf::Time m_sleepTime;
+    sf::Time m_sleepDelay;
     State m_state;
     bool m_isActive;
 

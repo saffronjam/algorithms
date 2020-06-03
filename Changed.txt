@@ -4,3 +4,4 @@
 - made all resource managers functions static
 - DrawText to camera and Window
 - Add textalign
+- updates includes in IScreen.hpp

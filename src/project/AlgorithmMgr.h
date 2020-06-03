@@ -30,13 +30,21 @@ public:
 
     void Add(IAlgorithm *algorithm);
 
+    void Activate(const std::string &name);
+    void Deactivate(const std::string &name);
+
     void Start();
+    void Restart();
     void Pause();
     void Resume();
     void Reset();
 
     void Resize(size_t size);
+    void PopPushUntil(size_t size);
     void Shuffle();
+    void SetSleepDelay(sf::Time seconds);
+
+    const std::vector<IAlgorithm *> &GetAlgorithms() const noexcept { return m_algorithms; }
 
 private:
     void GenerateDrawContainers();

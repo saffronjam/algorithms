@@ -31,12 +31,12 @@ void AlgorithmMgr::Draw()
     int i = 0;
     for (auto &algorithm : m_algorithms)
     {
-        if (i < m_drawContainers.size())
+        if (i < m_drawContainers.size() && algorithm->IsActive())
         {
             algorithm->Draw(m_drawContainers[i]);
             algorithm->DrawName(m_drawContainers[i]);
+            i++;
         }
-        i++;
     }
 }
 
@@ -45,11 +45,41 @@ void AlgorithmMgr::Add(IAlgorithm *algorithm)
     m_algorithms.emplace_back(algorithm);
 }
 
+void AlgorithmMgr::Activate(const std::string &name)
+{
+    for (auto &algorithm : m_algorithms)
+    {
+        if (algorithm->GetName() == name)
+        {
+            algorithm->Activate();
+            GenerateDrawContainers();
+            break;
+        }
+    }
+}
+
+void AlgorithmMgr::Deactivate(const std::string &name)
+{
+    for (auto &algorithm : m_algorithms)
+    {
+        if (algorithm->GetName() == name)
+        {
+            algorithm->Deactivate();
+            GenerateDrawContainers();
+            break;
+        }
+    }
+}
+
 void AlgorithmMgr::Start()
 {
-    Reset();
     for (auto &algorithm : m_algorithms)
         algorithm->Start();
+}
+void AlgorithmMgr::Restart()
+{
+    for (auto &algorithm : m_algorithms)
+        algorithm->Restart();
 }
 void AlgorithmMgr::Pause()
 {
@@ -73,6 +103,15 @@ void AlgorithmMgr::Resize(size_t size)
         algorithm->Resize(size);
 }
 
+void AlgorithmMgr::PopPushUntil(size_t size)
+{
+    for (auto &algorithm : m_algorithms)
+    {
+        algorithm->Reset();
+        algorithm->PopPushUntil(size);
+    }
+}
+
 void AlgorithmMgr::Shuffle()
 {
     std::random_device rd;
@@ -82,11 +121,18 @@ void AlgorithmMgr::Shuffle()
         algorithm->Shuffle(generator);
 }
 
+void AlgorithmMgr::SetSleepDelay(sf::Time delay)
+{
+    for (auto &algorithm : m_algorithms)
+        algorithm->SetSleepDelay(delay);
+}
+
 void AlgorithmMgr::GenerateDrawContainers()
 {
     m_drawContainers.clear();
 
-    sf::FloatRect container(-Camera::GetOffset(), Lib::ConvertTo<float>(Window::GetSize()));
+    auto winSize = Lib::ConvertTo<float>(Window::GetSize());
+    sf::FloatRect container(-Camera::GetOffset(), sf::Vector2f(winSize.x - 200.0f, winSize.y));
 
     int nWidth, nHeight;
     int nActiveContainers = GetActiveContainers();
@@ -151,7 +197,7 @@ void AlgorithmMgr::GenerateDrawContainers()
         break;
     }
     sf::Vector2f size(container.width / static_cast<float>(nWidth), container.height / static_cast<float>(nWidth));
-    sf::Vector2f padding(40.0f, 40.0f);
+    sf::Vector2f padding(15.0f, 40.0f);
     sf::Vector2f divide(container.width / nWidth, container.height / nHeight);
     for (int y, nBoxes = 0; y < nHeight && nBoxes < nActiveContainers; y++)
     {
