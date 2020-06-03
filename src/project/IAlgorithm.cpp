@@ -14,6 +14,11 @@ void IAlgorithm::Draw(const sf::FloatRect &rect)
     sf::RectangleShape shape;
     sf::Vector2f size(rect.width / m_bars.size(), 0.0f);
     sf::Vector2f positionOffset(rect.left, rect.top);
+    if (size.x > 2.0f && size.y > 2.0f)
+    {
+        shape.setOutlineThickness(1);
+        shape.setOutlineColor(sf::Color(150, 150, 150));
+    }
     float heightMult = rect.height / m_bars.size();
     for (size_t i = 0; i < m_bars.size(); i++)
     {
