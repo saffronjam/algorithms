@@ -5,6 +5,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/System/Err.hpp>
 
 #include "WindowThrowMacros.h"
@@ -26,6 +27,7 @@ public:
 
     static void Draw(const sf::Drawable &drawable, sf::RenderStates renderStates = sf::RenderStates::Default) noexcept;
     static void DrawText(const sf::Text &text, TextAlign align = TextAlign::Left, sf::RenderStates renderStates = sf::RenderStates::Default) noexcept;
+    static void DrawPoint(const sf::Vector2f &position, sf::Color color = sf::Color::Red, float radius = 3.0f) noexcept;
     static void Clear();
     static void Present() noexcept;
 

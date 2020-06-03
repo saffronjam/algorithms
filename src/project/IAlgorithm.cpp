@@ -1,32 +1,63 @@
 #include "IAlgorithm.h"
 
 IAlgorithm::IAlgorithm()
-    : m_bars(10000),
+    : m_elements(10000),
       m_sleepDelay(sf::seconds(0.01f)),
       m_state(State::WaitingForStart),
-      m_isActive(true)
+      m_isActive(true),
+      m_visType(VisType::Bars)
 {
     m_name.setFont(*FontMgr::Get("res/arial.ttf"));
 }
 
 void IAlgorithm::Draw(const sf::FloatRect &rect)
 {
-    sf::RectangleShape shape;
-    sf::Vector2f size(rect.width / m_bars.size(), 0.0f);
-    sf::Vector2f positionOffset(rect.left, rect.top);
-    if (size.x > 2.0f && size.y > 2.0f)
+    switch (m_visType)
     {
-        shape.setOutlineThickness(1);
-        shape.setOutlineColor(sf::Color(150, 150, 150));
+    case VisType::Bars:
+    {
+        sf::RectangleShape shape;
+        sf::Vector2f size(rect.width / m_elements.size(), 0.0f);
+        sf::Vector2f positionOffset(rect.left, rect.top);
+        if (size.x > 2.0f && size.y > 2.0f)
+        {
+            shape.setOutlineThickness(1);
+            shape.setOutlineColor(sf::Color(150, 150, 150));
+        }
+        float heightMult = rect.height / m_elements.size();
+        for (size_t i = 0; i < m_elements.size(); i++)
+        {
+            size.y = m_elements[i].value * heightMult;
+            shape.setFillColor(m_elements[i].color);
+            shape.setPosition(positionOffset.x + size.x * static_cast<float>(i), positionOffset.y + rect.height - size.y);
+            shape.setSize(size);
+            Camera::Draw(shape);
+        }
+        break;
     }
-    float heightMult = rect.height / m_bars.size();
-    for (size_t i = 0; i < m_bars.size(); i++)
+    case VisType::Circles:
     {
-        size.y = m_bars[i].value * heightMult;
-        shape.setFillColor(m_bars[i].color);
-        shape.setPosition(positionOffset.x + size.x * static_cast<float>(i), positionOffset.y + rect.height - size.y);
-        shape.setSize(size);
-        Camera::Draw(shape);
+        sf::VertexArray vertexArray(sf::TriangleFan, 1 + 2 * m_elements.size());
+        float maxRadius = static_cast<float>(std::min(rect.width / 2, rect.height / 2));
+        float maxValue = m_elements.size();
+        float angleDelta = 2.0f * PI<> / m_elements.size();
+        float heightMult = maxRadius / m_elements.size();
+        sf::Vector2f rectMid = Lib::Mid(rect);
+
+        vertexArray[0] = sf::Vertex(rectMid, sf::Color(255, 255, 255));
+        for (size_t i = 0; i < m_elements.size() * 2; i += 2)
+        {
+            sf::Vector2f line0 = vl::Rotate(sf::Vector2f(0.0f, -m_elements[i / 2].value * heightMult) + rectMid, angleDelta * static_cast<float>(i), rectMid);
+            sf::Vector2f line1 = vl::Rotate(sf::Vector2f(0.0f, -m_elements[i / 2].value * heightMult) + rectMid, angleDelta * static_cast<float>(i + 1), rectMid);
+            vertexArray[i + 1] = sf::Vertex(line0, m_elements[i / 2].color);
+            vertexArray[i + 2] = sf::Vertex(line1, m_elements[i / 2].color);
+        }
+        Camera::Draw(vertexArray);
+        Camera::DrawPoint(rectMid);
+        break;
+    }
+    default:
+        break;
     }
 }
 
@@ -53,7 +84,7 @@ void IAlgorithm::Restart()
     {
         CollectSorter();
         m_state = State::WaitingForStart;
-        m_bars = m_barsRestart;
+        m_elements = m_elementsRestart;
     }
 }
 
@@ -73,54 +104,54 @@ void IAlgorithm::Reset()
 {
     CollectSorter();
     m_state = State::WaitingForStart;
-    m_bars = m_barsReset;
+    m_elements = m_elementsReset;
 }
 
 void IAlgorithm::Resize(size_t size)
 {
-    if (m_bars.size() == size)
+    if (m_elements.size() == size)
         return;
 
-    m_bars.clear();
-    m_barsRestart.clear();
-    m_barsReset.clear();
-    m_bars.resize(size);
-    m_barsRestart.resize(size);
-    m_barsReset.resize(size);
+    m_elements.clear();
+    m_elementsRestart.clear();
+    m_elementsReset.clear();
+    m_elements.resize(size);
+    m_elementsRestart.resize(size);
+    m_elementsReset.resize(size);
 
     long n = 1;
-    std::generate(m_bars.begin(), m_bars.end(), [&n] {
-        return Bar(n++);
+    std::generate(m_elements.begin(), m_elements.end(), [&n] {
+        return Element(n++);
     });
-    m_barsRestart = m_bars;
-    m_barsReset = m_bars;
+    m_elementsRestart = m_elements;
+    m_elementsReset = m_elements;
 }
 
 void IAlgorithm::PopPushUntil(size_t size)
 {
     CollectSorter();
-    while (m_barsReset.size() != size)
+    while (m_elementsReset.size() != size)
     {
-        if (size < m_barsReset.size())
-            m_barsReset.pop_back();
-        else if (size > m_barsReset.size())
-            m_barsReset.push_back(Bar(m_barsReset.size() + 1));
+        if (size < m_elementsReset.size())
+            m_elementsReset.pop_back();
+        else if (size > m_elementsReset.size())
+            m_elementsReset.push_back(Element(m_elementsReset.size() + 1));
     }
-    m_bars = m_barsReset;
-    m_barsRestart = m_barsReset;
+    m_elements = m_elementsReset;
+    m_elementsRestart = m_elementsReset;
 }
 
 void IAlgorithm::Shuffle(std::mt19937 generator)
 {
     Reset();
-    std::shuffle(m_barsRestart.begin(), m_barsRestart.end(), generator);
-    m_bars = m_barsRestart;
+    std::shuffle(m_elementsRestart.begin(), m_elementsRestart.end(), generator);
+    m_elements = m_elementsRestart;
 }
 
 void IAlgorithm::PauseCheck()
 {
     while (m_state == State::Paused && m_state != State::BeingCollected)
-        sf::sleep(sf::seconds(0.1f));
+        sf::sleep(sf::seconds(0.01f));
 }
 
 std::chrono::nanoseconds calc_overhead()
@@ -173,7 +204,7 @@ void IAlgorithm::SortThreadFn()
 
 void IAlgorithm::OnFinish()
 {
-    for (auto &bar : m_bars)
+    for (auto &bar : m_elements)
         bar.color = sf::Color::Green;
     m_state = State::Finished;
 }

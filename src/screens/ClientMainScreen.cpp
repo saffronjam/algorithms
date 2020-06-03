@@ -22,40 +22,45 @@ void ClientMainScreen::OnEntry()
 {
     FPSLimiter::SetDesiredFPS(60.0f);
 
+    // -------------- ALL LABELS ------------------
+    auto visStyleLabel = sfg::Label::Create("--- Visualisation Style ---");
+    auto visAlgLabel = sfg::Label::Create("--- Visible Algorithms ---");
+    auto settingsLabel = sfg::Label::Create("--- Settings ---");
+
     // -------------- NUMBER OF BARS ------------------
-    auto barsLabel = sfg::Label::Create();
-    barsLabel->SetText("Bars: 500");
-    auto barsScale = sfg::Scale::Create(sfg::Scale::Orientation::HORIZONTAL);
+    auto elementsLabel = sfg::Label::Create();
+    elementsLabel->SetText("Elements: 500");
+    auto elementsScale = sfg::Scale::Create(sfg::Scale::Orientation::HORIZONTAL);
 
-    auto barsAdjustment = barsScale->GetAdjustment();
+    auto elementsAdjustment = elementsScale->GetAdjustment();
 
-    barsAdjustment->SetLower(4.64159f);
-    barsAdjustment->SetUpper(464.159f);
-    barsAdjustment->SetValue(100.0f);
+    elementsAdjustment->SetLower(4.64159f);
+    elementsAdjustment->SetUpper(464.159f);
+    elementsAdjustment->SetValue(100.0f);
 
-    barsAdjustment->SetMinorStep(2.0f);
-    barsAdjustment->SetMajorStep(100.0f);
+    elementsAdjustment->SetMinorStep(2.0f);
+    elementsAdjustment->SetMajorStep(100.0f);
 
-    barsAdjustment->GetSignal(sfg::Adjustment::OnChange).Connect([barsAdjustment, barsLabel, this] {
-        auto valMul = std::pow(barsAdjustment->GetValue(), 1.5f);
+    elementsAdjustment->GetSignal(sfg::Adjustment::OnChange).Connect([elementsAdjustment, elementsLabel, this] {
+        auto valMul = std::pow(elementsAdjustment->GetValue(), 1.5f);
         std::ostringstream oss;
-        oss << std::fixed << std::setprecision(0) << "Bars: " << valMul;
-        barsLabel->SetText(oss.str());
+        oss << std::fixed << std::setprecision(0) << "Elements: " << valMul;
+        elementsLabel->SetText(oss.str());
         m_algorithmMgr.PopPushUntil(valMul);
     });
     {
-        auto valMul = std::pow(barsAdjustment->GetValue(), 1.5f);
+        auto valMul = std::pow(elementsAdjustment->GetValue(), 1.5f);
         std::ostringstream oss;
-        oss << std::fixed << std::setprecision(0) << "Bars: " << valMul;
-        barsLabel->SetText(oss.str());
+        oss << std::fixed << std::setprecision(0) << "Elements: " << valMul;
+        elementsLabel->SetText(oss.str());
         m_algorithmMgr.PopPushUntil(valMul);
     }
 
-    barsScale->SetRequisition(sf::Vector2f(80.f, 20.f));
+    elementsScale->SetRequisition(sf::Vector2f(80.f, 20.f));
 
-    auto barsScalebox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
-    barsScalebox->Pack(barsLabel, false, false);
-    barsScalebox->Pack(barsScale, false, false);
+    auto elementsScalebox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
+    elementsScalebox->Pack(elementsLabel, false, false);
+    elementsScalebox->Pack(elementsScale, false, false);
 
     // -------------- SLEEP DELAY ------------------
     auto sleepDelayLabel = sfg::Label::Create();
@@ -63,7 +68,7 @@ void ClientMainScreen::OnEntry()
 
     auto sleepDelayAdjustment = sleepDelayScale->GetAdjustment();
 
-    sleepDelayAdjustment->SetLower(1.0f);
+    sleepDelayAdjustment->SetLower(100.0f);
     sleepDelayAdjustment->SetUpper(1357.21f);
     sleepDelayAdjustment->SetValue(464.159f);
 
@@ -93,7 +98,7 @@ void ClientMainScreen::OnEntry()
 
     // -------------- PACK ALL SCALES INTO ONE BOX ------------------
     auto scaleBoxes = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 10.0f);
-    scaleBoxes->Pack(barsScalebox);
+    scaleBoxes->Pack(elementsScalebox);
     scaleBoxes->Pack(sleepDelayScalebox);
 
     // -------------- ALL CHECK BOXES ------------------
@@ -111,8 +116,26 @@ void ClientMainScreen::OnEntry()
         checkButtonsBox->Pack(checkButton);
     }
 
-    auto tmp = std::async(std::launch::async, ClientMainScreen::Build, this);
-    tmp.get();
+    // -------------- COMBO BOX --------------------
+    auto visStyleComboBox = sfg::ComboBox::Create();
+    visStyleComboBox->AppendItem("Bars");
+    visStyleComboBox->AppendItem("Circles");
+    visStyleComboBox->SelectItem(0);
+
+    visStyleComboBox->GetSignal(sfg::ComboBox::OnSelect).Connect([visStyleComboBox, this] {
+        switch (visStyleComboBox->GetSelectedItem())
+        {
+        case 0:
+            m_algorithmMgr.SetVisType(IAlgorithm::VisType::Bars);
+            break;
+        case 1:
+            m_algorithmMgr.SetVisType(IAlgorithm::VisType::Circles);
+            break;
+        default:
+            break;
+        }
+    });
+
     // -------------- ALL BUTTONS ------------------
     auto startButton = sfg::Button::Create("Start");
     auto restartButton = sfg::Button::Create("Restart");
@@ -121,36 +144,36 @@ void ClientMainScreen::OnEntry()
     auto resumeButton = sfg::Button::Create("Resume");
     auto shuffleButton = sfg::Button::Create("Shuffle");
 
-    startButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, barsScale, this] {
+    startButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, this] {
         m_algorithmMgr.Start();
         for (auto &child : checkButtonsBox->GetChildren())
             child->SetState(sfg::Widget::State::INSENSITIVE);
-        barsScale->SetState(sfg::Widget::State::INSENSITIVE);
+        elementsScale->SetState(sfg::Widget::State::INSENSITIVE);
     });
 
-    restartButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, barsScale, this] {
+    restartButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, this] {
         m_algorithmMgr.Restart();
         for (auto &child : checkButtonsBox->GetChildren())
             child->SetState(sfg::Widget::State::NORMAL);
-        barsScale->SetState(sfg::Widget::State::NORMAL);
+        elementsScale->SetState(sfg::Widget::State::NORMAL);
     });
 
-    resetButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, barsScale, this] {
+    resetButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, this] {
         m_algorithmMgr.Reset();
         for (auto &child : checkButtonsBox->GetChildren())
             child->SetState(sfg::Widget::State::NORMAL);
-        barsScale->SetState(sfg::Widget::State::NORMAL);
+        elementsScale->SetState(sfg::Widget::State::NORMAL);
     });
 
     pauseButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { m_algorithmMgr.Pause(); });
 
     resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { m_algorithmMgr.Resume(); });
 
-    shuffleButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, barsScale, this] {
+    shuffleButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, this] {
         m_algorithmMgr.Shuffle();
         for (auto &child : checkButtonsBox->GetChildren())
             child->SetState(sfg::Widget::State::NORMAL);
-        barsScale->SetState(sfg::Widget::State::NORMAL);
+        elementsScale->SetState(sfg::Widget::State::NORMAL);
     });
 
     auto buttonsBoxRow0 = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 3.0f);
@@ -169,15 +192,28 @@ void ClientMainScreen::OnEntry()
     allButtonBox->Pack(buttonsBoxRow1, false);
     allButtonBox->Pack(buttonsBoxRow2, false);
 
+    // --------------- SUB BOXES ----------------------
+    auto visStyleBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 4.0f);
+    visStyleBox->Pack(visStyleLabel);
+    visStyleBox->Pack(visStyleComboBox);
+
+    auto visAlgBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 4.0f);
+    visAlgBox->Pack(visAlgLabel);
+    visAlgBox->Pack(checkButtonsBox);
+
+    auto settingsBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 4.0f);
+    settingsBox->Pack(settingsLabel);
+    settingsBox->Pack(scaleBoxes);
+
     // -------------- ADD TO MAIN BOX ------------------
     auto mainBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 15.0f);
     mainBox->Pack(allButtonBox, false);
-    mainBox->Pack(checkButtonsBox, false);
-    mainBox->Pack(scaleBoxes, false);
+    mainBox->Pack(visStyleBox, false);
+    mainBox->Pack(visAlgBox, false);
+    mainBox->Pack(settingsBox, false);
 
     // -------------- ADD TO MAIN WINDOW ------------------
-    auto window = sfg::Window::Create(sfg::Window::Style::TITLEBAR | sfg::Window::Style::BACKGROUND);
-    window->SetTitle("Settings");
+    auto window = sfg::Window::Create(sfg::Window::Style::BACKGROUND);
     window->SetPosition(sf::Vector2f(Window::GetWidth() - 200.0f, 0.0f));
     window->SetRequisition(sf::Vector2f(200.0f, Window::GetHeight()));
     window->Add(mainBox);

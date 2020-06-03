@@ -14,7 +14,7 @@ public:
     static sf::Vector2<T> Direction(const sf::Vector2<T> &point1, const sf::Vector2<T> &point2);
     template <typename T>
     static sf::Vector2<T> Unit(const sf::Vector2<T> &vector);
-    template <typename T>
+    template <typename T = float>
     static sf::Vector2<T> Null();
     template <typename T>
     static sf::Vector2<T> Perpendicular(const sf::Vector2<T> &vector);
@@ -76,7 +76,7 @@ sf::Vector2<T> vl::Perpendicular(const sf::Vector2<T> &vector)
 template <typename T>
 sf::Vector2<T> vl::Rotate(const sf::Vector2<T> &vector, float angle, const sf::Vector2<T> &around)
 {
-    auto anchor = vector -= around;
+    auto anchor = vector - around;
 
     const float cosTheta = cos(angle);
     const float sinTheta = sin(angle);

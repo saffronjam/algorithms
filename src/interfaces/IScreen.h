@@ -14,6 +14,7 @@
 #include <SFGUI/Box.hpp>
 #include <SFGUI/Button.hpp>
 #include <SFGUI/CheckButton.hpp>
+#include <SFGUI/ComboBox.hpp>
 #include <SFGUI/Desktop.hpp>
 #include <SFGUI/Label.hpp>
 #include <SFGUI/Scale.hpp>

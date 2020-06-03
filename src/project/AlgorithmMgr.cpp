@@ -127,6 +127,12 @@ void AlgorithmMgr::SetSleepDelay(sf::Time delay)
         algorithm->SetSleepDelay(delay);
 }
 
+void AlgorithmMgr::SetVisType(IAlgorithm::VisType visType)
+{
+    for (auto &algorithm : m_algorithms)
+        algorithm->SetVisType(visType);
+}
+
 void AlgorithmMgr::GenerateDrawContainers()
 {
     m_drawContainers.clear();

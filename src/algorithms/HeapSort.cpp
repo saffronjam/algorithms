@@ -2,23 +2,23 @@
 
 void HeapSort::Sort()
 {
-    for (long i = (long)m_bars.size() / 2 - 1; i >= 0 && m_state != State::BeingCollected; i--)
+    for (long i = (long)m_elements.size() / 2 - 1; i >= 0 && m_state != State::BeingCollected; i--)
     {
         PauseCheck();
-        Heapify(m_bars.size(), i);
+        Heapify(m_elements.size(), i);
     }
 
-    for (long i = (long)m_bars.size() - 1; i >= 0 && m_state != State::BeingCollected; i--)
+    for (long i = (long)m_elements.size() - 1; i >= 0 && m_state != State::BeingCollected; i--)
     {
         PauseCheck();
-        std::swap(m_bars[i], m_bars[0]);
-        m_bars[i].color = sf::Color::Green;
+        std::swap(m_elements[i], m_elements[0]);
+        m_elements[i].color = sf::Color::Green;
         Heapify(i, 0);
         for (long j = i; j >= 0; j--)
         {
-            m_bars[j].color = sf::Color::White;
+            m_elements[j].color = sf::Color::White;
         }
-        m_bars[i].color = sf::Color::Green;
+        m_elements[i].color = sf::Color::Green;
     }
 }
 
@@ -30,8 +30,8 @@ void HeapSort::Heapify(const size_t &maxSizeCheck, const size_t &parent)
 
     if (leftChild < maxSizeCheck && m_state != State::BeingCollected)
     {
-        m_bars[leftChild].color = sf::Color::Red;
-        if (m_bars[leftChild].value > m_bars[largest].value)
+        m_elements[leftChild].color = sf::Color::Red;
+        if (m_elements[leftChild].value > m_elements[largest].value)
         {
             largest = leftChild;
         }
@@ -40,8 +40,8 @@ void HeapSort::Heapify(const size_t &maxSizeCheck, const size_t &parent)
 
     if (rightChild < maxSizeCheck && m_state != State::BeingCollected)
     {
-        m_bars[rightChild].color = sf::Color::Red;
-        if (m_bars[rightChild].value > m_bars[largest].value)
+        m_elements[rightChild].color = sf::Color::Red;
+        if (m_elements[rightChild].value > m_elements[largest].value)
         {
             largest = rightChild;
         }
@@ -51,7 +51,7 @@ void HeapSort::Heapify(const size_t &maxSizeCheck, const size_t &parent)
     if (largest != parent && m_state != State::BeingCollected)
     {
         PauseCheck();
-        std::swap(m_bars[parent], m_bars[largest]);
+        std::swap(m_elements[parent], m_elements[largest]);
         Heapify(maxSizeCheck, largest);
     }
 }

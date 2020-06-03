@@ -24,6 +24,7 @@ public:
     static void Update();
     static void Draw(const sf::Drawable &drawable, sf::RenderStates renderStates = sf::RenderStates::Default) noexcept;
     static void DrawText(const sf::Text &text, TextAlign align, sf::RenderStates renderStates = sf::RenderStates::Default) noexcept;
+    static void DrawPoint(const sf::Vector2f &position, sf::Color color = sf::Color::Red, float radius = 3.0f) noexcept;
 
     static void Move(const sf::Vector2f &offset) noexcept;
     static void Zoom(float factor) noexcept;

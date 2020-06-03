@@ -42,7 +42,9 @@ public:
     void Resize(size_t size);
     void PopPushUntil(size_t size);
     void Shuffle();
+
     void SetSleepDelay(sf::Time seconds);
+    void SetVisType(IAlgorithm::VisType visType);
 
     const std::vector<IAlgorithm *> &GetAlgorithms() const noexcept { return m_algorithms; }
 
@@ -53,5 +55,5 @@ private:
 private:
     std::vector<IAlgorithm *> m_algorithms;
     std::vector<sf::FloatRect> m_drawContainers;
-    std::vector<Bar> m_currentBars;
+    std::vector<Element> m_currentElements;
 };

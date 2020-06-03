@@ -51,6 +51,15 @@ void Window::DrawText(const sf::Text &text, TextAlign align, sf::RenderStates re
     Window::Render(textCpy, renderStates);
 }
 
+void Window::DrawPoint(const sf::Vector2f &position, sf::Color color, float radius) noexcept
+{
+    sf::CircleShape circle;
+    circle.setPosition(position - sf::Vector2f(radius, radius));
+    circle.setFillColor(color);
+    circle.setRadius(radius);
+    Window::Draw(circle);
+}
+
 void Window::Clear()
 {
     assert("Attempted to handle the window without creating it" && m_sfWindow);

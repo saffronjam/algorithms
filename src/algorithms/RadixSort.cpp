@@ -10,14 +10,14 @@ void RadixSort::Sort()
 void RadixSort::CountSort(size_t exponent)
 {
 
-    std::vector<Bar> outBucket(m_bars.size());
+    std::vector<Element> outBucket(m_elements.size());
     std::array<size_t, 10> count = {0};
 
     // Store count of occurrences in count[]
-    for (size_t i = 0; i < m_bars.size() && m_state != State::BeingCollected; i++)
+    for (size_t i = 0; i < m_elements.size() && m_state != State::BeingCollected; i++)
     {
         PauseCheck();
-        count[(m_bars[i].value / exponent) % 10]++;
+        count[(m_elements[i].value / exponent) % 10]++;
     }
 
     // Change count[i] so that count[i] now contains actual
@@ -29,33 +29,33 @@ void RadixSort::CountSort(size_t exponent)
     }
 
     // Build the output array
-    for (long i = (long)m_bars.size() - 1; i >= 0 && m_state != State::BeingCollected; i--)
+    for (long i = (long)m_elements.size() - 1; i >= 0 && m_state != State::BeingCollected; i--)
     {
         PauseCheck();
-        outBucket[count[(m_bars[i].value / exponent) % 10] - 1] = m_bars[i];
-        count[(m_bars[i].value / exponent) % 10]--;
+        outBucket[count[(m_elements[i].value / exponent) % 10] - 1] = m_elements[i];
+        count[(m_elements[i].value / exponent) % 10]--;
     }
 
     // Copy the output array to arr[], so that arr[] now
     // contains sorted numbers according to current digit
-    for (size_t i = 0; i < m_bars.size() && m_state != State::BeingCollected; i++)
+    for (size_t i = 0; i < m_elements.size() && m_state != State::BeingCollected; i++)
     {
-        m_bars[i].color = sf::Color::Red;
+        m_elements[i].color = sf::Color::Red;
         SleepDelay();
         SleepDelay();
         SleepDelay();
         PauseCheck();
-        m_bars[i] = outBucket[i];
-        m_bars[i].color = sf::Color::White;
+        m_elements[i] = outBucket[i];
+        m_elements[i].color = sf::Color::White;
     }
 
     if (m_state != State::BeingCollected)
-        m_bars = outBucket;
+        m_elements = outBucket;
 }
 
 long RadixSort::HighestValue()
 {
-    return std::max_element(m_bars.begin(), m_bars.end(), [](const Bar &first, const Bar &second) {
+    return std::max_element(m_elements.begin(), m_elements.end(), [](const Element &first, const Element &second) {
                return first.value < second.value;
            })
         ->value;

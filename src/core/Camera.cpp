@@ -101,6 +101,15 @@ void Camera::DrawText(const sf::Text &text, TextAlign align, sf::RenderStates re
     Camera::Draw(textCpy, renderStates);
 }
 
+void Camera::DrawPoint(const sf::Vector2f &position, sf::Color color, float radius) noexcept
+{
+    sf::CircleShape circle;
+    circle.setPosition(position - sf::Vector2f(radius, radius));
+    circle.setFillColor(color);
+    circle.setRadius(radius);
+    Camera::Draw(circle);
+}
+
 void Camera::Move(const sf::Vector2f &offset) noexcept
 {
     m_position += offset;

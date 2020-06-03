@@ -1,3 +1,4 @@
+- Add "project" folder
 - ditched the whole ndc system
 - remove junk decl. from ClientMainScreen.h
 - add Random.h
@@ -5,3 +6,6 @@
 - DrawText to camera and Window
 - Add textalign
 - updates includes in IScreen.hpp
+- Add DrawPoint to window and camera
+- Add PI to Lib
+- Add default template to vl::Null<>()

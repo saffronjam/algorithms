@@ -5,6 +5,9 @@
 
 #define GET_VARIABLE_NAME(Variable) (#Variable)
 
+template <typename T = float>
+static constexpr T PI = (T)3.141592653589793238462643383279;
+
 class Lib
 {
 public:
@@ -49,5 +52,16 @@ public:
             return to;
         else
             return value;
+    }
+
+    template <typename T>
+    static T ToDegress(const T &radians)
+    {
+        return (radians * (T)180) / (T)PI<>;
+    }
+    template <typename T>
+    static T ToRadians(const T &degress)
+    {
+        return (T)180 / degress;
     }
 };

@@ -13,12 +13,18 @@
 
 #include "Camera.h"
 #include "Clock.h"
-#include "Bar.h"
+#include "Element.h"
 #include "FontMgr.h"
 
 class IAlgorithm
 {
 public:
+    enum class VisType
+    {
+        Bars,
+        Circles
+    };
+
     enum class State
     {
         Sorting,
@@ -50,12 +56,8 @@ public:
     void Shuffle(std::mt19937 generator);
 
     virtual std::string GetName() = 0;
-    void SetSleepDelay(sf::Time delay) noexcept
-    {
-        if (delay.asMicroseconds() < 1000)
-            int x = 10;
-        m_sleepDelay = delay;
-    }
+    void SetSleepDelay(sf::Time delay) noexcept { m_sleepDelay = delay; }
+    void SetVisType(VisType visType) noexcept { m_visType = visType; }
 
 protected:
     virtual void Sort() = 0;
@@ -70,9 +72,9 @@ private:
     void CollectSorter();
 
 protected:
-    std::vector<Bar> m_bars;
-    std::vector<Bar> m_barsRestart;
-    std::vector<Bar> m_barsReset;
+    std::vector<Element> m_elements;
+    std::vector<Element> m_elementsRestart;
+    std::vector<Element> m_elementsReset;
     std::thread m_sorter;
 
     sf::Time m_sleepDelay;
@@ -80,4 +82,5 @@ protected:
     bool m_isActive;
 
     sf::Text m_name;
+    VisType m_visType;
 };

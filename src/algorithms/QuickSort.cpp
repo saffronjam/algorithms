@@ -2,34 +2,34 @@
 
 void QuickSort::Sort()
 {
-    Quick(0, m_bars.size() - 1);
+    Quick(0, m_elements.size() - 1);
 }
 
 long QuickSort::Partition(long start, long end)
 {
-    Bar *pivot = &m_bars[end];
+    Element *pivot = &m_elements[end];
     long iS = start - 1;
 
     for (long i = (long)start; i <= end - 1 && m_state != State::BeingCollected; i++)
     {
-        m_bars[i].color = sf::Color::Blue;
+        m_elements[i].color = sf::Color::Blue;
     }
     for (long i = (long)start; i <= end - 1 && m_state != State::BeingCollected; i++)
     {
         PauseCheck();
-        m_bars[i].color = sf::Color::Red;
+        m_elements[i].color = sf::Color::Red;
         SleepDelay();
-        if (m_bars[i].value < pivot->value)
+        if (m_elements[i].value < pivot->value)
         {
             iS++;
-            std::swap(m_bars[iS], m_bars[i]);
+            std::swap(m_elements[iS], m_elements[i]);
         }
     }
     for (long i = (long)start; i <= end - 1 && m_state != State::BeingCollected; i++)
     {
-        m_bars[i].color = sf::Color::White;
+        m_elements[i].color = sf::Color::White;
     }
-    std::swap(m_bars[iS + 1], m_bars[end]);
+    std::swap(m_elements[iS + 1], m_elements[end]);
     return (iS + 1);
 }
 
