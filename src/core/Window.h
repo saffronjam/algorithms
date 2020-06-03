@@ -4,10 +4,12 @@
 #include <cassert>
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Err.hpp>
 
 #include "WindowThrowMacros.h"
 #include "IException.h"
+#include "TextAlign.h"
 #include "Log.h"
 #include "Lib.h"
 
@@ -22,7 +24,8 @@ public:
     Window(const Window &) = delete;
     Window &operator=(const Window &) = delete;
 
-    static void Draw(const sf::Drawable &drawable, sf::RenderStates renderStates = sf::RenderStates::Default);
+    static void Draw(const sf::Drawable &drawable, sf::RenderStates renderStates = sf::RenderStates::Default) noexcept;
+    static void DrawText(const sf::Text &text, TextAlign align = TextAlign::Left, sf::RenderStates renderStates = sf::RenderStates::Default) noexcept;
     static void Clear();
     static void Present() noexcept;
 
@@ -37,7 +40,6 @@ public:
     static sf::View GetCurrentView() noexcept;
     static sf::View GetDefaultView() noexcept;
     static sf::IntRect GetScreenRect() noexcept;
-    static sf::FloatRect GetNdcRect() noexcept;
 
     static bool IsFullscreen() noexcept;
     static bool IsVSyncEnabled() noexcept;
@@ -48,14 +50,9 @@ public:
     static void SetIcon(const std::string &icon) noexcept;
     static void SetFullscreen(bool toggle) noexcept;
     static void SetVSync(bool toggle) noexcept;
-    static void SetFoV(float fov) noexcept;
-
-    static sf::Transform GetNdcTransform() noexcept;
-    static sf::Vector2f RawToNdc(const sf::Vector2f &point) noexcept;
-    static sf::Vector2f NdcToRaw(const sf::Vector2f &point) noexcept;
 
 private:
-    static void Render(const sf::Drawable &drawable, sf::RenderStates renderStates = sf::RenderStates::Default);
+    static void Render(const sf::Drawable &drawable, sf::RenderStates renderStates = sf::RenderStates::Default) noexcept;
     static void ResetNdcTransform() noexcept;
 
 private:
@@ -67,11 +64,7 @@ private:
     static sf::Uint32 m_style;
     static sf::Vector2i m_nonFullscreenPosition;
 
-    static sf::Transform m_defaultNdcTransform;
-    static sf::Transform m_ndcTransform;
-
     static bool m_fullscreen;
-    static float m_fov;
 
 public:
     class Exception : public IException

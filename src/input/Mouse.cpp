@@ -105,7 +105,7 @@ void Mouse::OnMove(const sf::Event::MouseMoveEvent &event) noexcept
         callback(event);
     if (!m_inWindow && AnyButtonDown() || m_inWindow)
     {
-        m_mousePos = Window::RawToNdc(sf::Vector2f(event.x, event.y));
+        m_mousePos = sf::Vector2f(event.x, event.y);
     }
 }
 

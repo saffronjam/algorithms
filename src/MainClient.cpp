@@ -2,6 +2,8 @@
 
 int main(int, char **)
 {
+    srand(time(nullptr));
+
     try
     {
         AppClient app;

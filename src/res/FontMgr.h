@@ -11,7 +11,25 @@ public:
     FontMgr(const FontMgr &) = delete;
     const FontMgr &operator()(const FontMgr &) = delete;
 
-    virtual void Load(const std::string &filepath) override
+    static sf::Font *Get(const std::string &filepath) noexcept
+    {
+        if (m_resources.find(filepath) == m_resources.end())
+        {
+            Load(filepath);
+        }
+        return &m_resources[filepath];
+    }
+    // Returns copy of resource from cache, if not existing, call Load();
+    static const sf::Font &GetCopy(const std::string &filepath) noexcept
+    {
+        if (m_resources.find(filepath) == m_resources.end())
+        {
+            Load(filepath);
+        }
+        return m_resources[filepath];
+    }
+    // Load resource into memory
+    static void Load(const std::string &filepath)
     {
         sf::Font resource;
         if (!resource.loadFromFile(filepath))

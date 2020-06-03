@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
-project(V-2DFramework VERSION 0.1.0)
+project(V-Algorithms VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -45,6 +45,7 @@ add_executable(Server "${ServerSRC}")
 
 target_include_directories(Client PRIVATE
   src
+  src/algorithms
   src/apps
   src/core
   src/etc
@@ -52,6 +53,7 @@ target_include_directories(Client PRIVATE
   src/interfaces
   src/net
   src/netmodules
+  src/project
   src/res
   src/screens
   src/throwmacros

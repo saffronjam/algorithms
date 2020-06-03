@@ -29,10 +29,21 @@ void ClientMainScreen::OnExit()
 
 void ClientMainScreen::Update()
 {
+    if (Keyboard::IsPressed(sf::Keyboard::Num1))
+        m_algorithmMgr.Start();
+    if (Keyboard::IsPressed(sf::Keyboard::Num2))
+        m_algorithmMgr.Pause();
+    if (Keyboard::IsPressed(sf::Keyboard::Num3))
+        m_algorithmMgr.Resume();
+    if (Keyboard::IsPressed(sf::Keyboard::Num4))
+        m_algorithmMgr.Reset();
+    if (Keyboard::IsPressed(sf::Keyboard::Num5))
+        m_algorithmMgr.Shuffle();
 }
 
 void ClientMainScreen::Draw()
 {
+    m_algorithmMgr.Draw();
 }
 
 int ClientMainScreen::GetNextScreenIndex() const

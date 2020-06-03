@@ -4,6 +4,8 @@
 
 #include "Camera.h"
 
+#include "AlgorithmMgr.h"
+
 class AppClient;
 
 class ClientMainScreen : public IScreen
@@ -34,6 +36,5 @@ private:
 private:
     AppClient &m_parent;
 
-    float zoom = 1.0f;
-    int rot = 0.0f;
+    AlgorithmMgr m_algorithmMgr;
 };

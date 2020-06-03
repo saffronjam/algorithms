@@ -6,6 +6,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 #include "Window.h"
 #include "Mouse.h"
@@ -22,6 +23,7 @@ public:
 
     static void Update();
     static void Draw(const sf::Drawable &drawable, sf::RenderStates renderStates = sf::RenderStates::Default) noexcept;
+    static void DrawText(const sf::Text &text, TextAlign align, sf::RenderStates renderStates = sf::RenderStates::Default) noexcept;
 
     static void Move(const sf::Vector2f &offset) noexcept;
     static void Zoom(float factor) noexcept;
@@ -41,7 +43,11 @@ public:
     ///@param point: point to be translated from world to screen space.
     static sf::Vector2f WorldToScreen(const sf::Vector2f &point) noexcept;
 
-    void SetRotationSpeed(float rps) noexcept { m_rps = rps; }
+    static sf::FloatRect GetViewPort() noexcept { return m_transform.transformRect(Lib::ConvertTo<float>(Window::GetScreenRect())); }
+    static sf::Vector2f GetViewSize() noexcept { return m_transform.transformPoint(GetViewPort().width, GetViewPort().height); }
+    static sf::Vector2f GetOffset() noexcept { return Lib::ConvertTo<float>(Window::GetSize()) / 2.0f; }
+
+    static void SetRotationSpeed(float rps) noexcept { m_rps = rps; }
 
 private:
     static void UpdateTransform() noexcept;

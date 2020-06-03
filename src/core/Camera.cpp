@@ -42,7 +42,8 @@ void Camera::Update()
                 m_lastPos = cur_pos;
                 delta = m_rotationTransform.getInverse().transformPoint(delta);
                 delta = m_zoomTransform.getInverse().transformPoint(delta);
-                m_position += delta;
+                delta *= -1.0f;
+                Move(delta);
             }
         }
         else
@@ -76,9 +77,28 @@ void Camera::Update()
 
 void Camera::Draw(const sf::Drawable &drawable, sf::RenderStates renderStates) noexcept
 {
-    renderStates.transform.combine(Window::GetNdcTransform());
     renderStates.transform.combine(m_transform);
     Window::Render(drawable, renderStates);
+}
+
+void Camera::DrawText(const sf::Text &text, TextAlign align, sf::RenderStates renderStates) noexcept
+{
+    auto textCpy = text;
+    float offset = 0.0f;
+    switch (align)
+    {
+    case TextAlign::Left:
+        break;
+    case TextAlign::Middle:
+        offset = textCpy.getLocalBounds().width / 2.0f;
+        break;
+    case TextAlign::Right:
+        offset = textCpy.getLocalBounds().width;
+        break;
+    }
+
+    textCpy.setPosition(text.getPosition().x - offset, text.getPosition().y);
+    Camera::Draw(textCpy, renderStates);
 }
 
 void Camera::Move(const sf::Vector2f &offset) noexcept
@@ -104,7 +124,7 @@ void Camera::Rotate(float angle) noexcept
 
 void Camera::SetCenter(const sf::Vector2f &center) noexcept
 {
-    m_position = center - sf::Vector2f(1.0f, 1.0f);
+    m_position = center - GetViewSize() / 2.0f;
     m_positionTransform = sf::Transform().translate(m_position);
     UpdateTransform();
 }
@@ -136,10 +156,13 @@ sf::Vector2f Camera::WorldToScreen(const sf::Vector2f &point) noexcept
 
 void Camera::UpdateTransform() noexcept
 {
+    const sf::Vector2f offset(Lib::ConvertTo<float>(Window::GetSize()) / 2.0f);
+
     m_transform = sf::Transform::Identity;
+    m_transform.translate(offset);
     m_transform.scale(m_zoom);
     m_transform.rotate(m_rotation);
-    m_transform.translate(m_position);
+    m_transform.translate(-m_position);
 }
 
 void Camera::CapZoomLevel() noexcept
