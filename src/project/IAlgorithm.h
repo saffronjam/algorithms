@@ -23,7 +23,7 @@ public:
     {
         Bars,
         Circles,
-        Spectrum
+        Hoops
     };
 
     enum class State
@@ -44,6 +44,9 @@ public:
     void Activate() noexcept { m_isActive = true; }
     void Deactivate() noexcept { m_isActive = false; }
     bool IsActive() const noexcept { return m_isActive; }
+
+    void ActivateSpectrum() noexcept { m_usingSpectrumColors = true; }
+    void DeactivateSpectrum() noexcept { m_usingSpectrumColors = false; }
 
     void Start();
     void Restart();
@@ -72,6 +75,13 @@ private:
     void OnFinish();
     void CollectSorter();
 
+    void DrawBars(const sf::FloatRect &rect);
+    void DrawCircles(const sf::FloatRect &rect);
+    void DrawHoops(const sf::FloatRect &rect);
+
+    // Used as a wrapper to check if drawing in spectrum mode or not
+    sf::Color GetElementColor(size_t index);
+
 protected:
     std::vector<Element> m_elements;
     std::vector<Element> m_elementsRestart;
@@ -84,4 +94,5 @@ protected:
 
     sf::Text m_name;
     VisType m_visType;
+    bool m_usingSpectrumColors;
 };

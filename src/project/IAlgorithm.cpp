@@ -16,105 +16,18 @@ void IAlgorithm::Draw(const sf::FloatRect &rect)
     {
     case VisType::Bars:
     {
-        sf::RectangleShape shape;
-        sf::Vector2f size(rect.width / m_elements.size(), 0.0f);
-        sf::Vector2f positionOffset(rect.left, rect.top);
-        if (size.x > 2.0f && size.y > 2.0f)
-        {
-            shape.setOutlineThickness(1);
-            shape.setOutlineColor(sf::Color(150, 150, 150));
-        }
-        float heightMult = rect.height / m_elements.size();
-        for (size_t i = 0; i < m_elements.size(); i++)
-        {
-            size.y = m_elements[i].value * heightMult;
-            shape.setFillColor(m_elements[i].color);
-            shape.setPosition(positionOffset.x + size.x * static_cast<float>(i), positionOffset.y + rect.height - size.y);
-            shape.setSize(size);
-            Camera::Draw(shape);
-        }
+        DrawBars(rect);
         break;
     }
     case VisType::Circles:
     {
-        sf::VertexArray vertexArray(sf::TriangleFan, 1 + 2 * m_elements.size());
-        float maxRadius = static_cast<float>(std::min(rect.width / 2, rect.height / 2));
-        float maxValue = m_elements.size();
-        float angleDelta = 2.0f * PI<> / m_elements.size();
-        float heightMult = maxRadius / m_elements.size();
-        sf::Vector2f rectMid = Lib::Mid(rect);
-
-        vertexArray[0] = sf::Vertex(rectMid, sf::Color(255, 255, 255));
-        for (size_t i = 0; i < m_elements.size() * 2; i += 2)
-        {
-            sf::Vector2f line0 = vl::Rotate(sf::Vector2f(0.0f, -m_elements[i / 2].value * heightMult) + rectMid, angleDelta * static_cast<float>(i), rectMid);
-            sf::Vector2f line1 = vl::Rotate(sf::Vector2f(0.0f, -m_elements[i / 2].value * heightMult) + rectMid, angleDelta * static_cast<float>(i + 1), rectMid);
-            vertexArray[i + 1] = sf::Vertex(line0, m_elements[i / 2].color);
-            vertexArray[i + 2] = sf::Vertex(line1, m_elements[i / 2].color);
-        }
-        Camera::Draw(vertexArray);
+        DrawCircles(rect);
         break;
     }
-    case VisType::Spectrum:
+    case VisType::Hoops:
     {
-        sf::VertexArray vertexArray(sf::Quads, 4 * m_elements.size());
-        sf::Vector2f size(rect.width / m_elements.size(), rect.height / 4.0f);
-        sf::Vector2f positionOffset(rect.left, rect.top + rect.height / 3.0f);
-        sf::FloatRect frect(positionOffset, size);
-
-        auto MapColor = [](long value, long maxValue) {
-            float a = ((float)value / (float)maxValue) / 0.2f;
-            sf::Int8 X = std::floor(a);
-            sf::Int8 Y = std::floor(255 * (a - X));
-            sf::Int8 r = 0, g = 0, b = 0;
-            switch (X)
-            {
-            case 0:
-                r = 255;
-                g = Y;
-                b = 0;
-                break;
-            case 1:
-                r = 255 - Y;
-                g = 255;
-                b = 0;
-                break;
-            case 2:
-                r = 0;
-                g = 255;
-                b = Y;
-                break;
-            case 3:
-                r = 0;
-                g = 255 - Y;
-                b = 255;
-                break;
-            case 4:
-                r = Y;
-                g = 0;
-                b = 255;
-                break;
-            case 5:
-                r = 255;
-                g = 0;
-                b = 255;
-                break;
-            default:
-                break;
-            }
-            return sf::Color(r, g, b);
-        };
-
-        for (size_t i = 0; i < m_elements.size() * 4; i += 4)
-        {
-            sf::Color color = MapColor(m_elements[i / 4].value, m_elements.size());
-            vertexArray[i + 0] = sf::Vertex(sf::Vector2f(frect.left, frect.top), color);
-            vertexArray[i + 1] = sf::Vertex(sf::Vector2f(frect.left + frect.width, frect.top), color);
-            vertexArray[i + 2] = sf::Vertex(sf::Vector2f(frect.left + frect.width, frect.top + frect.height), color);
-            vertexArray[i + 3] = sf::Vertex(sf::Vector2f(frect.left, frect.top + frect.height), color);
-            frect.left += size.x;
-        }
-        Camera::Draw(vertexArray);
+        DrawHoops(rect);
+        break;
     }
     default:
         break;
@@ -276,4 +189,75 @@ void IAlgorithm::CollectSorter()
     if (m_sorter.joinable())
         m_sorter.join();
     m_state = tmpState;
+}
+
+void IAlgorithm::DrawBars(const sf::FloatRect &rect)
+{
+    sf::RectangleShape shape;
+    sf::Vector2f size(rect.width / m_elements.size(), 0.0f);
+    sf::Vector2f positionOffset(rect.left, rect.top);
+    if (size.x > 2.0f && size.y > 2.0f)
+    {
+        shape.setOutlineThickness(1);
+        shape.setOutlineColor(sf::Color(150, 150, 150));
+    }
+    float heightMult = rect.height / m_elements.size();
+
+    bool spectrumColorsForThisLoop = m_usingSpectrumColors;
+
+    for (size_t i = 0; i < m_elements.size(); i++)
+    {
+        size.y = m_elements[i].value * heightMult;
+        shape.setFillColor(GetElementColor(i));
+        shape.setPosition(positionOffset.x + size.x * static_cast<float>(i), positionOffset.y + rect.height - size.y);
+        shape.setSize(size);
+        Camera::Draw(shape);
+    }
+}
+
+void IAlgorithm::DrawCircles(const sf::FloatRect &rect)
+{
+    sf::VertexArray vertexArray(sf::TriangleFan, 1 + 2 * m_elements.size());
+    float maxRadius = static_cast<float>(std::min(rect.width / 2, rect.height / 2));
+    float maxValue = m_elements.size();
+    float angleDelta = 2.0f * PI<> / (m_elements.size() * 2.0f);
+    float heightMult = maxRadius / m_elements.size();
+    sf::Vector2f rectMid = Lib::Mid(rect);
+
+    vertexArray[0] = sf::Vertex(rectMid, sf::Color(255, 255, 255));
+    for (size_t i = 0; i < m_elements.size() * 2; i += 2)
+    {
+        sf::Vector2f line0 = vl::Rotate(sf::Vector2f(0.0f, -m_elements[i / 2].value * heightMult) + rectMid, angleDelta * static_cast<float>(i), rectMid);
+        sf::Vector2f line1 = vl::Rotate(sf::Vector2f(0.0f, -m_elements[i / 2].value * heightMult) + rectMid, angleDelta * static_cast<float>(i + 1), rectMid);
+        vertexArray[i + 1] = sf::Vertex(line0, GetElementColor(i / 2));
+        vertexArray[i + 2] = sf::Vertex(line1, GetElementColor(i / 2));
+    }
+    Camera::Draw(vertexArray);
+}
+
+void IAlgorithm::DrawHoops(const sf::FloatRect &rect)
+{
+    sf::CircleShape circle;
+    circle.setFillColor(sf::Color(0.0f, 0.0f, 0.0f, 0.0f));
+    circle.setOutlineThickness(1);
+    float radiusMult = rect.height / m_elements.size() / 3.0f;
+    sf::Vector2f rectMid = Lib::Mid(rect);
+    for (size_t i = 0; i < m_elements.size(); i++)
+    {
+        float radius = m_elements[i].value * radiusMult;
+        sf::Color color = GetElementColor(i);
+        color.a = 50;
+        circle.setRadius(radius);
+        circle.setOutlineColor(color);
+        circle.setPosition(rectMid.x - radius, rect.top + radiusMult * static_cast<float>(i));
+        Camera::Draw(circle);
+    }
+}
+
+sf::Color IAlgorithm::GetElementColor(size_t index)
+{
+    if (m_usingSpectrumColors)
+        Lib::ValueToSpectrum(m_elements[index].value, (long)m_elements.size());
+    else
+        return m_elements[index].color;
 }

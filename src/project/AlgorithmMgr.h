@@ -14,7 +14,7 @@
 #include "MergeSort.h"
 #include "HeapSort.h"
 #include "QuickSort.h"
-#include "ShittySort.h"
+#include "GnomeSort.h"
 #include "RadixSort.h"
 // ----------------------
 
@@ -32,6 +32,9 @@ public:
 
     void Activate(const std::string &name);
     void Deactivate(const std::string &name);
+
+    void ActivateSpectrum() noexcept;
+    void DeactivateSpectrum() noexcept;
 
     void Start();
     void Restart();

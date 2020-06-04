@@ -1,7 +1,10 @@
 #pragma once
 
+#include <cmath>
+
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Color.hpp>
 
 #define GET_VARIABLE_NAME(Variable) (#Variable)
 
@@ -64,4 +67,29 @@ public:
     {
         return (T)180 / degress;
     }
+
+    template <typename T>
+    static sf::Color ValueToSpectrum(T value, T maxValue)
+    {
+        double a = ((double)value / (double)maxValue) / 0.2f;
+        sf::Uint8 X = std::floor(a);
+        sf::Uint8 Y = std::floor(255 * (a - X));
+        switch (X)
+        {
+        case 0:
+            return sf::Color(255, Y, 0);
+        case 1:
+            return sf::Color(255 - Y, 255, 0);
+        case 2:
+            return sf::Color(0, 255, Y);
+        case 3:
+            return sf::Color(0, 255 - Y, 255);
+        case 4:
+            return sf::Color(Y, 0, 255);
+        case 5:
+            return sf::Color(255, 0, 255);
+        default:
+            break;
+        }
+    };
 };

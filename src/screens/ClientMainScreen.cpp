@@ -95,11 +95,36 @@ void ClientMainScreen::OnEntry()
     auto sleepDelayScalebox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
     sleepDelayScalebox->Pack(sleepDelayLabel, false, false);
     sleepDelayScalebox->Pack(sleepDelayScale, false, false);
+    sleepDelayScalebox->SetRequisition(sf::Vector2f(150.0f, 0.0f));
 
-    // -------------- PACK ALL SCALES INTO ONE BOX ------------------
+    auto sleepDelayCheck = sfg::CheckButton::Create("");
+    sleepDelayCheck->SetActive(true);
+    sleepDelayCheck->GetSignal(sfg::ToggleButton::OnToggle).Connect([sleepDelayCheck, sleepDelayLabel, sleepDelayAdjustment, sleepDelayScale, this] {
+        if (sleepDelayCheck->IsActive())
+        {
+            sleepDelayScale->SetState(sfg::Widget::State::NORMAL);
+            auto valMul = std::pow(sleepDelayAdjustment->GetValue(), 1.5f);
+            std::ostringstream oss;
+            oss << std::fixed << std::setprecision(0) << "Sleep delay " << valMul << " us";
+            sleepDelayLabel->SetText(oss.str());
+            m_algorithmMgr.SetSleepDelay(sf::microseconds(valMul));
+        }
+        else
+        {
+            sleepDelayScale->SetState(sfg::Widget::State::INSENSITIVE);
+            sleepDelayLabel->SetText("Sleep delay deactivated");
+            m_algorithmMgr.SetSleepDelay(sf::microseconds(0));
+        }
+    });
+
+    auto sleepDelaySettingsBox = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 5.0f);
+    sleepDelaySettingsBox->Pack(sleepDelayCheck, false);
+    sleepDelaySettingsBox->Pack(sleepDelayScalebox, false);
+
+    // -------------- PACK SCALES INTO ONE BOX ------------------
     auto scaleBoxes = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 10.0f);
     scaleBoxes->Pack(elementsScalebox);
-    scaleBoxes->Pack(sleepDelayScalebox);
+    scaleBoxes->Pack(sleepDelaySettingsBox);
 
     // -------------- ALL CHECK BOXES ------------------
     std::vector<sfg::CheckButton::Ptr> checkButtons;
@@ -116,11 +141,11 @@ void ClientMainScreen::OnEntry()
         checkButtonsBox->Pack(checkButton);
     }
 
-    // -------------- COMBO BOX --------------------
+    // -------------- COMBO BOX AND SPECTRUM CHECK --------------------
     auto visStyleComboBox = sfg::ComboBox::Create();
     visStyleComboBox->AppendItem("Bars");
     visStyleComboBox->AppendItem("Circles");
-    visStyleComboBox->AppendItem("Spectrum");
+    visStyleComboBox->AppendItem("Hoops");
     visStyleComboBox->SelectItem(0);
 
     visStyleComboBox->GetSignal(sfg::ComboBox::OnSelect).Connect([visStyleComboBox, this] {
@@ -133,12 +158,22 @@ void ClientMainScreen::OnEntry()
             m_algorithmMgr.SetVisType(IAlgorithm::VisType::Circles);
             break;
         case 2:
-            m_algorithmMgr.SetVisType(IAlgorithm::VisType::Spectrum);
+            m_algorithmMgr.SetVisType(IAlgorithm::VisType::Hoops);
             break;
         default:
             break;
         }
     });
+
+    auto visStyleSpectrumCheck = sfg::CheckButton::Create("Spectrum");
+    visStyleSpectrumCheck->SetActive(false);
+    visStyleSpectrumCheck->GetSignal(sfg::ToggleButton::OnToggle).Connect([visStyleSpectrumCheck, this] {
+        visStyleSpectrumCheck->IsActive() ? m_algorithmMgr.ActivateSpectrum() : m_algorithmMgr.DeactivateSpectrum();
+    });
+
+    auto visStyleSettingsBox = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 4.0f);
+    visStyleSettingsBox->Pack(visStyleComboBox);
+    visStyleSettingsBox->Pack(visStyleSpectrumCheck);
 
     // -------------- ALL BUTTONS ------------------
     auto startButton = sfg::Button::Create("Start");
@@ -150,22 +185,16 @@ void ClientMainScreen::OnEntry()
 
     startButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, this] {
         m_algorithmMgr.Start();
-        for (auto &child : checkButtonsBox->GetChildren())
-            child->SetState(sfg::Widget::State::INSENSITIVE);
         elementsScale->SetState(sfg::Widget::State::INSENSITIVE);
     });
 
     restartButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, this] {
         m_algorithmMgr.Restart();
-        for (auto &child : checkButtonsBox->GetChildren())
-            child->SetState(sfg::Widget::State::NORMAL);
         elementsScale->SetState(sfg::Widget::State::NORMAL);
     });
 
     resetButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, this] {
         m_algorithmMgr.Reset();
-        for (auto &child : checkButtonsBox->GetChildren())
-            child->SetState(sfg::Widget::State::NORMAL);
         elementsScale->SetState(sfg::Widget::State::NORMAL);
     });
 
@@ -175,8 +204,6 @@ void ClientMainScreen::OnEntry()
 
     shuffleButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, this] {
         m_algorithmMgr.Shuffle();
-        for (auto &child : checkButtonsBox->GetChildren())
-            child->SetState(sfg::Widget::State::NORMAL);
         elementsScale->SetState(sfg::Widget::State::NORMAL);
     });
 
@@ -199,7 +226,7 @@ void ClientMainScreen::OnEntry()
     // --------------- SUB BOXES ----------------------
     auto visStyleBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 4.0f);
     visStyleBox->Pack(visStyleLabel);
-    visStyleBox->Pack(visStyleComboBox);
+    visStyleBox->Pack(visStyleSettingsBox);
 
     auto visAlgBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 4.0f);
     visAlgBox->Pack(visAlgLabel);

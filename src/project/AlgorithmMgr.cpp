@@ -9,7 +9,7 @@ AlgorithmMgr::AlgorithmMgr()
     Add(new MergeSort());
     Add(new HeapSort());
     Add(new QuickSort());
-    Add(new ShittySort());
+    Add(new GnomeSort());
     Add(new RadixSort());
 
     GenerateDrawContainers();
@@ -69,6 +69,18 @@ void AlgorithmMgr::Deactivate(const std::string &name)
             break;
         }
     }
+}
+
+void AlgorithmMgr::ActivateSpectrum() noexcept
+{
+    for (auto &algorithm : m_algorithms)
+        algorithm->ActivateSpectrum();
+}
+
+void AlgorithmMgr::DeactivateSpectrum() noexcept
+{
+    for (auto &algorithm : m_algorithms)
+        algorithm->DeactivateSpectrum();
 }
 
 void AlgorithmMgr::Start()

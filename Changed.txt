@@ -9,3 +9,4 @@
 - Add DrawPoint to window and camera
 - Add PI to Lib
 - Add default template to vl::Null<>()
+- Add ValueToSpectrum in Lib
