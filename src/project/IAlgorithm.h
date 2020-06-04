@@ -22,7 +22,8 @@ public:
     enum class VisType
     {
         Bars,
-        Circles
+        Circles,
+        Spectrum
     };
 
     enum class State

@@ -53,8 +53,68 @@ void IAlgorithm::Draw(const sf::FloatRect &rect)
             vertexArray[i + 2] = sf::Vertex(line1, m_elements[i / 2].color);
         }
         Camera::Draw(vertexArray);
-        Camera::DrawPoint(rectMid);
         break;
+    }
+    case VisType::Spectrum:
+    {
+        sf::VertexArray vertexArray(sf::Quads, 4 * m_elements.size());
+        sf::Vector2f size(rect.width / m_elements.size(), rect.height / 4.0f);
+        sf::Vector2f positionOffset(rect.left, rect.top + rect.height / 3.0f);
+        sf::FloatRect frect(positionOffset, size);
+
+        auto MapColor = [](long value, long maxValue) {
+            float a = ((float)value / (float)maxValue) / 0.2f;
+            sf::Int8 X = std::floor(a);
+            sf::Int8 Y = std::floor(255 * (a - X));
+            sf::Int8 r = 0, g = 0, b = 0;
+            switch (X)
+            {
+            case 0:
+                r = 255;
+                g = Y;
+                b = 0;
+                break;
+            case 1:
+                r = 255 - Y;
+                g = 255;
+                b = 0;
+                break;
+            case 2:
+                r = 0;
+                g = 255;
+                b = Y;
+                break;
+            case 3:
+                r = 0;
+                g = 255 - Y;
+                b = 255;
+                break;
+            case 4:
+                r = Y;
+                g = 0;
+                b = 255;
+                break;
+            case 5:
+                r = 255;
+                g = 0;
+                b = 255;
+                break;
+            default:
+                break;
+            }
+            return sf::Color(r, g, b);
+        };
+
+        for (size_t i = 0; i < m_elements.size() * 4; i += 4)
+        {
+            sf::Color color = MapColor(m_elements[i / 4].value, m_elements.size());
+            vertexArray[i + 0] = sf::Vertex(sf::Vector2f(frect.left, frect.top), color);
+            vertexArray[i + 1] = sf::Vertex(sf::Vector2f(frect.left + frect.width, frect.top), color);
+            vertexArray[i + 2] = sf::Vertex(sf::Vector2f(frect.left + frect.width, frect.top + frect.height), color);
+            vertexArray[i + 3] = sf::Vertex(sf::Vector2f(frect.left, frect.top + frect.height), color);
+            frect.left += size.x;
+        }
+        Camera::Draw(vertexArray);
     }
     default:
         break;

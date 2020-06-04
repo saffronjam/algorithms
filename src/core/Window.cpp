@@ -12,7 +12,9 @@ Window::Window(const std::string &title, int width, int height)
     m_videomode = sf::VideoMode(width, height);
     m_style = sf::Style::Resize | sf::Style::Titlebar | sf::Style::Close;
 
-    m_sfWindow = new sf::RenderWindow(m_videomode, title, m_style, sf::ContextSettings());
+    auto contexSettings = sf::ContextSettings(0u, 0u, 8u);
+
+    m_sfWindow = new sf::RenderWindow(m_videomode, title, m_style, contexSettings);
     m_sfWindow->setKeyRepeatEnabled(false);
     m_sfWindow->resetGLStates();
     SetTitle(title);

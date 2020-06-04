@@ -120,6 +120,7 @@ void ClientMainScreen::OnEntry()
     auto visStyleComboBox = sfg::ComboBox::Create();
     visStyleComboBox->AppendItem("Bars");
     visStyleComboBox->AppendItem("Circles");
+    visStyleComboBox->AppendItem("Spectrum");
     visStyleComboBox->SelectItem(0);
 
     visStyleComboBox->GetSignal(sfg::ComboBox::OnSelect).Connect([visStyleComboBox, this] {
@@ -130,6 +131,9 @@ void ClientMainScreen::OnEntry()
             break;
         case 1:
             m_algorithmMgr.SetVisType(IAlgorithm::VisType::Circles);
+            break;
+        case 2:
+            m_algorithmMgr.SetVisType(IAlgorithm::VisType::Spectrum);
             break;
         default:
             break;

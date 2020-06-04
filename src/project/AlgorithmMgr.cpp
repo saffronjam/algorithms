@@ -205,7 +205,7 @@ void AlgorithmMgr::GenerateDrawContainers()
     sf::Vector2f size(container.width / static_cast<float>(nWidth), container.height / static_cast<float>(nWidth));
     sf::Vector2f padding(15.0f, 40.0f);
     sf::Vector2f divide(container.width / nWidth, container.height / nHeight);
-    for (int y, nBoxes = 0; y < nHeight && nBoxes < nActiveContainers; y++)
+    for (int y = 0, nBoxes = 0; y < nHeight && nBoxes < nActiveContainers; y++)
     {
         float extraOffsetY = 0.0f;
         if (y == 0)
