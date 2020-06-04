@@ -5,6 +5,7 @@ IAlgorithm::IAlgorithm()
       m_sleepDelay(sf::seconds(0.01f)),
       m_state(State::WaitingForStart),
       m_isActive(true),
+      m_minorDelay(false),
       m_visType(VisType::Bars)
 {
     m_name.setFont(*FontMgr::Get("res/arial.ttf"));
@@ -121,51 +122,33 @@ void IAlgorithm::Shuffle(std::mt19937 generator)
     m_elements = m_elementsRestart;
 }
 
+void IAlgorithm::SetSleepDelay(sf::Time delay) noexcept
+{
+    m_sleepDelay = delay;
+    m_minorDelay = (m_sleepDelay.asMicroseconds() < 1000);
+}
+
 void IAlgorithm::PauseCheck()
 {
     while (m_state == State::Paused && m_state != State::BeingCollected)
         sf::sleep(sf::seconds(0.01f));
 }
 
-std::chrono::nanoseconds calc_overhead()
-{
-    using namespace std::chrono;
-    constexpr size_t tests = 1001;
-    constexpr auto timer = 200us;
-
-    auto init = [&timer]() {
-        auto end = steady_clock::now() + timer;
-        while (steady_clock::now() < end)
-            ;
-    };
-
-    time_point<steady_clock> start;
-    nanoseconds dur[tests];
-
-    for (auto &d : dur)
-    {
-        start = steady_clock::now();
-        init();
-        d = steady_clock::now() - start - timer;
-    }
-    std::sort(std::begin(dur), std::end(dur));
-    // get the median value or something a little less as in this example:
-    return dur[tests / 3];
-}
-
-// initialize the overhead constant that will be used in busy_sleep()
-static const std::chrono::nanoseconds overhead = calc_overhead();
-
-inline void busy_sleep(std::chrono::nanoseconds t)
-{
-    auto end = std::chrono::steady_clock::now() + t - overhead;
-    while (std::chrono::steady_clock::now() < end)
-        ;
-}
-
 void IAlgorithm::SleepDelay()
 {
-    std::this_thread::sleep_for(std::chrono::microseconds(m_sleepDelay.asMicroseconds()));
+    if (!m_minorDelay)
+    {
+        std::this_thread::sleep_for(std::chrono::microseconds(m_sleepDelay.asMicroseconds()));
+    }
+    else
+    {
+        m_minorDelayTimer += m_sleepDelay.asMicroseconds();
+        while (m_minorDelayTimer > 1000)
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(1000));
+            m_minorDelayTimer -= 1000;
+        }
+    }
 }
 
 void IAlgorithm::SortThreadFn()

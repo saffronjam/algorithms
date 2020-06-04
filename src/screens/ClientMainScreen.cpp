@@ -68,22 +68,22 @@ void ClientMainScreen::OnEntry()
 
     auto sleepDelayAdjustment = sleepDelayScale->GetAdjustment();
 
-    sleepDelayAdjustment->SetLower(100.0f);
-    sleepDelayAdjustment->SetUpper(1357.21f);
-    sleepDelayAdjustment->SetValue(464.159f);
+    sleepDelayAdjustment->SetLower(0.0f);
+    sleepDelayAdjustment->SetUpper(26.826957952797f);
+    sleepDelayAdjustment->SetValue(13.894954943731f);
 
-    sleepDelayAdjustment->SetMinorStep(1.0f);
-    sleepDelayAdjustment->SetMajorStep(5.0f);
+    sleepDelayAdjustment->SetMinorStep(0.1f);
+    sleepDelayAdjustment->SetMajorStep(0.3f);
 
     sleepDelayAdjustment->GetSignal(sfg::Adjustment::OnChange).Connect([sleepDelayAdjustment, sleepDelayLabel, this] {
-        auto valMul = std::pow(sleepDelayAdjustment->GetValue(), 1.5f);
+        auto valMul = std::pow(sleepDelayAdjustment->GetValue(), 3.5f);
         std::ostringstream oss;
         oss << std::fixed << std::setprecision(0) << "Sleep delay " << valMul << " us";
         sleepDelayLabel->SetText(oss.str());
         m_algorithmMgr.SetSleepDelay(sf::microseconds(valMul));
     });
     {
-        auto valMul = std::pow(sleepDelayAdjustment->GetValue(), 1.5f);
+        auto valMul = std::pow(sleepDelayAdjustment->GetValue(), 3.5f);
         std::ostringstream oss;
         oss << std::fixed << std::setprecision(0) << "Sleep delay " << valMul << " us";
         sleepDelayLabel->SetText(oss.str());

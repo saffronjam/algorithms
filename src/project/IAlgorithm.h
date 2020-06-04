@@ -60,7 +60,7 @@ public:
     void Shuffle(std::mt19937 generator);
 
     virtual std::string GetName() = 0;
-    void SetSleepDelay(sf::Time delay) noexcept { m_sleepDelay = delay; }
+    void SetSleepDelay(sf::Time delay) noexcept;
     void SetVisType(VisType visType) noexcept { m_visType = visType; }
 
 protected:
@@ -89,6 +89,9 @@ protected:
     std::thread m_sorter;
 
     sf::Time m_sleepDelay;
+    bool m_minorDelay;
+    sf::Int64 m_minorDelayTimer;
+
     State m_state;
     bool m_isActive;
 
