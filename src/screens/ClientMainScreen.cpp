@@ -78,14 +78,14 @@ void ClientMainScreen::OnEntry()
     sleepDelayAdjustment->GetSignal(sfg::Adjustment::OnChange).Connect([sleepDelayAdjustment, sleepDelayLabel, this] {
         auto valMul = std::pow(sleepDelayAdjustment->GetValue(), 3.5f);
         std::ostringstream oss;
-        oss << std::fixed << std::setprecision(0) << "Sleep delay " << valMul << " us";
+        oss << std::fixed << std::setprecision(0) << "Sleep delay: " << valMul << " us";
         sleepDelayLabel->SetText(oss.str());
         m_algorithmMgr.SetSleepDelay(sf::microseconds(valMul));
     });
     {
         auto valMul = std::pow(sleepDelayAdjustment->GetValue(), 3.5f);
         std::ostringstream oss;
-        oss << std::fixed << std::setprecision(0) << "Sleep delay " << valMul << " us";
+        oss << std::fixed << std::setprecision(0) << "Sleep delay: " << valMul << " us";
         sleepDelayLabel->SetText(oss.str());
         m_algorithmMgr.SetSleepDelay(sf::microseconds(valMul));
     }
