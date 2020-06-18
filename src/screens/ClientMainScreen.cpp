@@ -141,15 +141,28 @@ void ClientMainScreen::OnEntry()
         checkButtonsBox->Pack(checkButton);
     }
 
-    // -------------- COMBO BOX AND SPECTRUM CHECK --------------------
+    // -------------- VISSTYLE SELECT BOX AND SPECTRUM CHECK --------------------
     auto visStyleComboBox = sfg::ComboBox::Create();
     visStyleComboBox->AppendItem("Bars");
     visStyleComboBox->AppendItem("Circles");
     visStyleComboBox->AppendItem("Hoops");
+    visStyleComboBox->AppendItem("Line");
+    visStyleComboBox->AppendItem("Scatter Plot");
+    visStyleComboBox->AppendItem("Image");
     visStyleComboBox->SelectItem(0);
 
-    visStyleComboBox->GetSignal(sfg::ComboBox::OnSelect).Connect([visStyleComboBox, this] {
-        switch (visStyleComboBox->GetSelectedItem())
+    visStyleComboBox->GetSignal(sfg::ComboBox::OnSelect).Connect([visStyleComboBox, elementsScale, this] {
+        const auto selectedItem = visStyleComboBox->GetSelectedItem();
+        if (m_algorithmMgr.GetVisType() == IAlgorithm::VisType::Image && selectedItem != 5)
+        {
+            elementsScale->SetState(sfg::Widget::State::NORMAL);
+        }
+        else if (selectedItem == 5)
+        {
+            elementsScale->SetState(sfg::Widget::State::INSENSITIVE);
+        }
+
+        switch (selectedItem)
         {
         case 0:
             m_algorithmMgr.SetVisType(IAlgorithm::VisType::Bars);
@@ -159,6 +172,15 @@ void ClientMainScreen::OnEntry()
             break;
         case 2:
             m_algorithmMgr.SetVisType(IAlgorithm::VisType::Hoops);
+            break;
+        case 3:
+            m_algorithmMgr.SetVisType(IAlgorithm::VisType::Line);
+            break;
+        case 4:
+            m_algorithmMgr.SetVisType(IAlgorithm::VisType::ScatterPlot);
+            break;
+        case 5:
+            m_algorithmMgr.SetVisType(IAlgorithm::VisType::Image);
             break;
         default:
             break;
@@ -183,28 +205,32 @@ void ClientMainScreen::OnEntry()
     auto resumeButton = sfg::Button::Create("Resume");
     auto shuffleButton = sfg::Button::Create("Shuffle");
 
-    startButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, this] {
+    startButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, visStyleComboBox, this] {
         m_algorithmMgr.Start();
-        elementsScale->SetState(sfg::Widget::State::INSENSITIVE);
+        if (visStyleComboBox->GetSelectedItem() != 5)
+            elementsScale->SetState(sfg::Widget::State::INSENSITIVE);
     });
 
-    restartButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, this] {
+    restartButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, visStyleComboBox, this] {
         m_algorithmMgr.Restart();
-        elementsScale->SetState(sfg::Widget::State::NORMAL);
+        if (visStyleComboBox->GetSelectedItem() != 5)
+            elementsScale->SetState(sfg::Widget::State::NORMAL);
     });
 
-    resetButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, this] {
+    resetButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, visStyleComboBox, this] {
         m_algorithmMgr.Reset();
-        elementsScale->SetState(sfg::Widget::State::NORMAL);
+        if (visStyleComboBox->GetSelectedItem() != 5)
+            elementsScale->SetState(sfg::Widget::State::NORMAL);
     });
 
     pauseButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { m_algorithmMgr.Pause(); });
 
     resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { m_algorithmMgr.Resume(); });
 
-    shuffleButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, this] {
+    shuffleButton->GetSignal(sfg::Widget::OnLeftClick).Connect([checkButtonsBox, elementsScale, visStyleComboBox, this] {
         m_algorithmMgr.Shuffle();
-        elementsScale->SetState(sfg::Widget::State::NORMAL);
+        if (visStyleComboBox->GetSelectedItem() != 5)
+            elementsScale->SetState(sfg::Widget::State::NORMAL);
     });
 
     auto buttonsBoxRow0 = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 3.0f);

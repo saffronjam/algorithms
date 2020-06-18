@@ -2,7 +2,7 @@
 
 void MergeSort::Sort()
 {
-    Split(0, m_elements.size() - 1);
+    Split(0, GetContainer().size() - 1);
 }
 
 void MergeSort::Split(size_t iStart, size_t iEnd)
@@ -18,7 +18,7 @@ void MergeSort::Split(size_t iStart, size_t iEnd)
 
 void MergeSort::Merge(size_t iLeftStart, size_t iLeftEnd, size_t iRightStart, size_t iRightEnd)
 {
-    std::vector<Element> sorted;
+    std::vector<long> sorted;
 
     size_t iCurrLeft = iLeftStart;
     size_t iCurrRight = iRightStart;
@@ -27,28 +27,28 @@ void MergeSort::Merge(size_t iLeftStart, size_t iLeftEnd, size_t iRightStart, si
     {
         PauseCheck();
         if (iCurrLeft != iLeftEnd + 1)
-            m_elements[iCurrLeft].color = sf::Color::Red;
+            SetColor(iCurrLeft, sf::Color::Red);
         if (iCurrRight != iRightEnd + 1)
-            m_elements[iCurrRight].color = sf::Color::Red;
+            SetColor(iCurrRight, sf::Color::Red);
 
         if (iCurrLeft == iLeftEnd + 1)
         {
-            sorted.push_back(m_elements[iCurrRight]);
+            sorted.push_back(GetValue(iCurrRight));
             iCurrRight++;
         }
         else if (iCurrRight == iRightEnd + 1)
         {
-            sorted.push_back(m_elements[iCurrLeft]);
+            sorted.push_back(GetValue(iCurrLeft));
             iCurrLeft++;
         }
-        else if (m_elements[iCurrLeft].value <= m_elements[iCurrRight].value)
+        else if (GetValue(iCurrLeft) <= GetValue(iCurrRight))
         {
-            sorted.push_back(m_elements[iCurrLeft]);
+            sorted.push_back(GetValue(iCurrLeft));
             iCurrLeft++;
         }
-        else if (m_elements[iCurrLeft].value > m_elements[iCurrRight].value)
+        else if (GetValue(iCurrLeft) > GetValue(iCurrRight))
         {
-            sorted.push_back(m_elements[iCurrRight]);
+            sorted.push_back(GetValue(iCurrRight));
             iCurrRight++;
         }
         SleepDelay();
@@ -57,7 +57,7 @@ void MergeSort::Merge(size_t iLeftStart, size_t iLeftEnd, size_t iRightStart, si
     for (size_t i = 0; iLeftStart + i != iRightEnd + 1 && m_state != State::BeingCollected; i++)
     {
         PauseCheck();
-        m_elements[iLeftStart + i] = sorted[i];
-        m_elements[iLeftStart + i].color = sf::Color::White;
+        SetValue(iLeftStart + i, sorted[i]);
+        SetColor(iLeftStart + i, sf::Color::White);
     }
 }

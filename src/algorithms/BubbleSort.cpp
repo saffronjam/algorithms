@@ -3,23 +3,23 @@
 void BubbleSort::Sort()
 {
     m_state = State::Sorting;
-    for (size_t i = 0; i < m_elements.size() && m_state != State::BeingCollected; i++)
+    for (size_t i = 0; i < GetContainer().size() && m_state != State::BeingCollected; i++)
     {
-        for (size_t j = 0; j < m_elements.size() - i - 1 && m_state != State::BeingCollected; j++)
+        for (size_t j = 0; j < GetContainer().size() - i - 1 && m_state != State::BeingCollected; j++)
         {
             PauseCheck();
-            m_elements[j].color = sf::Color::Red;
-            m_elements[j + 1].color = sf::Color::Red;
+            SetColor(j, sf::Color::Red);
+            SetColor(j + 1, sf::Color::Red);
 
-            if (m_elements[j].value > m_elements[j + 1].value)
+            if (GetValue(j) > GetValue(j + 1))
             {
-                std::swap(m_elements[j], m_elements[j + 1]);
+                SwapElements(j, j + 1);
             }
             SleepDelay();
 
-            m_elements[j].color = sf::Color::White;
-            m_elements[j + 1].color = sf::Color::White;
+            SetColor(j, sf::Color::White);
+            SetColor(j + 1, sf::Color::White);
         }
-        m_elements[m_elements.size() - i - 1].color = sf::Color::Green;
+        SetColor(GetContainer().size() - i - 1, sf::Color::Green);
     }
 }

@@ -143,6 +143,7 @@ void AlgorithmMgr::SetVisType(IAlgorithm::VisType visType)
 {
     for (auto &algorithm : m_algorithms)
         algorithm->SetVisType(visType);
+    m_visType = visType;
 }
 
 void AlgorithmMgr::GenerateDrawContainers()

@@ -9,4 +9,5 @@ struct Element
         : value(value), color(color) {}
     long value = 0;
     sf::Color color = sf::Color::White;
+    sf::Color pixel = sf::Color::White;
 };

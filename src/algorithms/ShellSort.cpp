@@ -2,27 +2,27 @@
 
 void ShellSort::Sort()
 {
-    for (size_t gap = m_elements.size() / 2; gap > 0 && m_state != State::BeingCollected; gap /= 2)
+    for (size_t gap = GetContainer().size() / 2; gap > 0 && m_state != State::BeingCollected; gap /= 2)
     {
-        for (size_t i = gap; i < m_elements.size() && m_state != State::BeingCollected; i++)
+        for (size_t i = gap; i < GetContainer().size() && m_state != State::BeingCollected; i++)
         {
             PauseCheck();
-            m_elements[i].color = sf::Color::Red;
-            Element tmp = m_elements[i];
+            SetColor(i, sf::Color::Red);
+            const Element tmp = GetElement(i);
             size_t j;
-            for (j = i; j >= gap && m_elements[j - gap].value > tmp.value && m_state != State::BeingCollected; j -= gap)
+            for (j = i; j >= gap && GetValue(j - gap) > tmp.value && m_state != State::BeingCollected; j -= gap)
             {
-                m_elements[j].color = sf::Color::Red;
-                m_elements[j - gap].color = sf::Color::Red;
-                m_elements[j] = m_elements[j - gap];
+                SetColor(j, sf::Color::Red);
+                SetColor(j - gap, sf::Color::Red);
+                SetValue(j, GetValue(j - gap));
                 SleepDelay();
-                m_elements[j].color = sf::Color::White;
-                m_elements[j - gap].color = sf::Color::White;
+                SetColor(j, sf::Color::White);
+                SetColor(j - gap, sf::Color::White);
             }
             SleepDelay();
-            m_elements[j] = tmp;
-            m_elements[i].color = sf::Color::White;
-            m_elements[j].color = sf::Color::White;
+            SetValue(j, tmp.value);
+            SetColor(i, sf::Color::White);
+            SetColor(j, sf::Color::White);
         }
     }
 }

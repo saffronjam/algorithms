@@ -2,34 +2,34 @@
 
 void QuickSort::Sort()
 {
-    Quick(0, m_elements.size() - 1);
+    Quick(0, GetContainer().size() - 1lu);
 }
 
 long QuickSort::Partition(long start, long end)
 {
-    Element *pivot = &m_elements[end];
+    Element *pivot = &GetElement(end);
     long iS = start - 1;
 
-    for (long i = (long)start; i <= end - 1 && m_state != State::BeingCollected; i++)
+    for (long i = static_cast<long>(start); i <= end - 1 && m_state != State::BeingCollected; i++)
     {
-        m_elements[i].color = sf::Color::Blue;
+        SetColor(i, sf::Color::Blue);
     }
-    for (long i = (long)start; i <= end - 1 && m_state != State::BeingCollected; i++)
+    for (long i = static_cast<long>(start); i <= end - 1 && m_state != State::BeingCollected; i++)
     {
         PauseCheck();
-        m_elements[i].color = sf::Color::Red;
+        SetColor(i, sf::Color::Red);
         SleepDelay();
-        if (m_elements[i].value < pivot->value)
+        if (GetValue(i) < pivot->value)
         {
             iS++;
-            std::swap(m_elements[iS], m_elements[i]);
+            SwapElements(iS, i);
         }
     }
-    for (long i = (long)start; i <= end - 1 && m_state != State::BeingCollected; i++)
+    for (long i = static_cast<long>(start); i <= end - 1 && m_state != State::BeingCollected; i++)
     {
-        m_elements[i].color = sf::Color::White;
+        SetColor(i, sf::Color::White);
     }
-    std::swap(m_elements[iS + 1], m_elements[end]);
+    SwapElements(iS + 1, end);
     return (iS + 1);
 }
 

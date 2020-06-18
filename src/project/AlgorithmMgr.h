@@ -46,6 +46,8 @@ public:
     void PopPushUntil(size_t size);
     void Shuffle();
 
+    IAlgorithm::VisType GetVisType() const noexcept { return m_visType; }
+
     void SetSleepDelay(sf::Time seconds);
     void SetVisType(IAlgorithm::VisType visType);
 
@@ -59,4 +61,7 @@ private:
     std::vector<IAlgorithm *> m_algorithms;
     std::vector<sf::FloatRect> m_drawContainers;
     std::vector<Element> m_currentElements;
+
+    // A cache used for getter
+    IAlgorithm::VisType m_visType;
 };

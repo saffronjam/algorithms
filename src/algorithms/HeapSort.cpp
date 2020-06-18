@@ -2,27 +2,27 @@
 
 void HeapSort::Sort()
 {
-    for (long i = (long)m_elements.size() / 2 - 1; i >= 0 && m_state != State::BeingCollected; i--)
+    for (long i = static_cast<long>(GetContainer().size() / 2 - 1); i >= 0 && m_state != State::BeingCollected; i--)
     {
         PauseCheck();
-        Heapify(m_elements.size(), i);
+        Heapify(GetContainer().size(), i);
     }
 
-    for (long i = (long)m_elements.size() - 1; i >= 0 && m_state != State::BeingCollected; i--)
+    for (long i = static_cast<long>(GetContainer().size() - 1); i >= 0 && m_state != State::BeingCollected; i--)
     {
         PauseCheck();
-        std::swap(m_elements[i], m_elements[0]);
-        m_elements[i].color = sf::Color::Green;
+        SwapElements(i, 0);
+        SetColor(i, sf::Color::Green);
         Heapify(i, 0);
         for (long j = i; j >= 0; j--)
         {
-            m_elements[j].color = sf::Color::White;
+            SetColor(j, sf::Color::White);
         }
-        m_elements[i].color = sf::Color::Green;
+        SetColor(i, sf::Color::Green);
     }
 }
 
-void HeapSort::Heapify(const size_t &maxSizeCheck, const size_t &parent)
+void HeapSort::Heapify(size_t maxSizeCheck, size_t parent)
 {
     size_t largest = parent; //assume parent is largest
     const size_t leftChild = 2 * parent + 1;
@@ -30,8 +30,8 @@ void HeapSort::Heapify(const size_t &maxSizeCheck, const size_t &parent)
 
     if (leftChild < maxSizeCheck && m_state != State::BeingCollected)
     {
-        m_elements[leftChild].color = sf::Color::Red;
-        if (m_elements[leftChild].value > m_elements[largest].value)
+        SetColor(leftChild, sf::Color::Red);
+        if (GetValue(leftChild) > GetValue(largest))
         {
             largest = leftChild;
         }
@@ -40,8 +40,8 @@ void HeapSort::Heapify(const size_t &maxSizeCheck, const size_t &parent)
 
     if (rightChild < maxSizeCheck && m_state != State::BeingCollected)
     {
-        m_elements[rightChild].color = sf::Color::Red;
-        if (m_elements[rightChild].value > m_elements[largest].value)
+        SetColor(rightChild, sf::Color::Red);
+        if (GetValue(rightChild) > GetValue(largest))
         {
             largest = rightChild;
         }
@@ -51,7 +51,7 @@ void HeapSort::Heapify(const size_t &maxSizeCheck, const size_t &parent)
     if (largest != parent && m_state != State::BeingCollected)
     {
         PauseCheck();
-        std::swap(m_elements[parent], m_elements[largest]);
+        SwapElements(parent, largest);
         Heapify(maxSizeCheck, largest);
     }
 }

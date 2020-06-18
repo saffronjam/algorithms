@@ -1,14 +1,21 @@
 #include "IAlgorithm.h"
 
+struct ContainerGroup
+{
+    std::vector<Element> &elements;
+    std::vector<Element> &elementsRestart;
+    std::vector<Element> &elementsReset;
+};
+
 IAlgorithm::IAlgorithm()
-    : m_elements(10000),
-      m_sleepDelay(sf::seconds(0.01f)),
+    : m_sleepDelay(sf::seconds(0.01f)),
       m_state(State::WaitingForStart),
       m_isActive(true),
       m_minorDelay(false),
       m_visType(VisType::Bars)
 {
     m_name.setFont(*FontMgr::Get("res/arial.ttf"));
+    SetImage("res/sample_small.png");
 }
 
 void IAlgorithm::Draw(const sf::FloatRect &rect)
@@ -28,6 +35,21 @@ void IAlgorithm::Draw(const sf::FloatRect &rect)
     case VisType::Hoops:
     {
         DrawHoops(rect);
+        break;
+    }
+    case VisType::Line:
+    {
+        DrawLine(rect);
+        break;
+    }
+    case VisType::ScatterPlot:
+    {
+        DrawScatterPlot(rect);
+        break;
+    }
+    case VisType::Image:
+    {
+        DrawImage(rect);
         break;
     }
     default:
@@ -97,6 +119,7 @@ void IAlgorithm::Resize(size_t size)
     std::generate(m_elements.begin(), m_elements.end(), [&n] {
         return Element(n++);
     });
+
     m_elementsRestart = m_elements;
     m_elementsReset = m_elements;
 }
@@ -107,25 +130,92 @@ void IAlgorithm::PopPushUntil(size_t size)
     while (m_elementsReset.size() != size)
     {
         if (size < m_elementsReset.size())
+        {
             m_elementsReset.pop_back();
+        }
         else if (size > m_elementsReset.size())
+        {
+            const auto pixelCoord = GetPixelCoord(m_elementsReset.size());
             m_elementsReset.push_back(Element(m_elementsReset.size() + 1));
+            m_elementsReset.back().pixel = m_image.getPixel(pixelCoord.x, pixelCoord.y);
+        }
     }
     m_elements = m_elementsReset;
     m_elementsRestart = m_elementsReset;
 }
 
+void IAlgorithm::SetImage(const std::string &filepath)
+{
+    m_image.loadFromFile(filepath);
+    const size_t nPixels = m_image.getSize().x * m_image.getSize().y;
+
+    m_imageElements.clear();
+    m_imageElementsRestart.clear();
+    m_imageElementsReset.clear();
+    m_imageElements.resize(nPixels);
+    m_imageElementsRestart.resize(nPixels);
+    m_imageElementsReset.resize(nPixels);
+
+    long n = 1;
+    std::generate(m_imageElements.begin(), m_imageElements.end(), [&n] {
+        return Element(n++);
+    });
+
+    for (int i = 0; i < m_imageElements.size(); i++)
+    {
+        const auto pixelCoord = GetPixelCoord(i);
+        m_imageElements[i].pixel = m_image.getPixel(pixelCoord.x, pixelCoord.y);
+    }
+
+    m_imageElementsRestart = m_imageElements;
+    m_imageElementsReset = m_imageElements;
+
+    m_imageRenderTexture.create(m_image.getSize().x, m_image.getSize().y);
+}
+
 void IAlgorithm::Shuffle(std::mt19937 generator)
 {
     Reset();
-    std::shuffle(m_elementsRestart.begin(), m_elementsRestart.end(), generator);
-    m_elements = m_elementsRestart;
+    std::shuffle(GetActiveContainerGroup().elementsRestart.begin(), GetActiveContainerGroup().elementsRestart.end(), generator);
+    GetActiveContainerGroup().elements = GetActiveContainerGroup().elementsRestart;
 }
 
 void IAlgorithm::SetSleepDelay(sf::Time delay) noexcept
 {
     m_sleepDelay = delay;
     m_minorDelay = (m_sleepDelay.asMicroseconds() < 1000);
+}
+
+void IAlgorithm::SetVisType(VisType visType) noexcept
+{
+    if (m_visType == VisType::Image ||
+        visType == VisType::Image)
+    {
+        Reset();
+    }
+    m_visType = visType;
+}
+
+std::vector<Element> &IAlgorithm::GetContainer()
+{
+    return GetActiveContainerGroup().elements;
+}
+
+void IAlgorithm::SetValue(Element &element, long value)
+{
+    element.value = value;
+    const auto pixelCoord = GetPixelCoord(element.value - 1l);
+    element.pixel = m_image.getPixel(pixelCoord.x, pixelCoord.y);
+}
+
+void IAlgorithm::SetColor(Element &element, const sf::Color &color)
+{
+    element.color = color;
+}
+
+void IAlgorithm::SwapElements(Element &first, Element &second)
+{
+    std::swap(first, second);
 }
 
 void IAlgorithm::PauseCheck()
@@ -149,6 +239,26 @@ void IAlgorithm::SleepDelay()
             m_minorDelayTimer -= 1000;
         }
     }
+}
+
+ContainerGroup IAlgorithm::GetActiveContainerGroup()
+{
+    if (m_visType != VisType::Image)
+    {
+        return {m_elements, m_elementsRestart, m_elementsReset};
+    }
+    else
+    {
+        return {m_imageElements, m_imageElementsRestart, m_imageElementsReset};
+    }
+}
+
+sf::Vector2u IAlgorithm::GetPixelCoord(size_t index)
+{
+    const auto width = m_image.getSize().x;
+    const auto x = index % width;
+    const auto y = std::floor(index / width);
+    return sf::Vector2u(x, y);
 }
 
 void IAlgorithm::SortThreadFn()
@@ -237,10 +347,81 @@ void IAlgorithm::DrawHoops(const sf::FloatRect &rect)
     }
 }
 
+void IAlgorithm::DrawLine(const sf::FloatRect &rect)
+{
+    sf::VertexArray line(sf::PrimitiveType::LineStrip);
+    float yMult = rect.height / static_cast<float>(m_elements.size());
+    float xMult = rect.width / static_cast<float>(m_elements.size());
+    sf::Vector2f offset(rect.left, rect.top);
+    for (size_t i = 0; i < m_elements.size(); i++)
+    {
+        float x = offset.x + static_cast<float>(i) * xMult;
+        float y = offset.y + rect.height - m_elements[i].value * yMult;
+        line.append(sf::Vertex(sf::Vector2f(x, y), GetElementColor(i)));
+    }
+    Camera::Draw(line);
+}
+
+void IAlgorithm::DrawScatterPlot(const sf::FloatRect &rect)
+{
+    float yMult = rect.height / static_cast<float>(m_elements.size());
+    float xMult = rect.width / static_cast<float>(m_elements.size());
+    sf::Vector2f offset(rect.left, rect.top);
+
+    if (xMult < 1.0f)
+    {
+        sf::VertexArray scatterPlot(sf::PrimitiveType::Points);
+        for (size_t i = 0; i < m_elements.size(); i++)
+        {
+            float x = offset.x + static_cast<float>(i) * xMult;
+            float y = offset.y + rect.height - m_elements[i].value * yMult;
+            scatterPlot.append(sf::Vertex(sf::Vector2f(x, y), GetElementColor(i)));
+        }
+        Camera::Draw(scatterPlot);
+    }
+    else
+    {
+        sf::CircleShape circleShape(xMult / 2.0f);
+        for (size_t i = 0; i < m_elements.size(); i++)
+        {
+            circleShape.setFillColor(GetElementColor(i));
+            float x = offset.x + static_cast<float>(i) * xMult;
+            float y = offset.y + rect.height - m_elements[i].value * yMult;
+            circleShape.setPosition(x, y);
+            Camera::Draw(circleShape);
+        }
+    }
+}
+
+void IAlgorithm::DrawImage(const sf::FloatRect &rect)
+{
+    float xMult = rect.width / static_cast<float>(m_imageElements.size());
+    float yMult = rect.height / static_cast<float>(m_imageElements.size());
+    sf::Vector2f offset(rect.left, rect.top);
+
+    const size_t imageWidth = m_image.getSize().x;
+    const size_t imageHeight = m_image.getSize().y;
+    const size_t nPixels = imageWidth * imageHeight;
+    sf::VertexArray pointArray(sf::PrimitiveType::Points, nPixels);
+    for (int i = 0; i < nPixels; i++)
+    {
+        const auto pixelCoord = GetPixelCoord(i);
+        pointArray[i].position = sf::Vector2f(pixelCoord.x, pixelCoord.y);
+        pointArray[i].color = m_imageElements[i].pixel;
+    }
+    m_imageRenderTexture.clear();
+    m_imageRenderTexture.draw(pointArray);
+    m_imageRenderTexture.display();
+    sf::Sprite renderTextureSprite(m_imageRenderTexture.getTexture());
+    renderTextureSprite.setPosition(renderTextureSprite.getPosition() + offset);
+    renderTextureSprite.setScale(rect.width / imageWidth, rect.height / imageHeight);
+    Camera::Draw(renderTextureSprite);
+}
+
 sf::Color IAlgorithm::GetElementColor(size_t index)
 {
     if (m_usingSpectrumColors)
-        Lib::ValueToSpectrum(m_elements[index].value, (long)m_elements.size());
+        Lib::ValueToSpectrum(m_elements[index].value, static_cast<long>(m_elements.size()));
     else
         return m_elements[index].color;
 }

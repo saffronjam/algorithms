@@ -9,5 +9,5 @@ public:
     std::string GetName() override { return "Heap Sort"; }
 
 private:
-    void Heapify(const size_t &maxSizeCheck, const size_t &topIndex);
+    void Heapify(size_t maxSizeCheck, size_t topIndex);
 };
