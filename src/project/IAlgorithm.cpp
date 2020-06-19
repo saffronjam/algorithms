@@ -137,7 +137,6 @@ void IAlgorithm::PopPushUntil(size_t size)
         {
             const auto pixelCoord = GetPixelCoord(m_elementsReset.size());
             m_elementsReset.push_back(Element(m_elementsReset.size() + 1));
-            m_elementsReset.back().pixel = m_image.getPixel(pixelCoord.x, pixelCoord.y);
         }
     }
     m_elements = m_elementsReset;
