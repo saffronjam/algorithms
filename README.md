@@ -1,7 +1,7 @@
 # V-Algorithms
 Visualizing Bubble Sort, Insertion Sort, Selection Sort, Shell Sort, Merge Sort, Heap Sort, Quick Sort, Gnome Sort and Radix Sort.
 
-Includes controls to alter which sorts are visible, how many elements to sort and how to visualize (Bars, Circle, Hoops...)
+Includes controls to chose which algorithms that are visible, how many elements to sort and how to visualize (Bars, Circle, Hoops...)
 
 <img src="https://github.com/viesa/V-Algorithms/blob/master/preview_1.png">
 <img src="https://github.com/viesa/V-Algorithms/blob/master/preview_2.png">
