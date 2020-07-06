@@ -157,10 +157,12 @@ void Camera::SetRotation(float angle) noexcept
 
 sf::Vector2f Camera::ScreenToWorld(const sf::Vector2f &point) noexcept
 {
+    return vl::Null<>();
 }
 
 sf::Vector2f Camera::WorldToScreen(const sf::Vector2f &point) noexcept
 {
+    return vl::Null<>();
 }
 
 void Camera::UpdateTransform() noexcept

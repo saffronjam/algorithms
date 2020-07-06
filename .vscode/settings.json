@@ -93,6 +93,7 @@
         "**/build/": true,
         "**/deps/": true,
         "**/cmake/": true,
-    }
+    },
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
     // "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
 }

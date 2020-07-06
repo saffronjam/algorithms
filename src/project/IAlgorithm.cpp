@@ -420,7 +420,7 @@ void IAlgorithm::DrawImage(const sf::FloatRect &rect)
 sf::Color IAlgorithm::GetElementColor(size_t index)
 {
     if (m_usingSpectrumColors)
-        Lib::ValueToSpectrum(m_elements[index].value, static_cast<long>(m_elements.size()));
+        return Lib::ValueToSpectrum(m_elements[index].value, static_cast<long>(m_elements.size()));
     else
         return m_elements[index].color;
 }

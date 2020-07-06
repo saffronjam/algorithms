@@ -89,6 +89,7 @@ public:
         case 5:
             return sf::Color(255, 0, 255);
         default:
+            return sf::Color(0,0,0);
             break;
         }
     };
