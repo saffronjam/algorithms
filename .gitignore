@@ -11,10 +11,6 @@
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-
 # Fortran module files
 *.mod
 *.smod
@@ -31,3 +27,5 @@
 
 # Folders
 build/
+cmake-build-debug/
+cmake-build-release/
