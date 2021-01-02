@@ -39,6 +39,8 @@ private:
 	bool _wantResize = false;
 	sf::Vector2f _resizeTo = vl::Null<>();
 	int _framesWithNoResizeRequest = 0;
+
+    bool _showSystemWindows = false;
 };
 
 };

@@ -5,7 +5,7 @@
 class DockSpace
 {
 public:
-	void OnGuiRender()
+	void Begin()
 	{
 		auto *viewport = ImGui::GetMainViewport();
 
@@ -16,7 +16,7 @@ public:
 		ImGuiWindowFlags hostWindowFlags = 0;
 		hostWindowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDocking;
 		hostWindowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-		hostWindowFlags |= ImGuiWindowFlags_NoBackground;
+		hostWindowFlags |= ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_MenuBar;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -26,6 +26,10 @@ public:
 
 		const auto dockspaceId = ImGui::GetID("DockSpace");
 		ImGui::DockSpace(dockspaceId, { 0.0f, 0.0f }, ImGuiDockNodeFlags_None);
+	}
+
+	void End()
+	{
 		ImGui::End();
 	}
 };
