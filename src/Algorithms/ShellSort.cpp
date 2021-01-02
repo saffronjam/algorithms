@@ -12,8 +12,8 @@ void ShellSort::Sort()
     {
         for (size_t i = gap; i < GetElements().size() && _state != State::BeingCollected; i++)
         {
-            PauseCheck();
             SetColor(i, sf::Color::Red);
+            PauseCheck();
             const Element tmp = GetElement(i);
             size_t j;
             for (j = i; j >= gap && GetValue(j - gap) > tmp.value && _state != State::BeingCollected; j -= gap)
@@ -21,6 +21,7 @@ void ShellSort::Sort()
                 SetColor(j, sf::Color::Red);
                 SetColor(j - gap, sf::Color::Red);
                 SetValue(j, GetValue(j - gap));
+                PauseCheck();
                 SleepDelay();
                 SetColor(j, sf::Color::White);
                 SetColor(j - gap, sf::Color::White);
