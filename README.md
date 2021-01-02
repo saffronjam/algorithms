@@ -1,31 +1,33 @@
-# V-Algorithms
+# Algorithms
 Visualizing Bubble Sort, Insertion Sort, Selection Sort, Shell Sort, Merge Sort, Heap Sort, Quick Sort, Gnome Sort and Radix Sort.
 
-<img src="https://github.com/viesa/V-Algorithms/blob/master/preview0.png">
-<img src="https://github.com/viesa/V-Algorithms/blob/master/preview1.png">
-<img src="https://github.com/viesa/V-Algorithms/blob/master/previewGif0.gif">
-
+<img src="https://github.com/saffronjam/Algorithms/blob/master/preview0.png">
+<img src="https://github.com/saffronjam/Algorithms/blob/master/previewGif0.gif">
+<img src="https://github.com/saffronjam/Algorithms/blob/master/previewGif1.gif">
 
 ## Setting up
-Prerequisite: CLion with [Prebuilt 7.3.0 MinGW Compiler](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/7.3.0/threads-posix/seh/x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z/download)
-
-### Linux
-<b> 1. </b> Install SFML using <i>sudo apt-get install libsfml-dev</i>
-
-<b> 2. </b> Install Box2D using <i>sudo apt-get install libbox2d-dev</i>
-
-<b> 3. </b> Run <i>Client</i> in CLion
-
-<img src="https://github.com/viesa/V-Fractals/blob/master/startCLion.png">
-
 
 ### Windows
-Run <i>Client</i> in CLion
+Prerequisites: 
+- CLion (or VSCode, see below) </br>
+- C++17 MinGW compiler
 
-<img src="https://github.com/viesa/V-Fractals/blob/master/startCLion.png">
+Run <i>Client</i> in CLion in <i>Release</i> 
+
+<img src="https://github.com/saffronjam/SaffronEngine2D/blob/master/startCMakeProjectCLion.png">
+
+### Linux
+Prerequisites: 
+- CLion (or VSCode, see below) </br>
+
+<b> 1. </b> Install SFML using ``sudo apt-get install libsfml-dev``
+
+<b> 2. </b> Run <i>Client</i> in CLion in <i>Release</i> 
+
+<img src="https://github.com/saffronjam/SaffronEngine2D/blob/master/startCMakeProjectCLion.png">
 
 ### Mac
-Should be similar to Linux
+To be supported
 
 
 ### Alternatively Visual Studio Code
@@ -34,4 +36,5 @@ Follow previous steps, but make sure you have CMake installed.
   
 Start the application by running <i>Client</i> using <i>CMake Tools</i> plugin
 
-<img src="https://github.com/viesa/V-Algorithms/blob/master/startCMakeProject.png">
+<img src="https://github.com/saffronjam/SaffronEngine2D/blob/master/startCMakeProjectVSCode.png">
+
