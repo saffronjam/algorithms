@@ -1,3 +1,24 @@
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio clutter
+_ReSharper*
+*.sdf
+*.suo
+*.dir
+*.vcxproj*
+*.sln
+.vs
+CMakeSettings.json
+Win32
+MinSizeRel
+RelWithDebInfo
+*.opensdf
+
 # Prerequisites
 *.d
 
@@ -18,14 +39,23 @@
 # Compiled Static libraries
 *.lai
 *.la
-*.lib
 
 # Executables
 *.exe
+!Deps/premake5/Bin/premake5.exe
 *.out
 *.app
 
+# Build directory
+Saffron/bin/
+
 # Folders
+.vs/
+Bin/
+Bin-Int/
+!deps/premake5/Bin/
+
+bin/
+!deps/Saffron/lib/SFML/bin
+!deps/Saffron/lib/Box2D/bin
 build/
-cmake-build-debug/
-cmake-build-release/
