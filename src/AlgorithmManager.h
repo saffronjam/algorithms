@@ -94,6 +94,7 @@ private:
     // Gui cache
     float _elements = 100;
     float _sleepDelayMicroseconds = 10000.0f;
+    bool _spectrum = false;
     int _activeVisTypeIndex = static_cast<int>(Algorithm::VisType::Bars);
     ArrayList<const char*> _visTypeNames;
     ArrayList<const char*> _algorithmNames;

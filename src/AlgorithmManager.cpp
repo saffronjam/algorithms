@@ -143,6 +143,11 @@ void AlgorithmManager::OnGuiRender()
         _wantSoftResize = true;
     }
 
+    if (Gui::Property("Spectrum", _spectrum))
+    {
+        _spectrum ? ActivateSpectrum() : DeactivateSpectrum();
+    }
+
     Gui::EndPropertyGrid();
 
     ImGui::Separator();
@@ -298,7 +303,7 @@ void AlgorithmManager::CustomShuffle(int degree)
     for (int i = 0; i < newElements.size(); i++)
     {
         // 10 iterations of swapping
-        for(int j = 0; j < 10; j++)
+        for (int j = 0; j < 10; j++)
         {
             int newIndex = i + Random::Integer(static_cast<int>(-degreePecentage * noElements),
                                                static_cast<int>(degreePecentage * noElements));
@@ -454,8 +459,7 @@ void AlgorithmManager::OnAlgorithmStateChange()
                 break;
             }
         }
-    }
-    else if (_gnomeActive)
+    } else if (_gnomeActive)
     {
         _gnomeSound.stop();
         for (auto *algorithm : _algorithms)
