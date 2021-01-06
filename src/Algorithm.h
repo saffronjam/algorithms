@@ -170,6 +170,8 @@ private:
     // Shapes cache
     sf::VertexArray _barsVA;
     ArrayList<sf::CircleShape> _hoopsShapes;
+
+    static constexpr int MaxElements = 10000;
 };
 
 }

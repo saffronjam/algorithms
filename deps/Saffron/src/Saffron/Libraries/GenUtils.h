@@ -14,10 +14,10 @@ namespace Se
 #define GET_VARIABLE_NAME(Variable) (#Variable)
 
 template <typename T = float>
-static constexpr T PI = (T)3.141592653589793238462643383279;
+static constexpr T PI = static_cast<T>(3.141592653589793238462643383279);
 
 template <typename T = float>
-static constexpr T E = (T)2.71828182845904523536;
+static constexpr T E = static_cast<T>(2.71828182845904523536);
 
 class GenUtils
 {
@@ -200,9 +200,9 @@ sf::Color GenUtils::ValueToSpectrum(T value, T maxValue)
 	case 5:
 		return sf::Color(255, 0, 255);
 	default:
-        return sf::Color(255, 255,255 ,255);
+		return sf::Color::White;
 	}
-}
+};
 
 template <typename T>
 std::vector<sf::Vector2<T>> GenUtils::WrapPoints(const std::vector<sf::Vector2<T>> &points)
@@ -235,7 +235,7 @@ std::vector<sf::Vector2<T>> GenUtils::WrapPoints(const std::vector<sf::Vector2<T
 	//Inital removal of center-points
 	for ( auto &point : points )
 	{
-		if ( !vl::IsLeft(startLine.first, startLine.second, point) )
+		if ( !VecUtils::IsLeft(startLine.first, startLine.second, point) )
 		{
 			topPoints.emplace_back(point);
 		}
@@ -253,15 +253,15 @@ std::vector<sf::Vector2<T>> GenUtils::WrapPoints(const std::vector<sf::Vector2<T
 
 template <typename T>
 void GenUtils::ClearPointsRecursively(const std::pair<sf::Vector2<T>, sf::Vector2<T>> &line,
-                                      const std::vector<sf::Vector2<T>> &points,
-                                      std::vector<sf::Vector2<T>> &finalPoints)
+									  const std::vector<sf::Vector2<T>> &points,
+									  std::vector<sf::Vector2<T>> &finalPoints)
 {
 	//Find the point which is the furthest away
 	float biggestDistance = 0.0f;
 	int biggestIndex = -1;
 	for ( size_t i = 0; i < points.size(); i++ )
 	{
-		const float currentCheck = vl::DistanceFromLine(line.first, line.second, points[i]);
+		const float currentCheck = VecUtils::DistanceFromLine(line.first, line.second, points[i]);
 		if ( currentCheck > biggestDistance )
 		{
 			biggestDistance = currentCheck;
@@ -281,11 +281,11 @@ void GenUtils::ClearPointsRecursively(const std::pair<sf::Vector2<T>, sf::Vector
 		std::vector<sf::Vector2f> consideredPoints2;
 		for ( auto &point : points )
 		{
-			if ( !vl::IsLeft(newLine.first, newLine.second, point) )
+			if ( !VecUtils::IsLeft(newLine.first, newLine.second, point) )
 			{
 				consideredPoints1.push_back(point);
 			}
-			else if ( !vl::IsLeft(lineCpy.first, lineCpy.second, point) )
+			else if ( !VecUtils::IsLeft(lineCpy.first, lineCpy.second, point) )
 			{
 				consideredPoints2.push_back(point);
 			}

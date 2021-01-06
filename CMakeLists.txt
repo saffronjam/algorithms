@@ -17,14 +17,22 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=nehalem")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1 -msse4.2")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
-
 
 ### VARIABLES ###
 set(PLATFORM_MACRO SE_PLATFORM)
+
+### COMPILER SPECIFIC ###
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+    set(COMPILER_LIB_DIR "msvc")
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    add_compile_options(/w44244)
+    add_compile_options(/w44267)
+
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+    set(COMPILER_LIB_DIR "mingw")
+else ()
+    message(FATAL_ERROR "Bad compiler selected. Supported is GNU and MSVC")
+endif ()
 
 ### BUILD TYPE SPECIFIC ###
 if (${CMAKE_BUILD_TYPE} MATCHES Debug)
@@ -35,12 +43,10 @@ elseif (${CMAKE_BUILD_TYPE} MATCHES Release)
     add_definitions(
             -DSE_RELEASE
     )
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O4")
 elseif (${CMAKE_BUILD_TYPE} MATCHES Dist)
     add_definitions(
             -DSE_DIST
     )
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O4")
 else ()
     message(FATAL_ERROR "Bad configuration selected")
 endif ()
@@ -50,8 +56,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     add_definitions(-D${PLATFORM_MACRO}_WINDOWS)
 
     file(COPY ${SAFFRON_SHARED_BINARES} DESTINATION ${BUILD_DIR})
-
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
 else ()
     add_definitions(-D${PLATFORM_MACRO}_LINUX)
@@ -69,6 +73,7 @@ add_definitions()
 file(GLOB_RECURSE ALL_SOURCES "${CMAKE_SOURCE_DIR}/*.cpp")
 set(ClientSRC "${ALL_SOURCES}")
 add_executable(Client "${ClientSRC}")
+target_precompile_headers(Saffron PUBLIC "deps/Saffron/src/SaffronPCH.cpp")
 
 ### INCLUDES ###
 target_include_directories(Client PRIVATE
