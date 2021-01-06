@@ -25,6 +25,13 @@ Visualizing Bubble Sort, Insertion Sort, Selection Sort, Shell Sort, Merge Sort,
 </p>
   
 ## Setting up
+<p align="center">
+    <img src="https://github.com/saffronjam/SaffronEngine2D/blob/master/startCMakeProjectCLion.png" width="30%">
+    <img width="2%">
+    <img src="https://github.com/saffronjam/SaffronEngine2D/blob/master/startCMakeProjectVS.png" width="30%">
+    <img width="2%">
+    <img src="https://github.com/saffronjam/SaffronEngine2D/blob/master/startCMakeProjectVSCode.png" width="30%">
+</p>
 
 ### Windows
 Prerequisites: 
