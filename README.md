@@ -19,11 +19,6 @@ Visualizing Bubble Sort, Insertion Sort, Selection Sort, Shell Sort, Merge Sort,
   <img src="https://github.com/saffronjam/Algorithms/blob/master/previewGif1.gif" width="75%">
 </p>
   
-<p align="left">
-</p>  
-<p align="right">
-</p>
-  
 ## Setting up
 <p align="center">
     <img src="https://github.com/saffronjam/SaffronEngine2D/blob/master/startCMakeProjectCLion.png" width="30%">
