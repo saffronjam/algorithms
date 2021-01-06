@@ -15,8 +15,8 @@ Visualizing Bubble Sort, Insertion Sort, Selection Sort, Shell Sort, Merge Sort,
 
 <p align="center">
   <img src="https://github.com/saffronjam/Algorithms/blob/master/preview0.png" width="75%">
-  <img src="https://github.com/saffronjam/Algorithms/blob/master/previewGif1.gif" width="75%">
   <img src="https://github.com/saffronjam/Algorithms/blob/master/previewGif0.gif" width="75%">
+  <img src="https://github.com/saffronjam/Algorithms/blob/master/previewGif1.gif" width="75%">
 </p>
   
 <p align="left">
