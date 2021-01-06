@@ -29,7 +29,7 @@ Algorithm::Algorithm(String name)
 
 void Algorithm::Draw(Scene &scene, const sf::FloatRect &rect)
 {
-    switch (_visType)
+    switch ( _visType )
     {
         case VisType::Bars:
         {
@@ -75,7 +75,7 @@ void Algorithm::DrawName(Scene &scene, const sf::FloatRect &rect)
 
 void Algorithm::Start()
 {
-    if (_state == State::WaitingForStart)
+    if ( _state == State::WaitingForStart )
     {
         CollectSorter();
         _state = State::Sorting;
@@ -86,7 +86,7 @@ void Algorithm::Start()
 
 void Algorithm::Restart()
 {
-    if (_state == State::Sorting || _state == State::Paused || _state == State::Finished)
+    if ( _state == State::Sorting || _state == State::Paused || _state == State::Finished )
     {
         CollectSorter();
         _state = State::WaitingForStart;
@@ -96,13 +96,13 @@ void Algorithm::Restart()
 
 void Algorithm::Pause()
 {
-    if (_state == State::Sorting)
+    if ( _state == State::Sorting )
         _state = State::Paused;
 }
 
 void Algorithm::Resume()
 {
-    if (_state == State::Paused)
+    if ( _state == State::Paused )
         _state = State::Sorting;
 }
 
@@ -116,7 +116,7 @@ void Algorithm::Reset()
 
 void Algorithm::Resize(size_t size)
 {
-    if (_elements.size() == size)
+    if ( _elements.size() == size )
         return;
 
     _elements.clear();
@@ -142,15 +142,14 @@ void Algorithm::Resize(size_t size)
 void Algorithm::SoftResize(size_t size)
 {
     CollectSorter();
-    while (_elementsReset.size() != size)
+    while ( _elementsReset.size() != size )
     {
-        if (size < _elementsReset.size())
+        if ( size < _elementsReset.size())
         {
             _elementsReset.pop_back();
         }
-        else if (size > _elementsReset.size())
+        else if ( size > _elementsReset.size())
         {
-            const auto pixelCoord = GetPixelCoord(_elementsReset.size());
             _elementsReset.push_back(Element(_elementsReset.size() + 1));
         }
     }
@@ -205,8 +204,6 @@ ArrayList<Element> &Algorithm::GetResetElements()
 void Algorithm::SetValue(Element &element, long value)
 {
     element.value = value;
-    const auto pixelCoord = GetPixelCoord(element.value - 1l);
-    element.pixel = _image.getPixel(pixelCoord.x, pixelCoord.y);
 }
 
 void Algorithm::SetColor(Element &element, const sf::Color &color)
@@ -221,20 +218,20 @@ void Algorithm::SwapElements(Element &first, Element &second)
 
 void Algorithm::PauseCheck()
 {
-    while (_state == State::Paused && _state != State::BeingCollected)
+    while ( _state == State::Paused && _state != State::BeingCollected )
         sf::sleep(sf::seconds(0.01f));
 }
 
 void Algorithm::SleepDelay()
 {
-    if (!_minorDelay)
+    if ( !_minorDelay )
     {
         std::this_thread::sleep_for(std::chrono::microseconds(_sleepDelay.asMicroseconds()));
     }
     else
     {
         _minorDelayTimer += _sleepDelay.asMicroseconds();
-        while (_minorDelayTimer > 1000)
+        while ( _minorDelayTimer > 1000 )
         {
             std::this_thread::sleep_for(std::chrono::microseconds(1000));
             _minorDelayTimer -= 1000;
@@ -262,7 +259,7 @@ sf::FloatRect Algorithm::GetScaledPixel(size_t index, size_t max) const
     float scaledPixelWidth = width / nPixelsX;
     float scaledPixelHeight = height / nPixelsX;
 
-    if (index >= newMax)
+    if ( index >= newMax )
     {
         index = newMax - 1;
     }
@@ -289,7 +286,7 @@ sf::Vector2u Algorithm::GetClosestPixelCoord(size_t index, size_t max) const
     float scaledPixelWidth = width / nPixelsX;
     float scaledPixelHeight = height / nPixelsX;
 
-    if (index >= newMax)
+    if ( index >= newMax )
     {
         index = newMax - 1;
     }
@@ -304,12 +301,12 @@ void Algorithm::SortThreadFn()
 {
     bool alreadySorted = VerifyElements();
 
-    if (!alreadySorted)
+    if ( !alreadySorted )
     {
         Sort();
         VerifyElements();
     }
-    if (_state != State::BeingCollected)
+    if ( _state != State::BeingCollected )
     {
         OnFinish();
     }
@@ -325,7 +322,7 @@ void Algorithm::CollectSorter()
 {
     auto tmpState = _state;
     _state = State::BeingCollected;
-    if (_sorter.joinable())
+    if ( _sorter.joinable())
         _sorter.join();
     _state = tmpState;
 }
@@ -336,10 +333,10 @@ void Algorithm::DrawBars(Scene &scene, const sf::FloatRect &rect)
     const sf::Vector2f positionOffset(rect.left, rect.top);
     const float heightMult = rect.height / _elements.size();
 
-    for (size_t i = 0; i < _barsVA.getVertexCount(); i += 4)
+    for ( size_t i = 0; i < _barsVA.getVertexCount(); i += 4 )
     {
         auto color = GetElementColor(i / 4);
-        color.a = 50;
+        color.a = 255 - static_cast<float>(_elements.size()) / static_cast<float>(MaxElements) * 240;
         const auto &value = _elements[i / 4].value;
         size.y = value * heightMult;
 
@@ -371,12 +368,12 @@ void Algorithm::DrawCircles(Scene &scene, const sf::FloatRect &rect)
     sf::Vector2f rectMid = GenUtils::Mid(rect);
 
     vertexArray[0] = sf::Vertex(rectMid, sf::Color(255, 255, 255));
-    for (size_t i = 0; i < _elements.size() * 2; i += 2)
+    for ( size_t i = 0; i < _elements.size() * 2; i += 2 )
     {
-        sf::Vector2f line0 = vl::Rotate(sf::Vector2f(0.0f, -_elements[i / 2].value * heightMult) + rectMid,
-                                        angleDelta * static_cast<float>(i), rectMid);
-        sf::Vector2f line1 = vl::Rotate(sf::Vector2f(0.0f, -_elements[i / 2].value * heightMult) + rectMid,
-                                        angleDelta * static_cast<float>(i + 1), rectMid);
+        sf::Vector2f line0 = VecUtils::Rotate(sf::Vector2f(0.0f, -_elements[i / 2].value * heightMult) + rectMid,
+                                              angleDelta * static_cast<float>(i), rectMid);
+        sf::Vector2f line1 = VecUtils::Rotate(sf::Vector2f(0.0f, -_elements[i / 2].value * heightMult) + rectMid,
+                                              angleDelta * static_cast<float>(i + 1), rectMid);
         vertexArray[i + 1] = sf::Vertex(line0, GetElementColor(i / 2));
         vertexArray[i + 2] = sf::Vertex(line1, GetElementColor(i / 2));
     }
@@ -385,7 +382,7 @@ void Algorithm::DrawCircles(Scene &scene, const sf::FloatRect &rect)
 
 void Algorithm::DrawHoops(Scene &scene, const sf::FloatRect &rect)
 {
-    while (_hoopsShapes.size() < _elements.size())
+    while ( _hoopsShapes.size() < _elements.size())
     {
         _hoopsShapes.emplace_back();
         _hoopsShapes.back().setOutlineThickness(1.0f);
@@ -395,7 +392,7 @@ void Algorithm::DrawHoops(Scene &scene, const sf::FloatRect &rect)
     sf::Vector2f rectMid = GenUtils::Mid(rect);
     float radiusMult = rect.height / _elements.size() / 3.0f;
 
-    for (size_t i = 0; i < _elements.size(); i++)
+    for ( size_t i = 0; i < _elements.size(); i++ )
     {
 
         float radius = _elements[i].value * radiusMult;
@@ -417,7 +414,7 @@ void Algorithm::DrawLine(Scene &scene, const sf::FloatRect &rect)
     float yMult = rect.height / static_cast<float>(_elements.size());
     float xMult = rect.width / static_cast<float>(_elements.size());
     sf::Vector2f offset(rect.left, rect.top);
-    for (size_t i = 0; i < _elements.size(); i++)
+    for ( size_t i = 0; i < _elements.size(); i++ )
     {
         float x = offset.x + static_cast<float>(i) * xMult;
         float y = offset.y + rect.height - _elements[i].value * yMult;
@@ -432,10 +429,10 @@ void Algorithm::DrawScatterPlot(Scene &scene, const sf::FloatRect &rect)
     float xMult = rect.width / static_cast<float>(_elements.size());
     sf::Vector2f offset(rect.left, rect.top);
 
-    if (xMult < 1.0f)
+    if ( xMult < 1.0f )
     {
         sf::VertexArray scatterPlot(sf::PrimitiveType::Points);
-        for (size_t i = 0; i < _elements.size(); i++)
+        for ( size_t i = 0; i < _elements.size(); i++ )
         {
             float x = offset.x + static_cast<float>(i) * xMult;
             float y = offset.y + rect.height - _elements[i].value * yMult;
@@ -446,7 +443,7 @@ void Algorithm::DrawScatterPlot(Scene &scene, const sf::FloatRect &rect)
     else
     {
         sf::CircleShape circleShape(xMult / 2.0f);
-        for (size_t i = 0; i < _elements.size(); i++)
+        for ( size_t i = 0; i < _elements.size(); i++ )
         {
             circleShape.setFillColor(GetElementColor(i));
             float x = offset.x + static_cast<float>(i) * xMult;
@@ -469,15 +466,15 @@ void Algorithm::DrawImage(Scene &scene, const sf::FloatRect &rect)
     sf::FloatRect lostRect(0.0f, 0.0f, 0.0f, 0.0f);
     sf::Vector2f lostCoord(0.0f, 0.0f);
 
-    for (size_t i = 0; i < _elements.size(); i++)
+    for ( size_t i = 0; i < _elements.size(); i++ )
     {
         const auto pixelRect = GetScaledPixel(i, _elements.size());
         auto pixelCoord = GetClosestPixelCoord(_elements[i].value - 1, _elements.size());
 
         const sf::IntRect nonLostPixelRect(static_cast<int>(pixelRect.left + static_cast<float>(lostRect.left)),
                                            static_cast<int>(pixelRect.top + static_cast<float>(lostRect.top)),
-                                           static_cast<int>( pixelRect.width + static_cast<float>(lostRect.width)),
-                                           static_cast<int>( pixelRect.height + static_cast<float>(lostRect.height)));
+                                           static_cast<int>(pixelRect.width + static_cast<float>(lostRect.width)),
+                                           static_cast<int>(pixelRect.height + static_cast<float>(lostRect.height)));
 
         const sf::Vector2i nonLostCoord(static_cast<int>(pixelCoord.x + static_cast<float>(lostCoord.x)),
                                         static_cast<int>(pixelCoord.y + static_cast<float>(lostCoord.y)));
@@ -490,22 +487,18 @@ void Algorithm::DrawImage(Scene &scene, const sf::FloatRect &rect)
         lostCoord.x = static_cast<int>(pixelCoord.x - static_cast<float>(nonLostCoord.x));
         lostCoord.y = static_cast<int>(pixelCoord.y - static_cast<float>(nonLostCoord.y));
 
-        for (int width = 0; width < nonLostPixelRect.width + 1; width++)
+        for ( int width = 0; width < nonLostPixelRect.width + 1; width++ )
         {
-            for (int height = 0; height < nonLostPixelRect.height + 1; height++)
+            for ( int height = 0; height < nonLostPixelRect.height + 1; height++ )
             {
-                auto destIndex = (nonLostPixelRect.top + height) * imageWidth + nonLostPixelRect.left + width;
-                if (destIndex < nPixels)
+                const auto destIndex = (nonLostPixelRect.top + height) * imageWidth + nonLostPixelRect.left + width;
+                const auto srcX = nonLostCoord.x + width;
+                const auto srcY = nonLostCoord.y + height;
+                if ( destIndex < nPixels && srcX < imageWidth && srcY < imageHeight )
                 {
                     pointArray[destIndex].position = sf::Vector2f(nonLostPixelRect.left + width,
                                                                   nonLostPixelRect.top + height);
-                    pointArray[destIndex].color = _image.getPixel(nonLostCoord.x + width,
-                                                                  nonLostCoord.y + height);
-
-//                    pointArray[destIndex].position = sf::Vector2f(nonLostCoord.x + width,
-//                                                                  nonLostCoord.y + height);
-//                    pointArray[destIndex].color = _image.getPixel(nonLostPixelRect.left + width,
-//                                                                  nonLostPixelRect.top + height);
+                    pointArray[destIndex].color = _image.getPixel(srcX, srcY);
                 }
             }
         }
@@ -521,7 +514,7 @@ void Algorithm::DrawImage(Scene &scene, const sf::FloatRect &rect)
 
 sf::Color Algorithm::GetElementColor(size_t index)
 {
-    if (_usingSpectrumColors)
+    if ( _usingSpectrumColors )
     {
         return GenUtils::ValueToSpectrum(_elements[index].value, static_cast<long>(_elements.size()));
     }
@@ -533,16 +526,16 @@ sf::Color Algorithm::GetElementColor(size_t index)
 
 bool Algorithm::VerifyElements()
 {
-    for (auto &element : _elements)
+    for ( auto &element : _elements )
     {
         SetColor(element, sf::Color::White);
     }
     bool alreadySorted = true;
-    for (size_t i = 0; i < _elements.size() - 1 && _state != State::BeingCollected; i++)
+    for ( size_t i = 0; i < _elements.size() - 1 && _state != State::BeingCollected; i++ )
     {
-        if (GetValue(i) < GetValue(i + 1))
+        if ( GetValue(i) < GetValue(i + 1))
         {
-            if (_visType != VisType::Image)
+            if ( _visType != VisType::Image )
             {
                 SetColor(i, sf::Color::Green);
             }
@@ -554,11 +547,11 @@ bool Algorithm::VerifyElements()
         }
         SleepDelay();
     }
-    if (!alreadySorted)
+    if ( !alreadySorted )
     {
-        if (_visType != VisType::Image)
+        if ( _visType != VisType::Image )
         {
-            for (auto &element : _elements)
+            for ( auto &element : _elements )
             {
                 SetColor(element, sf::Color::White);
             }
@@ -566,7 +559,7 @@ bool Algorithm::VerifyElements()
     }
     else
     {
-        if (_visType != VisType::Image)
+        if ( _visType != VisType::Image )
         {
             SetColor(_elements.back(), sf::Color::Green);
         }

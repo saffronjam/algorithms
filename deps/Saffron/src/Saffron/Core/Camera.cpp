@@ -35,7 +35,7 @@ void Camera::OnUpdate()
 		if ( Mouse::IsDown(sf::Mouse::Button::Left) && Mouse::IsDown(sf::Mouse::Button::Right) )
 		{
 			sf::Vector2f delta = Mouse::GetSwipe();
-			if ( vl::LengthSq(delta) > 0.0f )
+			if ( VecUtils::LengthSq(delta) > 0.0f )
 			{
 				delta = _rotationTransform.getInverse().transformPoint(delta);
 				delta = _zoomTransform.getInverse().transformPoint(delta);
@@ -179,7 +179,7 @@ void Camera::UpdateTransform()
 	_transform.translate(-_position);
 }
 
-void Camera::CapZoomLevel()
+void Camera::CapZoomLevel() const
 {
 	GenUtils::Constrain(_zoom.x, 0.9f, 3.0f);
 	GenUtils::Constrain(_zoom.y, 0.9f, 3.0f);

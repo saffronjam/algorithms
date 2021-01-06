@@ -26,17 +26,27 @@ void ProjectLayer::OnGuiRender()
 {
     BaseLayer::OnGuiRender();
 
-    if (ImGui::Begin("Project", nullptr))
+    if ( ImGui::BeginMenuBar() )
+    {
+        if ( ImGui::BeginMenu("Gui") )
+        {
+            ImGui::MenuItem("View System", nullptr, &_viewSystem);
+            ImGui::MenuItem("View Demo", nullptr, &_viewDemo);
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenuBar();
+    }
+
+    if ( ImGui::Begin("Project") )
     {
         _algorithmManager->OnGuiRender();
     }
     ImGui::End();
 
-    if(_showSystemWindows)
+    if ( _viewDemo )
     {
         ImGui::ShowDemoWindow();
     }
-    _dockSpace.End();
 }
 
 void ProjectLayer::OnRenderTargetResize(const sf::Vector2f &newSize)

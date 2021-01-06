@@ -19,9 +19,5 @@ public:
 
 private:
 	std::shared_ptr<AlgorithmManager> _algorithmManager;
-
-    bool _showSystemWindows = false;
-	bool _showDemoWindow = false;
-
 };
 }

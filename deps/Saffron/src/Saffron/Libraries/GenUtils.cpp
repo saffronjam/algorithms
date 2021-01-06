@@ -24,14 +24,14 @@ sf::Vector2f GenUtils::Mid(const std::vector<sf::Vector2f> &polygonPoints)
 			total += point;
 		return total / static_cast<float>(nPoints);
 	}
-	return vl::Null<>();
+	return VecUtils::Null<>();
 }
 
 void GenUtils::Rotate(sf::Transformable &transformable, const sf::Vector2f &direction)
 {
 	const sf::Vector2f right(1.0f, 0.0f);
 
-	float angle = ToDegress(vl::Angle(right, direction));
+	float angle = ToDegress(VecUtils::Angle(right, direction));
 	if ( direction.y < 0.0f )
 	{
 		angle = 360.0f - angle;

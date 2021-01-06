@@ -17,22 +17,170 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6c4eed86-ede4-46df-bd45-b7c36592d109" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/openal32.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/sfml-audio-d-2.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/sfml-graphics-d-2.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/sfml-network-d-2.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/sfml-system-d-2.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/sfml-window-d-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CMakeSettings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/mingw/openal32.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/mingw/sfml-audio-d-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/mingw/sfml-graphics-d-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/mingw/sfml-network-d-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/mingw/sfml-system-d-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/mingw/sfml-window-d-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/msvc/Debug/openal32.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/msvc/Debug/sfml-audio-d-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/msvc/Debug/sfml-graphics-d-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/msvc/Debug/sfml-network-d-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/msvc/Debug/sfml-system-d-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/msvc/Debug/sfml-window-d-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/msvc/Release/openal32.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/msvc/Release/sfml-audio-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/msvc/Release/sfml-graphics-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/msvc/Release/sfml-network-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/msvc/Release/sfml-system-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/msvc/Release/sfml-window-2.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libFLAC.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libfreetype.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libogg.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libopenal32.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libsfml-audio-d.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libsfml-graphics-d.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libsfml-main-d.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libsfml-network-d.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libsfml-system-d.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libsfml-window-d.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libvorbis.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libvorbisenc.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/mingw/libvorbisfile.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/flac.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/freetype.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/ogg.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/openal32.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-audio-d-2.ilk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-audio-d.exp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-audio-d.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-audio.exp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-audio.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-audio.pdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-graphics-d-2.ilk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-graphics-d.exp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-graphics-d.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-graphics.exp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-graphics.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-graphics.pdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-main-d.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-main-s.pdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-main.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-network-d-2.ilk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-network-d.exp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-network-d.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-network.exp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-network.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-network.pdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-system-d-2.ilk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-system-d.exp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-system-d.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-system.exp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-system.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-system.pdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-window-d-2.ilk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-window-d.exp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-window-d.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-window.exp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-window.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/sfml-window.pdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/vorbis.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/vorbisenc.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/msvc/vorbisfile.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/imgui/lib/mingw/libimgui.a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/imgui/lib/msvc/imgui-d.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/imgui/lib/msvc/imgui-d.pdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/lib/imgui/lib/msvc/imgui.lib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/FadePane.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/FadePane.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/SplashScreenPane.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/SplashScreenPane.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/1x/Saffron.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/1x/SelectorBG.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/4x/SelectorBG@4x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/Black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/Checkerboard.tga" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/ControllerGame_w.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/ControllerMaya_w.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/FallbackViewportPaneTexture.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/PauseButton.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/PlayButton.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/Rotate.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/Rotate_w.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/Saffron.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/Saffron_windowIcon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/Scale.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/Scale_w.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/ScriptCS.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/SelectorBG.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/StopButton.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/Translate.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Editor/Translate_w.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake/FindSFGUI.cmake" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/deps/Saffron/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/openal32.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/sfml-audio-d-2.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/sfml-graphics-d-2.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/sfml-network-d-2.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/sfml-system-d-2.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/bin/sfml-window-d-2.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/cmake/SFML/SFMLConfig.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/cmake/SFML/SFMLConfigDependencies.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/cmake/SFML/SFMLConfigVersion.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/cmake/SFML/SFMLSharedTargets-debug.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/cmake/SFML/SFMLSharedTargets.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libFLAC.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libfreetype.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libogg.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libopenal32.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libsfml-audio-d.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libsfml-graphics-d.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libsfml-main-d.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libsfml-network-d.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libsfml-system-d.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libsfml-window-d.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libvorbis.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libvorbisenc.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/SFML/lib/libvorbisfile.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/imgui/lib/linux/libimgui.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/lib/imgui/lib/windows/libimgui.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/Application.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/Application.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/Application.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/Application.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/BatchLoader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/BatchLoader.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/BatchLoader.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/BatchLoader.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/Camera.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/Camera.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/Camera.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/Camera.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/Window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/Window.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/Window.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Core/Window.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/EntryPoint.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/EntryPoint.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Etc/Voronoi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Etc/Voronoi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/DockSpace.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/DockSpace.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/DockSpace.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/DockSpace.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/Gui.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/Gui.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AlgorithmManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/AlgorithmManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AlgorithmManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/AlgorithmManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/Gui.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/Gui.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/GuiImpl.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/GuiImpl.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/GuiImpl.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/GuiImpl.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/ViewportPane.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Gui/ViewportPane.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Layer/Layer.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Layer/Layer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Libraries/GenUtils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Libraries/GenUtils.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Libraries/GenUtils.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Libraries/GenUtils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Libraries/VecUtils.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Libraries/VecUtils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Lighting/Light.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Lighting/Light.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Lighting/SpotLight.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/deps/Saffron/src/Saffron/Lighting/SpotLight.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imgui.ini" beforeDir="false" afterPath="$PROJECT_DIR$/imgui.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Algorithm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Algorithm.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Algorithm.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Algorithm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Element.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Element.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Layers/BaseLayer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layers/BaseLayer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Layers/BaseLayer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layers/BaseLayer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Layers/ProjectLayer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layers/ProjectLayer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Layers/ProjectLayer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layers/ProjectLayer.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +217,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../2DFramework" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -77,7 +225,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C/C++" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -85,17 +233,17 @@
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.Client">
-    <configuration name="Client" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Algorithms" TARGET_NAME="Client" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Algorithms" RUN_TARGET_NAME="Client">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Client" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Algorithms" TARGET_NAME="Client" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="Algorithms" RUN_TARGET_NAME="Client">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Saffron" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Algorithms" TARGET_NAME="Saffron" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="Saffron" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Algorithms" TARGET_NAME="Saffron" CONFIG_NAME="Release">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -125,7 +273,12 @@
       <workItem from="1609613814476" duration="562000" />
       <workItem from="1609621830421" duration="1916000" />
       <workItem from="1609624767333" duration="45000" />
-      <workItem from="1609624831778" duration="427000" />
+      <workItem from="1609624831778" duration="1644000" />
+      <workItem from="1609675552466" duration="598000" />
+      <workItem from="1609689967566" duration="36000" />
+      <workItem from="1609769253439" duration="885000" />
+      <workItem from="1609799324462" duration="6160000" />
+      <workItem from="1609959438387" duration="6776000" />
     </task>
     <servers />
   </component>
