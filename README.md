@@ -39,9 +39,7 @@ Prerequisites:
 
 <b> 1. </b> Install SFML using ``sudo apt-get install libsfml-dev``
 
-<b> 2. </b> Install Box2D using ``sudo apt-get install libbox2d-dev``
-
-<b> 3. </b> Run <i>Client</i> in IDE
+<b> 2. </b> Run <i>Client</i> in IDE
 
 
 ### Mac
