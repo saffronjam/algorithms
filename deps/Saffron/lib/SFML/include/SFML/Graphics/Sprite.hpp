@@ -192,7 +192,7 @@ public:
 private:
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw the sprite to a render target
+    /// \brief OnRender the sprite to a render target
     ///
     /// \param target Render target to draw to
     /// \param states Current render states
@@ -201,13 +201,13 @@ private:
     virtual void draw(RenderTarget& target, RenderStates states) const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Update the vertices' positions
+    /// \brief OnUpdate the vertices' positions
     ///
     ////////////////////////////////////////////////////////////
     void updatePositions();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Update the vertices' texture coordinates
+    /// \brief OnUpdate the vertices' texture coordinates
     ///
     ////////////////////////////////////////////////////////////
     void updateTexCoords();
@@ -270,7 +270,7 @@ private:
 /// sprite.setColor(sf::Color(255, 255, 255, 200));
 /// sprite.setPosition(100, 25);
 ///
-/// // Draw it
+/// // OnRender it
 /// window.draw(sprite);
 /// \endcode
 ///

@@ -232,7 +232,7 @@ private:
 ///    // Clear the whole window before rendering a new frame
 ///    window.clear();
 ///
-///    // Draw some graphical entities
+///    // OnRender some graphical entities
 ///    window.draw(sprite);
 ///    window.draw(circle);
 ///    window.draw(text);
@@ -265,18 +265,18 @@ private:
 ///     // Process events
 ///     ...
 ///
-///     // Draw a background sprite
+///     // OnRender a background sprite
 ///     window.pushGLStates();
 ///     window.draw(sprite);
 ///     window.popGLStates();
 ///
-///     // Draw a 3D object using OpenGL
+///     // OnRender a 3D object using OpenGL
 ///     glBegin(GL_QUADS);
 ///         glVertex3f(...);
 ///         ...
 ///     glEnd();
 ///
-///     // Draw text on top of the 3D object
+///     // OnRender text on top of the 3D object
 ///     window.pushGLStates();
 ///     window.draw(text);
 ///     window.popGLStates();

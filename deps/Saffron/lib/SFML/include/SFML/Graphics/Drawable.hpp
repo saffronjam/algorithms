@@ -56,7 +56,7 @@ protected:
     friend class RenderTarget;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw the object to a render target
+    /// \brief OnRender the object to a render target
     ///
     /// This is a pure virtual function that has to be implemented
     /// by the derived class to define how the drawable should be

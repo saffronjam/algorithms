@@ -415,7 +415,7 @@ public:
 private:
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw the text to a render target
+    /// \brief OnRender the text to a render target
     ///
     /// \param target Render target to draw to
     /// \param states Current render states
@@ -504,7 +504,7 @@ private:
 /// text.setStyle(sf::Text::Bold);
 /// text.setFillColor(sf::Color::Red);
 ///
-/// // Draw it
+/// // OnRender it
 /// window.draw(text);
 /// \endcode
 ///
