@@ -228,7 +228,7 @@ public:
     Vector2i mapCoordsToPixel(const Vector2f& point, const View& view) const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw a drawable object to the render target
+    /// \brief OnRender a drawable object to the render target
     ///
     /// \param drawable Object to draw
     /// \param states   Render states to use for drawing
@@ -237,7 +237,7 @@ public:
     void draw(const Drawable& drawable, const RenderStates& states = RenderStates::Default);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw primitives defined by an array of vertices
+    /// \brief OnRender primitives defined by an array of vertices
     ///
     /// \param vertices    Pointer to the vertices
     /// \param vertexCount Number of vertices in the array
@@ -249,7 +249,7 @@ public:
               PrimitiveType type, const RenderStates& states = RenderStates::Default);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw primitives defined by a vertex buffer
+    /// \brief OnRender primitives defined by a vertex buffer
     ///
     /// \param vertexBuffer Vertex buffer
     /// \param states       Render states to use for drawing
@@ -258,7 +258,7 @@ public:
     void draw(const VertexBuffer& vertexBuffer, const RenderStates& states = RenderStates::Default);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw primitives defined by a vertex buffer
+    /// \brief OnRender primitives defined by a vertex buffer
     ///
     /// \param vertexBuffer Vertex buffer
     /// \param firstVertex  Index of the first vertex to render
@@ -308,7 +308,7 @@ public:
     /// \li your OpenGL states are not modified by a call to a SFML function
     ///
     /// More specifically, it must be used around code that
-    /// calls Draw functions. Example:
+    /// calls OnRender functions. Example:
     /// \code
     /// // OpenGL code here...
     /// window.pushGLStates();
@@ -433,7 +433,7 @@ private:
     void setupDraw(bool useVertexCache, const RenderStates& states);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw the primitives
+    /// \brief OnRender the primitives
     ///
     /// \param type        Type of primitives to draw
     /// \param firstVertex Index of the first vertex to use when drawing
