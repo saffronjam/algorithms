@@ -23,8 +23,11 @@ Visualizing Bubble Sort, Insertion Sort, Selection Sort, Shell Sort, Merge Sort,
 </p>  
 <p align="right">
 </p>
+
+## Run without building
+Run executable <i>Client</i> under ``examples/<platform>`` 
   
-## Setting up
+## Build yourself
 <p align="center">
     <img src="https://github.com/saffronjam/SaffronEngine2D/blob/master/startCMakeProjectCLion.png" width="30%">
     <img width="2%">
