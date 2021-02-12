@@ -20,7 +20,7 @@ Visualizing Bubble Sort, Insertion Sort, Selection Sort, Shell Sort, Merge Sort,
 </p>
 
 ## Run without building
-Run executable <i>Client</i> under ``examples/<platform>`` 
+Run <i>Client</i> executable under ``examples/<platform>`` 
   
 ## Build yourself
 <p align="center">
