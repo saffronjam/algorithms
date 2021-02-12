@@ -18,11 +18,6 @@ Visualizing Bubble Sort, Insertion Sort, Selection Sort, Shell Sort, Merge Sort,
   <img src="https://github.com/saffronjam/Algorithms/blob/master/previewGif0.gif" width="75%">
   <img src="https://github.com/saffronjam/Algorithms/blob/master/previewGif1.gif" width="75%">
 </p>
-  
-<p align="left">
-</p>  
-<p align="right">
-</p>
 
 ## Run without building
 Run executable <i>Client</i> under ``examples/<platform>`` 
