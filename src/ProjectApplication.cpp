@@ -5,7 +5,7 @@ namespace Se
 {
 Application *CreateApplication()
 {
-	return new ProjectApplication({ "Saffron 2D", 1700, 720 });
+	return new ProjectApplication({ "Algorithms", 1700, 720 });
 }
 
 ProjectApplication::ProjectApplication(const Properties &properties)
