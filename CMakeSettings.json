@@ -15,7 +15,7 @@
     {
       "name": "release",
       "generator": "Ninja",
-      "configurationType": "RelWithDebInfo",
+      "configurationType": "Release",
       "buildRoot": "${projectDir}\\bin\\${name}",
       "installRoot": "${projectDir}\\bin\\release\\${name}",
       "cmakeCommandArgs": "",
