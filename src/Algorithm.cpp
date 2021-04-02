@@ -4,7 +4,7 @@
 
 namespace Se
 {
-struct ContainerGroup
+struct ContainerRefGroup
 {
 	ArrayList<Element>& elements;
 	ArrayList<Element>& elementsRestart;
@@ -21,7 +21,8 @@ Algorithm::Algorithm(String name) :
 	_nameTextFont(FontStore::Get("segoeui.ttf")),
 	_visType(VisType::Bars),
 	_usingSpectrumColors(false),
-	_barsVA(sf::Quads, 0)
+	_barsVA(sf::Quads, 0),
+	_numberLineVA(sf::Quads, 0)
 {
 	_nameText.setFont(*_nameTextFont);
 	_nameText.setCharacterSize(18);
@@ -35,6 +36,11 @@ void Algorithm::Draw(Scene& scene, const sf::FloatRect& rect)
 	case VisType::Bars:
 	{
 		DrawBars(scene, rect);
+		break;
+	}
+	case VisType::NumberLine:
+	{
+		DrawNumberLine(scene, rect);
 		break;
 	}
 	case VisType::Circles:
@@ -161,6 +167,7 @@ void Algorithm::Resize(size_t size)
 
 	// Resize draw cache
 	_barsVA.resize(size * 4);
+	_numberLineVA.resize(size * 4);
 }
 
 void Algorithm::SoftResize(size_t size)
@@ -182,6 +189,7 @@ void Algorithm::SoftResize(size_t size)
 
 	// Resize draw cache
 	_barsVA.resize(size * 4);
+	_numberLineVA.resize(size * 4);
 }
 
 void Algorithm::SetImage(const String& filepath)
@@ -222,6 +230,31 @@ ArrayList<Element>& Algorithm::GetRestartElements()
 ArrayList<Element>& Algorithm::GetResetElements()
 {
 	return _elementsReset;
+}
+
+Element& Algorithm::GetElement(size_t index)
+{
+	return GetElements()[index];
+}
+
+long Algorithm::GetValue(size_t index)
+{
+	return GetElements()[index].value;
+}
+
+void Algorithm::SetValue(size_t index, long value)
+{
+	SetValue(GetElement(index), value);
+}
+
+void Algorithm::SetColor(size_t index, const sf::Color& color)
+{
+	SetColor(GetElement(index), color);
+}
+
+void Algorithm::SwapElements(size_t iFirst, size_t iSecond)
+{
+	SwapElements(GetElement(iFirst), GetElement(iSecond));
 }
 
 void Algorithm::SetValue(Element& element, long value)
@@ -373,6 +406,63 @@ void Algorithm::DrawBars(Scene& scene, const sf::FloatRect& rect)
 	}
 
 	scene.Submit(_barsVA);
+}
+
+void Algorithm::DrawNumberLine(Scene& scene, const sf::FloatRect& rect)
+{
+	const float size = rect.width / _elements.size();
+	const float constainedSize = std::min(size, rect.height * 0.4f);
+	const sf::Vector2f positionOffset(rect.left, rect.top);
+
+	for (size_t i = 0; i < _numberLineVA.getVertexCount(); i += 4)
+	{
+		const size_t boxIndex = i / 4;
+
+		auto color = GetElementColor(boxIndex);
+		color.a = 255 - static_cast<float>(_elements.size()) / static_cast<float>(MaxElements) * 240;
+
+		sf::Vector2f position(positionOffset.x + constainedSize * (static_cast<float>(boxIndex)),
+		                      positionOffset.y + rect.height / 2.0f - constainedSize / 2.0f);
+
+		if (constainedSize < size)
+		{
+			const float halfTotalLength = rect.width / 2.0f;
+			const float halfCurrentAccLength = constainedSize * static_cast<float>(_elements.size()) / 2.0f;
+
+			position.x += halfTotalLength - halfCurrentAccLength;
+		}
+
+		const int diff = boxIndex - _numberLineTextList.size();
+		if (diff >= 0)
+		{
+			_numberLineTextList.emplace_back("", *_nameTextFont);
+			_numberLineTextList.back().setFillColor(sf::Color::White);
+			_numberLineTextList.back().setOutlineThickness(1);
+			_numberLineTextList.back().setOutlineColor(sf::Color::Black);
+		}
+
+		const auto& value = _elements[boxIndex].value;
+		_numberLineTextList[boxIndex].setPosition(position + sf::Vector2f(constainedSize / 2.0f, 0.0f));
+		_numberLineTextList[boxIndex].setCharacterSize(constainedSize * 0.65f);
+		_numberLineTextList[boxIndex].setString(std::to_string(value));
+
+		const auto adjustedSize = std::max(1.0f, constainedSize);
+
+		_numberLineVA[i].color = color;
+		_numberLineVA[i].position = position;
+		_numberLineVA[i + 1].color = color;
+		_numberLineVA[i + 1].position = position + sf::Vector2f{adjustedSize, 0.0f};
+		_numberLineVA[i + 2].color = color;
+		_numberLineVA[i + 2].position = position + sf::Vector2f(adjustedSize, adjustedSize);
+		_numberLineVA[i + 3].color = color;
+		_numberLineVA[i + 3].position = position + sf::Vector2f{0.0f, adjustedSize};
+	}
+
+	scene.Submit(_numberLineVA);
+	for (size_t i = 0; i < _numberLineVA.getVertexCount() / 4; i++)
+	{
+		scene.Submit(_numberLineTextList[i], TextAlign::Middle);
+	}
 }
 
 void Algorithm::DrawCircles(Scene& scene, const sf::FloatRect& rect)

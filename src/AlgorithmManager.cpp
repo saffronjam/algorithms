@@ -15,6 +15,7 @@ AlgorithmManager::AlgorithmManager()
 	Add(new RadixSort());
 
 	_visTypeNames.push_back("Bars");
+	_visTypeNames.push_back("Number Line");
 	_visTypeNames.push_back("Circles");
 	_visTypeNames.push_back("Hoops");
 	_visTypeNames.push_back("Line");
@@ -388,10 +389,12 @@ void AlgorithmManager::GenerateDrawContainers(const Scene& scene)
 		nHeight = 3;
 		break;
 	}
-	default: SE_CORE_FALSE_ASSERT("Invalid container group amount");
+	default:
+	{
 		nWidth = 0;
 		nHeight = 0;
 		break;
+	}
 	}
 	const sf::Vector2f size(container.width / static_cast<float>(nWidth),
 	                        container.height / static_cast<float>(nWidth));

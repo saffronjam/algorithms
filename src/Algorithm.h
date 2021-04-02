@@ -1,12 +1,5 @@
 #pragma once
 
-#include <thread>
-#include <string>
-#include <vector>
-#include <random>
-#include <algorithm>
-
-#include <SFML/System/Sleep.hpp>
 #include <SFML/Graphics.hpp>
 
 #include <Saffron.h>
@@ -15,7 +8,7 @@
 
 namespace Se
 {
-struct ContainerGroup;
+struct ContainerRefGroup;
 
 class Algorithm
 {
@@ -23,6 +16,7 @@ public:
 	enum class VisType
 	{
 		Bars,
+		NumberLine,
 		Circles,
 		Hoops,
 		Line,
@@ -62,7 +56,7 @@ public:
 
 	void Resize(size_t size);
 	void SoftResize(size_t size);
-
+	
 	void SetImage(const String& filepath);
 
 	void Shuffle(Random::Engine generator);
@@ -79,21 +73,17 @@ public:
 protected:
 	virtual void Sort() = 0;
 
-	Element& GetElement(size_t index) { return GetElements()[index]; }
+	Element& GetElement(size_t index);
 
-	long GetValue(size_t index) { return GetElements()[index].value; }
+	long GetValue(size_t index);
 
 	void SetValue(Element& element, long value);
-
-	void SetValue(size_t index, long value) { SetValue(GetElement(index), value); }
-
+	void SetValue(size_t index, long value);
 	void SetColor(Element& element, const sf::Color& color);
-
-	void SetColor(size_t index, const sf::Color& color) { SetColor(GetElement(index), color); }
+	void SetColor(size_t index, const sf::Color& color);
 
 	void SwapElements(Element& first, Element& second);
-
-	void SwapElements(size_t iFirst, size_t iSecond) { SwapElements(GetElement(iFirst), GetElement(iSecond)); }
+	void SwapElements(size_t iFirst, size_t iSecond);
 
 	void PauseCheck();
 	void SleepDelay();
@@ -109,6 +99,7 @@ private:
 	void CollectSorter();
 
 	void DrawBars(Scene& scene, const sf::FloatRect& rect);
+	void DrawNumberLine(Scene &scene, const sf::FloatRect &rect);
 	void DrawCircles(Scene& scene, const sf::FloatRect& rect);
 	void DrawHoops(Scene& scene, const sf::FloatRect& rect);
 	void DrawLine(Scene& scene, const sf::FloatRect& rect);
@@ -148,6 +139,8 @@ private:
 	// Shapes cache
 	sf::VertexArray _barsVA;
 	ArrayList<sf::CircleShape> _hoopsShapes;
+	sf::VertexArray _numberLineVA;
+	ArrayList<sf::Text> _numberLineTextList;
 
 	static constexpr int MaxElements = 10000;
 };
