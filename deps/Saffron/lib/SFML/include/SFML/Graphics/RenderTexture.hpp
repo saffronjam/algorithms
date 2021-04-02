@@ -196,7 +196,7 @@ public:
     bool setActive(bool active = true);
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate the contents of the target texture
+    /// \brief Update the contents of the target texture
     ///
     /// This function updates the target texture with what
     /// has been drawn so far. Like for windows, calling this
@@ -284,7 +284,7 @@ private:
 ///    // Clear the whole texture with red color
 ///    texture.clear(sf::Color::Red);
 ///
-///    // OnRender stuff to the texture
+///    // Draw stuff to the texture
 ///    texture.draw(sprite);  // sprite is a sf::Sprite
 ///    texture.draw(shape);   // shape is a sf::Shape
 ///    texture.draw(text);    // text is a sf::Text
@@ -295,7 +295,7 @@ private:
 ///    // Now we start rendering to the window, clear it first
 ///    window.clear();
 ///
-///    // OnRender the texture
+///    // Draw the texture
 ///    sf::Sprite sprite(texture.getTexture());
 ///    window.draw(sprite);
 ///

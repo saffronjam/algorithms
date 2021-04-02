@@ -7,9 +7,8 @@ namespace Se
 class BubbleSort : public Algorithm
 {
 public:
-    BubbleSort();
+	BubbleSort();
 
-    void Sort() override;
+	void Sort() override;
 };
-
 }

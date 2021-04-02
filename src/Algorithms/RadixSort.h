@@ -7,13 +7,13 @@ namespace Se
 class RadixSort : public Algorithm
 {
 public:
-    RadixSort();
+	RadixSort();
 
-    void Sort() override;
+	void Sort() override;
 
 private:
-    void CountSort(size_t exponent);
+	void CountSort(size_t exponent);
 
-    long HighestValue();
+	long HighestValue();
 };
 }

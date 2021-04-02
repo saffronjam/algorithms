@@ -9,9 +9,8 @@ namespace Se
 class GnomeSort : public Algorithm
 {
 public:
-    GnomeSort();
+	GnomeSort();
 
-    void Sort() override;
+	void Sort() override;
 };
-
 }

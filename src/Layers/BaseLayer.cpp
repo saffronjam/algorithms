@@ -2,8 +2,7 @@
 
 namespace Se
 {
-
-SignalAggregate<const sf::Vector2f &> BaseLayer::Signals::OnRenderTargetResize;
+SignalAggregate<const sf::Vector2f&> BaseLayer::Signals::OnRenderTargetResize;
 
 BaseLayer::BaseLayer() :
 	_controllableRenderTexture(100, 100),
@@ -11,21 +10,19 @@ BaseLayer::BaseLayer() :
 {
 }
 
-void BaseLayer::OnAttach(std::shared_ptr<BatchLoader> &loader)
+void BaseLayer::OnAttach(std::shared_ptr<BatchLoader>& loader)
 {
 	_scene.GetViewportPane().GetSignal(ViewportPane::Signals::OnWantRenderTargetResize).Connect(
-		[this](const sf::Vector2f &size)
+		[this](const sf::Vector2f& size)
 		{
 			OnWantRenderTargetResize(size);
-		}
-	);
+		});
 	RenderTargetManager::Add(&_controllableRenderTexture);
 
-	GetSignal(Signals::OnRenderTargetResize).Connect(
-		[this](const sf::Vector2f &size)
-		{
-			OnRenderTargetResize(size);
-		});
+	GetSignal(Signals::OnRenderTargetResize).Connect([this](const sf::Vector2f& size)
+	{
+		OnRenderTargetResize(size);
+	});
 }
 
 void BaseLayer::OnDetach()
@@ -44,9 +41,9 @@ void BaseLayer::OnPostFrame()
 
 void BaseLayer::OnUpdate()
 {
-	if ( _wantResize )
+	if (_wantResize)
 	{
-		if ( _framesWithNoResizeRequest > 4 )
+		if (_framesWithNoResizeRequest > 4)
 		{
 			GetSignals().Emit(Signals::OnRenderTargetResize, _resizeTo);
 			_wantResize = false;
@@ -62,7 +59,7 @@ void BaseLayer::OnUpdate()
 
 void BaseLayer::OnGuiRender()
 {
-	if ( _viewSystem )
+	if (_viewSystem)
 	{
 		_camera.OnGuiRender();
 		_terminal.OnGuiRender();
@@ -71,15 +68,15 @@ void BaseLayer::OnGuiRender()
 	_scene.OnGuiRender();
 }
 
-void BaseLayer::OnRenderTargetResize(const sf::Vector2f &newSize)
+void BaseLayer::OnRenderTargetResize(const sf::Vector2f& newSize)
 {
 	_controllableRenderTexture.GetRenderTexture().create(newSize.x, newSize.y);
 	_camera.SetViewportSize(newSize);
 }
 
-void BaseLayer::OnWantRenderTargetResize(const sf::Vector2f &newSize)
+void BaseLayer::OnWantRenderTargetResize(const sf::Vector2f& newSize)
 {
-	if ( newSize == _resizeTo )
+	if (newSize == _resizeTo)
 	{
 		return;
 	}

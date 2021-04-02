@@ -268,7 +268,7 @@ protected:
 private:
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnRender the shape to a render target
+    /// \brief Draw the shape to a render target
     ///
     /// \param target Render target to draw to
     /// \param states Current render states
@@ -277,25 +277,25 @@ private:
     virtual void draw(RenderTarget& target, RenderStates states) const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate the fill vertices' color
+    /// \brief Update the fill vertices' color
     ///
     ////////////////////////////////////////////////////////////
     void updateFillColors();
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate the fill vertices' texture coordinates
+    /// \brief Update the fill vertices' texture coordinates
     ///
     ////////////////////////////////////////////////////////////
     void updateTexCoords();
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate the outline vertices' position
+    /// \brief Update the outline vertices' position
     ///
     ////////////////////////////////////////////////////////////
     void updateOutline();
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate the outline vertices' color
+    /// \brief Update the outline vertices' color
     ///
     ////////////////////////////////////////////////////////////
     void updateOutlineColors();

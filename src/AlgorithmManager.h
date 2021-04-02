@@ -1,7 +1,6 @@
 #pragma once
 
-#include <set>
-#include <numeric>
+#include <SFML/Audio/Sound.hpp>
 
 #include <Saffron.h>
 
@@ -22,86 +21,72 @@ namespace Se
 class AlgorithmManager
 {
 public:
-    AlgorithmManager();
+	AlgorithmManager();
 
-    ~AlgorithmManager();
+	~AlgorithmManager();
 
-    AlgorithmManager(const AlgorithmManager &) = delete;
+	AlgorithmManager(const AlgorithmManager&) = delete;
 
-    const AlgorithmManager &operator()(const AlgorithmManager &) = delete;
+	const AlgorithmManager& operator()(const AlgorithmManager&) = delete;
 
-    void OnUpdate(const Scene &scene);
+	void OnUpdate(const Scene& scene);
+	void OnRender(Scene& scene);
+	void OnGuiRender();
+	void OnViewportResize(const sf::Vector2f& size);
 
-    void OnRender(Scene &scene);
+	void Add(Algorithm* algorithm);
 
-    void OnGuiRender();
+	void Activate(Algorithm* algorithm);
+	void Deactivate(Algorithm* algorithm);
 
-    void OnViewportResize(const sf::Vector2f& size);
+	void ActivateSpectrum() noexcept;
+	void DeactivateSpectrum() noexcept;
 
-    void Add(Algorithm *algorithm);
+	void Start();
+	void Restart();
+	void Pause();
+	void Resume();
+	void Reset();
 
-    void Activate(Algorithm *algorithm);
+	void Resize(size_t size);
+	void SoftResize(size_t size);
 
-    void Deactivate(Algorithm *algorithm);
+	void Shuffle();
+	void CustomShuffle(int degree);
 
-    void ActivateSpectrum() noexcept;
+	Algorithm::VisType GetVisType() const noexcept { return _visType; }
 
-    void DeactivateSpectrum() noexcept;
+	void SetSleepDelay(sf::Time seconds);
+	void SetVisType(Algorithm::VisType visType);
 
-    void Start();
-
-    void Restart();
-
-    void Pause();
-
-    void Resume();
-
-    void Reset();
-
-    void Resize(size_t size);
-
-    void SoftResize(size_t size);
-
-    void Shuffle();
-
-    void CustomShuffle(int degree);
-
-    Algorithm::VisType GetVisType() const noexcept { return _visType; }
-
-    void SetSleepDelay(sf::Time seconds);
-
-    void SetVisType(Algorithm::VisType visType);
-
-    const ArrayList<Algorithm *> &GetAlgorithms() const noexcept { return _algorithms; }
+	const ArrayList<Algorithm*>& GetAlgorithms() const noexcept { return _algorithms; }
 
 private:
-    void GenerateDrawContainers(const Scene &scene);
+	void GenerateDrawContainers(const Scene& scene);
+	int GetActiveContainers();
 
-    int GetActiveContainers();
-
-    void OnAlgorithmStateChange();
+	void OnAlgorithmStateChange();
 
 private:
-    ArrayList<Algorithm *> _algorithms;
-    ArrayList<sf::FloatRect> _drawContainers;
+	ArrayList<Algorithm*> _algorithms;
+	ArrayList<sf::FloatRect> _drawContainers;
 
-    // A cache used for getter
-    Algorithm::VisType _visType;
+	// A cache used for getter
+	Algorithm::VisType _visType;
 
-    bool _wantNewDrawContainers = true;
-    bool _wantSoftResize = true;
+	bool _wantNewDrawContainers = true;
+	bool _wantSoftResize = true;
 
-    // Gui cache
-    float _elements = 100;
-    float _sleepDelayMicroseconds = 10000.0f;
-    bool _spectrum = false;
-    int _activeVisTypeIndex = static_cast<int>(Algorithm::VisType::Bars);
-    ArrayList<const char*> _visTypeNames;
-    ArrayList<const char*> _algorithmNames;
-    int _customShuffleDegree = 10;
+	// Gui cache
+	float _elements = 100;
+	float _sleepDelayMicroseconds = 10000.0f;
+	bool _spectrum = false;
+	int _activeVisTypeIndex = static_cast<int>(Algorithm::VisType::Bars);
+	ArrayList<const char*> _visTypeNames;
+	ArrayList<const char*> _algorithmNames;
+	int _customShuffleDegree = 10;
 
-    bool _gnomeActive = false;
-    sf::Sound _gnomeSound;
+	bool _gnomeActive = false;
+	sf::Sound _gnomeSound;
 };
-
 }

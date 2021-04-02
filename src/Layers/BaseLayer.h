@@ -9,13 +9,13 @@ class BaseLayer : public Layer, public Signaller
 public:
 	struct Signals
 	{
-		static SignalAggregate<const sf::Vector2f &> OnRenderTargetResize;
+		static SignalAggregate<const sf::Vector2f&> OnRenderTargetResize;
 	};
 
 public:
 	BaseLayer();
 
-	void OnAttach(std::shared_ptr<BatchLoader> &loader) override;
+	void OnAttach(std::shared_ptr<BatchLoader>& loader) override;
 	void OnDetach() override;
 
 	void OnPreFrame() override;
@@ -25,10 +25,10 @@ public:
 	void OnGuiRender() override;
 
 protected:
-	virtual void OnRenderTargetResize(const sf::Vector2f &newSize);
+	virtual void OnRenderTargetResize(const sf::Vector2f& newSize);
 
 private:
-	void OnWantRenderTargetResize(const sf::Vector2f &newSize);
+	void OnWantRenderTargetResize(const sf::Vector2f& newSize);
 
 protected:
 	ControllableRenderTexture _controllableRenderTexture;
@@ -45,5 +45,4 @@ private:
 	sf::Vector2f _resizeTo = VecUtils::Null<>();
 	int _framesWithNoResizeRequest = 0;
 };
-
 };

@@ -9,7 +9,7 @@ namespace Se
 class ProjectApplication : public Application
 {
 public:
-	explicit ProjectApplication(const Properties &properties);
+	explicit ProjectApplication(const Properties& properties);
 
 	void OnInit() override;
 

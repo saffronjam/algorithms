@@ -238,7 +238,7 @@ public:
     Image copyToImage() const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate the whole texture from an array of pixels
+    /// \brief Update the whole texture from an array of pixels
     ///
     /// The \a pixel array is assumed to have the same size as
     /// the \a area rectangle, and to contain 32-bits RGBA pixels.
@@ -256,7 +256,7 @@ public:
     void update(const Uint8* pixels);
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate a part of the texture from an array of pixels
+    /// \brief Update a part of the texture from an array of pixels
     ///
     /// The size of the \a pixel array must match the \a width and
     /// \a height arguments, and it must contain 32-bits RGBA pixels.
@@ -278,7 +278,7 @@ public:
     void update(const Uint8* pixels, unsigned int width, unsigned int height, unsigned int x, unsigned int y);
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate a part of this texture from another texture
+    /// \brief Update a part of this texture from another texture
     ///
     /// Although the source texture can be smaller than this texture,
     /// this function is usually used for updating the whole texture.
@@ -298,7 +298,7 @@ public:
     void update(const Texture& texture);
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate a part of this texture from another texture
+    /// \brief Update a part of this texture from another texture
     ///
     /// No additional check is performed on the size of the texture,
     /// passing an invalid combination of texture size and offset
@@ -315,7 +315,7 @@ public:
     void update(const Texture& texture, unsigned int x, unsigned int y);
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate the texture from an image
+    /// \brief Update the texture from an image
     ///
     /// Although the source image can be smaller than the texture,
     /// this function is usually used for updating the whole texture.
@@ -335,7 +335,7 @@ public:
     void update(const Image& image);
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate a part of the texture from an image
+    /// \brief Update a part of the texture from an image
     ///
     /// No additional check is performed on the size of the image,
     /// passing an invalid combination of image size and offset
@@ -352,7 +352,7 @@ public:
     void update(const Image& image, unsigned int x, unsigned int y);
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate the texture from the contents of a window
+    /// \brief Update the texture from the contents of a window
     ///
     /// Although the source window can be smaller than the texture,
     /// this function is usually used for updating the whole texture.
@@ -372,7 +372,7 @@ public:
     void update(const Window& window);
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate a part of the texture from the contents of a window
+    /// \brief Update a part of the texture from the contents of a window
     ///
     /// No additional check is performed on the size of the window,
     /// passing an invalid combination of window size and offset
@@ -687,7 +687,7 @@ private:
 /// sf::Sprite sprite;
 /// sprite.setTexture(texture);
 ///
-/// // OnRender the textured sprite
+/// // Draw the textured sprite
 /// window.draw(sprite);
 /// \endcode
 ///

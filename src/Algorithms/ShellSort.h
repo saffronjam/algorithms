@@ -7,8 +7,8 @@ namespace Se
 class ShellSort : public Algorithm
 {
 public:
-    ShellSort();
+	ShellSort();
 
-    void Sort() override;
+	void Sort() override;
 };
 }

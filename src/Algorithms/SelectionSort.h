@@ -7,8 +7,8 @@ namespace Se
 class SelectionSort : public Algorithm
 {
 public:
-    SelectionSort();
+	SelectionSort();
 
-    void Sort() override;
+	void Sort() override;
 };
 }
