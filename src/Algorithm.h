@@ -33,20 +33,35 @@ public:
 		BeingCollected
 	};
 
+	enum class Palette
+	{
+		Rainbow,
+		Fiery,
+		UV
+	};
+
+private:
+	struct TransitionColor
+	{
+		float r;
+		float g;
+		float b;
+		float a;
+	};
+
 public:
 	explicit Algorithm(String name);
 
 	virtual ~Algorithm() = default;
 
+	void OnUpdate();
+
 	void Draw(Scene& scene, const sf::FloatRect& rect);
 	void DrawName(Scene& scene, const sf::FloatRect& rect);
 
-	void Activate() noexcept;
-	void Deactivate() noexcept;
-	bool IsActive() const noexcept;
-
-	void ActivateSpectrum() noexcept;
-	void DeactivateSpectrum() noexcept;
+	void Activate();
+	void Deactivate();
+	bool IsActive() const;
 
 	void Start();
 	void Restart();
@@ -63,9 +78,13 @@ public:
 
 	const String& GetName() const { return _name; }
 
-	void SetSleepDelay(sf::Time delay) noexcept;
-	void SetVisType(VisType visType) noexcept;
+	void SetSleepDelay(sf::Time delay);
+	void SetVisType(VisType visType);
 
+	void UsePalette(bool use);
+	void SetPalette(Palette palette);
+	const sf::Image& GetCurrentPaletteImage();
+	
 	ArrayList<Element>& GetElements();
 	ArrayList<Element>& GetRestartElements();
 	ArrayList<Element>& GetResetElements();
@@ -88,7 +107,7 @@ protected:
 	void PauseCheck();
 	void SleepDelay();
 
-private:
+private:	
 	sf::Vector2u GetPixelCoord(size_t index) const;
 	sf::FloatRect GetScaledPixel(size_t index, size_t max) const;
 	sf::Vector2u GetClosestPixelCoord(size_t index, size_t max) const;
@@ -129,9 +148,11 @@ protected:
 	Shared<sf::Font> _nameTextFont;
 	sf::Text _nameText;
 	VisType _visType;
-	bool _usingSpectrumColors;
 
 private:
+	static constexpr int MaxElements = 10000;
+	static constexpr int PaletteWidth = 2048;
+	
 	ArrayList<Element> _elements;
 	ArrayList<Element> _elementsRestart;
 	ArrayList<Element> _elementsReset;
@@ -142,6 +163,15 @@ private:
 	sf::VertexArray _numberLineVA;
 	ArrayList<sf::Text> _numberLineTextList;
 
-	static constexpr int MaxElements = 10000;
+	// Palette
+	sf::Texture _paletteTexture;
+	Palette _desiredPalette = Palette::Rainbow;
+	sf::Image _currentPalette;
+	Array<TransitionColor, PaletteWidth> _colorsStart;
+	Array<TransitionColor, PaletteWidth> _colorsCurrent;
+	float _colorTransitionTimer;
+	float _colorTransitionDuration;
+	ArrayList<Shared<sf::Image>> _palettes;
+	bool _usePalette = false;
 };
 }

@@ -20,13 +20,58 @@ Algorithm::Algorithm(String name) :
 	_isActive(true),
 	_nameTextFont(FontStore::Get("segoeui.ttf")),
 	_visType(VisType::Bars),
-	_usingSpectrumColors(false),
 	_barsVA(sf::Quads, 0),
-	_numberLineVA(sf::Quads, 0)
+	_numberLineVA(sf::Quads, 0),
+	_colorTransitionTimer(0.0f),
+	_colorTransitionDuration(0.7f)
 {
 	_nameText.setFont(*_nameTextFont);
 	_nameText.setCharacterSize(18);
 	SetImage("sample_image_forest.jpg");
+
+	_palettes.push_back(ImageStore::Get("Pals/rainbowLarge.png"));
+	_palettes.push_back(ImageStore::Get("Pals/fieryLarge.png"));
+	_palettes.push_back(ImageStore::Get("Pals/uvLarge.png"));
+	
+	_currentPalette.create(PaletteWidth, 1, _palettes[static_cast<int>(_desiredPalette)]->getPixelsPtr());
+	for (int i = 0; i < PaletteWidth; i++)
+	{
+		const auto pix = _currentPalette.getPixel(i, 0);
+		_colorsStart[i] = {
+			static_cast<float>(pix.r) / 255.0f, static_cast<float>(pix.g) / 255.0f, static_cast<float>(pix.b) / 255.0f,
+			static_cast<float>(pix.a) / 255.0f
+		};
+	}
+	_colorsCurrent = _colorsStart;
+}
+
+void Algorithm::OnUpdate()
+{
+	if (_colorTransitionTimer <= _colorTransitionDuration)
+	{
+		const float delta = (std::sin((_colorTransitionTimer / _colorTransitionDuration) * PI<> - PI<> / 2.0f) + 1.0f) /
+			2.0f;
+		for (int x = 0; x < PaletteWidth; x++)
+		{
+			const auto pix = _palettes[static_cast<int>(_desiredPalette)]->getPixel(x, 0);
+			const TransitionColor goalColor = {
+				static_cast<float>(pix.r) / 255.0f, static_cast<float>(pix.g) / 255.0f,
+				static_cast<float>(pix.b) / 255.0f, static_cast<float>(pix.a) / 255.0f
+			};
+			const auto& startColor = _colorsStart[x];
+			auto& currentColor = _colorsCurrent[x];
+			currentColor.r = startColor.r + delta * (goalColor.r - startColor.r);
+			currentColor.g = startColor.g + delta * (goalColor.g - startColor.g);
+			currentColor.b = startColor.b + delta * (goalColor.b - startColor.b);
+			_currentPalette.setPixel(x, 0, {
+				                         static_cast<sf::Uint8>(currentColor.r * 255.0f),
+				                         static_cast<sf::Uint8>(currentColor.g * 255.0f),
+				                         static_cast<sf::Uint8>(currentColor.b * 255.0f),
+				                         static_cast<sf::Uint8>(currentColor.a * 255.0f)
+			                         });
+		}
+		_colorTransitionTimer += Global::Clock::GetFrameTime().asSeconds();
+	}
 }
 
 void Algorithm::Draw(Scene& scene, const sf::FloatRect& rect)
@@ -79,29 +124,19 @@ void Algorithm::DrawName(Scene& scene, const sf::FloatRect& rect)
 	scene.Submit(_nameText, TextAlign::Middle);
 }
 
-void Algorithm::Activate() noexcept
+void Algorithm::Activate()
 {
 	_isActive = true;
 }
 
-void Algorithm::Deactivate() noexcept
+void Algorithm::Deactivate()
 {
 	_isActive = false;
 }
 
-bool Algorithm::IsActive() const noexcept
+bool Algorithm::IsActive() const
 {
 	return _isActive;
-}
-
-void Algorithm::ActivateSpectrum() noexcept
-{
-	_usingSpectrumColors = true;
-}
-
-void Algorithm::DeactivateSpectrum() noexcept
-{
-	_usingSpectrumColors = false;
 }
 
 void Algorithm::Start()
@@ -206,15 +241,32 @@ void Algorithm::Shuffle(Random::Engine generator)
 	_elements = _elementsRestart;
 }
 
-void Algorithm::SetSleepDelay(sf::Time delay) noexcept
+void Algorithm::SetSleepDelay(sf::Time delay)
 {
 	_sleepDelay = delay;
 	_minorDelay = (_sleepDelay.asMicroseconds() < 1000);
 }
 
-void Algorithm::SetVisType(VisType visType) noexcept
+void Algorithm::SetVisType(VisType visType)
 {
 	_visType = visType;
+}
+
+void Algorithm::UsePalette(bool use)
+{
+	_usePalette = use;
+}
+
+void Algorithm::SetPalette(Palette palette)
+{
+	_desiredPalette = palette;
+	_colorTransitionTimer = 0.0f;
+	_colorsStart = _colorsCurrent;
+}
+
+const sf::Image& Algorithm::GetCurrentPaletteImage()
+{
+	return _currentPalette;
 }
 
 ArrayList<Element>& Algorithm::GetElements()
@@ -619,9 +671,11 @@ void Algorithm::DrawImage(Scene& scene, const sf::FloatRect& rect)
 
 sf::Color Algorithm::GetElementColor(size_t index)
 {
-	if (_usingSpectrumColors)
+	if (_usePalette)
 	{
-		return GenUtils::ValueToSpectrum(_elements[index].value, static_cast<long>(_elements.size()));
+		const auto &element = GetElement(index);
+		const auto mappedValue = GenUtils::Map(element.value, 0l, static_cast<long>(_elements.size()), 0l, static_cast<long>(PaletteWidth - 1));
+		return _currentPalette.getPixel(mappedValue, 0);
 	}
 	return _elements[index].color;
 }

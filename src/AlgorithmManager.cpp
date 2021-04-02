@@ -2,7 +2,8 @@
 
 namespace Se
 {
-AlgorithmManager::AlgorithmManager()
+AlgorithmManager::AlgorithmManager() :
+	_paletteComboBoxNames({"Rainbow", "Fiery", "UV"})
 {
 	Add(CreateUnique<BubbleSort>());
 	Add(CreateUnique<SelectionSort>());
@@ -50,6 +51,11 @@ void AlgorithmManager::OnUpdate(const Scene& scene)
 	{
 		GenerateDrawContainers(scene);
 		_wantNewDrawContainers = false;
+	}
+
+	for (auto& algoritm : _algorithms)
+	{
+		algoritm->OnUpdate();
 	}
 }
 
@@ -140,19 +146,35 @@ void AlgorithmManager::OnGuiRender()
 		_wantSoftResize = true;
 	}
 
-	if (Gui::Property("Spectrum", _spectrum))
-	{
-		_spectrum ? ActivateSpectrum() : DeactivateSpectrum();
-	}
-
 	Gui::EndPropertyGrid();
+
+	ImGui::Separator();
+
+	Gui::BeginPropertyGrid("Palette");
+	if(Gui::Property("Use Palette", _usePalette))
+	{
+		UsePalette(_usePalette);
+	}
+	ImGui::Text("Palette");
+	ImGui::NextColumn();
+	ImGui::PushItemWidth(-1);
+	if (ImGui::Combo("##Palette", &_activePaletteInt, _paletteComboBoxNames.data(), _paletteComboBoxNames.size()))
+	{
+		SetPalette(static_cast<Algorithm::Palette>(_activePaletteInt));
+	}
+	ImGui::NextColumn();
+	Gui::EndPropertyGrid();
+	ImGui::Dummy({1.0f, 2.0f});
+
+	
+	Gui::Image(GetCurrentPaletteTexture(), sf::Vector2f(ImGui::GetContentRegionAvailWidth(), 9.0f));
 
 	ImGui::Separator();
 
 	ImGui::Text("Algorithms");
 	Gui::BeginPropertyGrid("Checkboxes");
-	
-	for (auto &algorithm : _algorithms)
+
+	for (auto& algorithm : _algorithms)
 	{
 		bool active = algorithm->IsActive();
 		if (Gui::Property(algorithm->GetName(), active))
@@ -191,19 +213,11 @@ void AlgorithmManager::Deactivate(const Unique<Algorithm>& algorithm)
 	OnAlgorithmStateChange();
 }
 
-void AlgorithmManager::ActivateSpectrum() noexcept
+void AlgorithmManager::UsePalette(bool use)
 {
 	for (auto& algorithm : _algorithms)
 	{
-		algorithm->ActivateSpectrum();
-	}
-}
-
-void AlgorithmManager::DeactivateSpectrum() noexcept
-{
-	for (auto& algorithm : _algorithms)
-	{
-		algorithm->DeactivateSpectrum();
+		algorithm->UsePalette(use);
 	}
 }
 
@@ -328,6 +342,14 @@ void AlgorithmManager::SetVisType(Algorithm::VisType visType)
 	OnAlgorithmStateChange();
 }
 
+void AlgorithmManager::SetPalette(Algorithm::Palette palette)
+{
+	for (auto& algorithm : _algorithms)
+	{
+		algorithm->SetPalette(palette);
+	}
+}
+
 void AlgorithmManager::GenerateDrawContainers(const Scene& scene)
 {
 	_drawContainers.clear();
@@ -413,6 +435,14 @@ int AlgorithmManager::GetActiveContainers()
 	{
 		return alg->IsActive();
 	});
+}
+
+const sf::Texture &AlgorithmManager::GetCurrentPaletteTexture()
+{
+	const auto image = _algorithms[0]->GetCurrentPaletteImage();
+	static sf::Texture texture;
+	texture.loadFromImage(image);
+	return texture;
 }
 
 void AlgorithmManager::OnAlgorithmStateChange()

@@ -22,11 +22,8 @@ class AlgorithmManager
 {
 public:
 	AlgorithmManager();
-
 	~AlgorithmManager();
-
 	AlgorithmManager(const AlgorithmManager&) = delete;
-
 	const AlgorithmManager& operator()(const AlgorithmManager&) = delete;
 
 	void OnUpdate(const Scene& scene);
@@ -39,8 +36,7 @@ public:
 	void Activate(const Unique<Algorithm>& algorithm);
 	void Deactivate(const Unique<Algorithm>& algorithm);
 
-	void ActivateSpectrum() noexcept;
-	void DeactivateSpectrum() noexcept;
+	void UsePalette(bool use);
 
 	void Start();
 	void Restart();
@@ -54,16 +50,18 @@ public:
 	void Shuffle();
 	void CustomShuffle(int degree);
 
-	Algorithm::VisType GetVisType() const noexcept { return _visType; }
+	Algorithm::VisType GetVisType() const { return _visType; }
 
 	void SetSleepDelay(sf::Time delay);
 	void SetVisType(Algorithm::VisType visType);
+	void SetPalette(Algorithm::Palette palette);
 
-	const ArrayList<Unique<Algorithm>>& GetAlgorithms() const noexcept { return _algorithms; }
+	const ArrayList<Unique<Algorithm>>& GetAlgorithms() const { return _algorithms; }
 
 private:
 	void GenerateDrawContainers(const Scene& scene);
 	int GetActiveContainers();
+	const sf::Texture & GetCurrentPaletteTexture();
 
 	void OnAlgorithmStateChange();
 
@@ -80,11 +78,14 @@ private:
 	// Gui cache
 	float _elements = 100;
 	float _sleepDelayMicroseconds = 10000.0f;
-	bool _spectrum = false;
+	bool _usePalette = false;
 	int _activeVisTypeIndex = static_cast<int>(Algorithm::VisType::Bars);
 	ArrayList<const char*> _visTypeNames;
 	ArrayList<const char*> _algorithmNames;
 	int _customShuffleDegree = 10;
+
+	ArrayList<const char*> _paletteComboBoxNames;
+	int _activePaletteInt = static_cast<int>(Algorithm::Palette::Rainbow);
 
 	bool _gnomeActive = false;
 	sf::Sound _gnomeSound;
