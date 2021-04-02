@@ -154,14 +154,14 @@ public:
 /// \endcode
 ///
 /// If you want to use a single specific render state,
-/// for example a shader, you can pass it directly to the OnRender
+/// for example a shader, you can pass it directly to the Draw
 /// function: sf::RenderStates has an implicit one-argument
 /// constructor for each state.
 /// \code
 /// window.draw(sprite, shader);
 /// \endcode
 ///
-/// When you're inside the OnRender function of a drawable
+/// When you're inside the Draw function of a drawable
 /// object (inherited from sf::Drawable), you can
 /// either pass the render states unmodified, or change
 /// some of them.

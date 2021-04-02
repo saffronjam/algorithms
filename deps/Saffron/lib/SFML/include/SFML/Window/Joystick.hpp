@@ -154,7 +154,7 @@ public:
     static Identification getIdentification(unsigned int joystick);
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate the states of all joysticks
+    /// \brief Update the states of all joysticks
     ///
     /// This function is used internally by SFML, so you normally
     /// don't have to call it explicitly. However, you may need to

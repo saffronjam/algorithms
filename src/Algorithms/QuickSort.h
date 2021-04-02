@@ -7,13 +7,13 @@ namespace Se
 class QuickSort : public Algorithm
 {
 public:
-    QuickSort();
+	QuickSort();
 
-    void Sort() override;
+	void Sort() override;
 
 private:
-    long Partition(long start, long end);
+	long Partition(long start, long end);
 
-    void Quick(long start, long end);
+	void Quick(long start, long end);
 };
 }

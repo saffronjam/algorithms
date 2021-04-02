@@ -7,11 +7,11 @@ namespace Se
 class HeapSort : public Algorithm
 {
 public:
-    HeapSort();
+	HeapSort();
 
-    void Sort() override;
+	void Sort() override;
 
 private:
-    void Heapify(size_t maxSizeCheck, size_t topIndex);
+	void Heapify(size_t maxSizeCheck, size_t topIndex);
 };
 }

@@ -4,12 +4,11 @@
 
 namespace Se
 {
-
 class InsertionSort : public Algorithm
 {
 public:
-    InsertionSort();
+	InsertionSort();
 
-    void Sort() override;
+	void Sort() override;
 };
 }

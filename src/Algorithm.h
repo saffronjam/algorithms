@@ -1,12 +1,5 @@
 #pragma once
 
-#include <thread>
-#include <string>
-#include <vector>
-#include <random>
-#include <algorithm>
-
-#include <SFML/System/Sleep.hpp>
 #include <SFML/Graphics.hpp>
 
 #include <Saffron.h>
@@ -15,163 +8,183 @@
 
 namespace Se
 {
-struct ContainerGroup;
+struct ContainerRefGroup;
 
 class Algorithm
 {
 public:
-    enum class VisType
-    {
-        Bars,
-        Circles,
-        Hoops,
-        Line,
-        ScatterPlot,
-        Image
-    };
+	enum class VisType
+	{
+		Bars,
+		NumberLine,
+		Circles,
+		Hoops,
+		Line,
+		ScatterPlot,
+		Image
+	};
 
-    enum class State
-    {
-        Sorting,
-        WaitingForStart,
-        Paused,
-        Finished,
-        BeingCollected
-    };
+	enum class State
+	{
+		Sorting,
+		WaitingForStart,
+		Paused,
+		Finished,
+		BeingCollected
+	};
+
+	enum class Palette
+	{
+		Rainbow,
+		Fiery,
+		UV
+	};
+
+	enum class NumberGeneratorType
+	{
+		Linear,
+		Quadratic,
+		Random
+	};
+
+private:
+	struct TransitionColor
+	{
+		float r;
+		float g;
+		float b;
+		float a;
+	};
 
 public:
-    Algorithm(String name);
+	explicit Algorithm(String name);
 
-    virtual ~Algorithm() = default;
+	virtual ~Algorithm() = default;
 
-    void Draw(Scene &scene, const sf::FloatRect &rect);
+	void OnUpdate();
 
-    void DrawName(Scene &scene, const sf::FloatRect &rect);
+	void Draw(Scene& scene, const sf::FloatRect& rect);
+	void DrawName(Scene& scene, const sf::FloatRect& rect);
 
-    void Activate() noexcept { _isActive = true; }
+	void Activate();
+	void Deactivate();
+	bool IsActive() const;
 
-    void Deactivate() noexcept { _isActive = false; }
+	void Start();
+	void Restart();
+	void Pause();
+	void Resume();
+	void Reset();
 
-    bool IsActive() const noexcept { return _isActive; }
+	void Resize(size_t size);
+	void SoftResize(size_t size);
 
-    void ActivateSpectrum() noexcept { _usingSpectrumColors = true; }
+	void SetImage(const String& filepath);
 
-    void DeactivateSpectrum() noexcept { _usingSpectrumColors = false; }
+	void Shuffle(Random::Engine generator);
 
-    void Start();
+	const String& GetName() const { return _name; }
 
-    void Restart();
+	void SetSleepDelay(sf::Time delay);
+	void SetVisType(VisType visType);
+	void SetNumberGeneratorType(NumberGeneratorType numberGeneratorType);
 
-    void Pause();
+	void UsePalette(bool use);
+	void SetPalette(Palette palette);
+	const sf::Image& GetCurrentPaletteImage();
 
-    void Resume();
-
-    void Reset();
-
-    void Resize(size_t size);
-
-    void SoftResize(size_t size);
-
-    void SetImage(const std::string &filepath);
-
-    void Shuffle(std::mt19937 generator);
-
-    const String &GetName() const { return _name; }
-
-    void SetSleepDelay(sf::Time delay) noexcept;
-
-    void SetVisType(VisType visType) noexcept;
-
-    ArrayList<Element> &GetElements();
-
-    ArrayList<Element> &GetRestartElements();
-
-    ArrayList<Element> &GetResetElements();
+	ArrayList<Element>& GetElements();
+	ArrayList<Element>& GetRestartElements();
+	ArrayList<Element>& GetResetElements();
 
 protected:
+	virtual void Sort() = 0;
 
-    virtual void Sort() = 0;
+	Element& GetElement(size_t index);
 
-    Element &GetElement(size_t index) { return GetElements()[index]; }
+	long GetValue(size_t index);
 
-    long GetValue(size_t index) { return GetElements()[index].value; }
+	void SetValue(Element& element, long value);
+	void SetValue(size_t index, long value);
+	void SetColor(Element& element, const sf::Color& color);
+	void SetColor(size_t index, const sf::Color& color);
 
-    void SetValue(Element &element, long value);
+	void SwapElements(Element& first, Element& second);
+	void SwapElements(size_t iFirst, size_t iSecond);
 
-    void SetValue(size_t index, long value) { SetValue(GetElement(index), value); }
-
-    void SetColor(Element &element, const sf::Color &color);
-
-    void SetColor(size_t index, const sf::Color &color) { SetColor(GetElement(index), color); }
-
-    void SwapElements(Element &first, Element &second);
-
-    void SwapElements(size_t iFirst, size_t iSecond) { SwapElements(GetElement(iFirst), GetElement(iSecond)); }
-
-    void PauseCheck();
-
-    void SleepDelay();
+	void PauseCheck();
+	void SleepDelay();
 
 private:
-    sf::Vector2u GetPixelCoord(size_t index) const;
+	Function<long(size_t)> GetGenerator();
+	long GetHighestElementValue();
 
-    sf::FloatRect GetScaledPixel(size_t index, size_t max) const;
+	sf::Vector2u GetPixelCoord(size_t index) const;
+	sf::FloatRect GetScaledPixel(size_t index, size_t max) const;
+	sf::Vector2u GetClosestPixelCoord(size_t index, size_t max) const;
 
-    sf::Vector2u GetClosestPixelCoord(size_t index, size_t max) const;
+	// Calls overridden Sort() and later OnFinish() upon finish
+	void SortThreadFn();
+	void OnFinish();
+	void CollectSorter();
 
-    // Calls overridden Sort() and later OnFinish() upon finish
-    void SortThreadFn();
+	void DrawBars(Scene& scene, const sf::FloatRect& rect);
+	void DrawNumberLine(Scene& scene, const sf::FloatRect& rect);
+	void DrawCircles(Scene& scene, const sf::FloatRect& rect);
+	void DrawHoops(Scene& scene, const sf::FloatRect& rect);
+	void DrawLine(Scene& scene, const sf::FloatRect& rect);
+	void DrawScatterPlot(Scene& scene, const sf::FloatRect& rect);
+	void DrawImage(Scene& scene, const sf::FloatRect& rect);
 
-    void OnFinish();
+	// Used as a wrapper to check if drawing in spectrum mode or not
+	sf::Color GetElementColor(size_t index);
 
-    void CollectSorter();
-
-    void DrawBars(Scene &scene, const sf::FloatRect &rect);
-
-    void DrawCircles(Scene &scene, const sf::FloatRect &rect);
-
-    void DrawHoops(Scene &scene, const sf::FloatRect &rect);
-
-    void DrawLine(Scene &scene, const sf::FloatRect &rect);
-
-    void DrawScatterPlot(Scene &scene, const sf::FloatRect &rect);
-
-    void DrawImage(Scene &scene, const sf::FloatRect &rect);
-
-    // Used as a wrapper to check if drawing in spectrum mode or not
-    sf::Color GetElementColor(size_t index);
-
-    bool VerifyElements();
+	bool VerifyElements();
 
 protected:
-    String _name;
+	String _name;
 
-    std::thread _sorter;
+	Thread _sorter;
 
-    sf::Image _image;
-    sf::RenderTexture _imageRenderTexture;
+	Shared<sf::Image> _image;
+	sf::RenderTexture _imageRenderTexture;
 
-    sf::Time _sleepDelay;
-    bool _minorDelay;
-    sf::Int64 _minorDelayTimer;
+	sf::Time _sleepDelay;
+	bool _minorDelay;
+	sf::Int64 _minorDelayTimer;
 
-    State _state;
-    bool _isActive;
+	State _state;
+	bool _isActive;
 
-    sf::Text _nameText;
-    VisType _visType;
-    bool _usingSpectrumColors;
+	Shared<sf::Font> _nameTextFont;
+	sf::Text _nameText;
+	VisType _visType;
 
 private:
-    ArrayList<Element> _elements;
-    ArrayList<Element> _elementsRestart;
-    ArrayList<Element> _elementsReset;
+	static constexpr int MaxElements = 10000;
+	static constexpr int PaletteWidth = 2048;
 
-    // Shapes cache
-    sf::VertexArray _barsVA;
-    ArrayList<sf::CircleShape> _hoopsShapes;
+	ArrayList<Element> _elements;
+	ArrayList<Element> _elementsRestart;
+	ArrayList<Element> _elementsReset;
 
-    static constexpr int MaxElements = 10000;
+	NumberGeneratorType _numberGeneratorType = NumberGeneratorType::Linear;
+
+	// Shapes cache
+	sf::VertexArray _barsVA;
+	ArrayList<sf::CircleShape> _hoopsShapes;
+	sf::VertexArray _numberLineVA;
+	ArrayList<sf::Text> _numberLineTextList;
+
+	// Palette
+	sf::Texture _paletteTexture;
+	Palette _desiredPalette = Palette::Rainbow;
+	sf::Image _currentPalette;
+	Array<TransitionColor, PaletteWidth> _colorsStart;
+	Array<TransitionColor, PaletteWidth> _colorsCurrent;
+	float _colorTransitionTimer;
+	float _colorTransitionDuration;
+	ArrayList<Shared<sf::Image>> _palettes;
+	bool _usePalette = false;
 };
-
 }

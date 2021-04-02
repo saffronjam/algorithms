@@ -238,7 +238,7 @@ private:
     bool initialize(InputSoundFile& file);
 
     ////////////////////////////////////////////////////////////
-    /// \brief OnUpdate the internal buffer with the cached audio samples
+    /// \brief Update the internal buffer with the cached audio samples
     ///
     /// \param channelCount Number of channels
     /// \param sampleRate   Sample rate (number of samples per second)

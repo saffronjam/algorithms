@@ -2,66 +2,63 @@
 
 namespace Se
 {
-AlgorithmManager::AlgorithmManager()
+AlgorithmManager::AlgorithmManager() :
+	_visTypeNames({"Bars", "Number Line", "Circles", "Hoops", "Line", "Scatter Plot", "Image"}),
+	_paletteComboBoxNames({"Rainbow", "Fiery", "UV"}),
+	_numberGeneratorTypeComboBoxNames({"Linear", "Quadratic", "Random"})
 {
-	Add(new BubbleSort());
-	Add(new SelectionSort());
-	Add(new InsertionSort());
-	Add(new GnomeSort());
-	Add(new ShellSort());
-	Add(new MergeSort());
-	Add(new HeapSort());
-	Add(new QuickSort());
-	Add(new RadixSort());
+	Add(CreateUnique<BubbleSort>());
+	Add(CreateUnique<SelectionSort>());
+	Add(CreateUnique<InsertionSort>());
+	Add(CreateUnique<GnomeSort>());
+	Add(CreateUnique<ShellSort>());
+	Add(CreateUnique<MergeSort>());
+	Add(CreateUnique<HeapSort>());
+	Add(CreateUnique<QuickSort>());
+	Add(CreateUnique<RadixSort>());
 
-	_visTypeNames.push_back("Bars");
-	_visTypeNames.push_back("Circles");
-	_visTypeNames.push_back("Hoops");
-	_visTypeNames.push_back("Line");
-	_visTypeNames.push_back("Scatter Plot");
-	_visTypeNames.push_back("Image");
-
-	for ( const auto *algorithm : _algorithms )
+	for (const auto& algorithm : _algorithms)
 	{
 		_algorithmNames.push_back(algorithm->GetName().c_str());
 	}
 
 	Resize(_elements);
 
-	_gnomeSound = sf::Sound(*SoundBufferStore::Get("res/Sounds/gnomed.wav"));
+	_gnomeSound = sf::Sound(*SoundBufferStore::Get("gnomed.wav"));
 }
 
 AlgorithmManager::~AlgorithmManager()
 {
 	Reset();
-	for ( auto &algorithm : _algorithms )
-	{
-		delete algorithm;
-	}
 	_algorithms.clear();
 }
 
-void AlgorithmManager::OnUpdate(const Scene &scene)
+void AlgorithmManager::OnUpdate(const Scene& scene)
 {
-	if ( _wantSoftResize )
+	if (_wantSoftResize)
 	{
 		SoftResize(_elements);
 		_wantSoftResize = false;
 	}
 
-	if ( _wantNewDrawContainers )
+	if (_wantNewDrawContainers)
 	{
 		GenerateDrawContainers(scene);
 		_wantNewDrawContainers = false;
 	}
+
+	for (auto& algoritm : _algorithms)
+	{
+		algoritm->OnUpdate();
+	}
 }
 
-void AlgorithmManager::OnRender(Scene &scene)
+void AlgorithmManager::OnRender(Scene& scene)
 {
 	int i = 0;
-	for ( auto &algorithm : _algorithms )
+	for (auto& algorithm : _algorithms)
 	{
-		if ( i < _drawContainers.size() && algorithm->IsActive() )
+		if (i < _drawContainers.size() && algorithm->IsActive())
 		{
 			algorithm->Draw(scene, _drawContainers[i]);
 			algorithm->DrawName(scene, _drawContainers[i]);
@@ -73,28 +70,28 @@ void AlgorithmManager::OnRender(Scene &scene)
 void AlgorithmManager::OnGuiRender()
 {
 	ImGui::Columns(3, "BasicControls");
-	if ( ImGui::Button("Start", { ImGui::GetContentRegionAvailWidth(), 0 }) )
+	if (ImGui::Button("Start", {ImGui::GetContentRegionAvailWidth(), 0}))
 	{
 		Start();
 	}
 	ImGui::NextColumn();
-	if ( ImGui::Button("Restart", { ImGui::GetContentRegionAvailWidth(), 0 }) )
+	if (ImGui::Button("Restart", {ImGui::GetContentRegionAvailWidth(), 0}))
 	{
 		Restart();
 	}
 	ImGui::NextColumn();
-	if ( ImGui::Button("Reset", { ImGui::GetContentRegionAvailWidth(), 0 }) )
+	if (ImGui::Button("Reset", {ImGui::GetContentRegionAvailWidth(), 0}))
 	{
 		Reset();
 	}
 	ImGui::NextColumn();
 	ImGui::Columns(2, "PauseResume");
-	if ( ImGui::Button("Pause", { ImGui::GetContentRegionAvailWidth(), 0 }) )
+	if (ImGui::Button("Pause", {ImGui::GetContentRegionAvailWidth(), 0}))
 	{
 		Pause();
 	}
 	ImGui::NextColumn();
-	if ( ImGui::Button("Resume", { ImGui::GetContentRegionAvailWidth(), 0 }) )
+	if (ImGui::Button("Resume", {ImGui::GetContentRegionAvailWidth(), 0}))
 	{
 		Resume();
 	}
@@ -103,12 +100,12 @@ void AlgorithmManager::OnGuiRender()
 	ImGui::Separator();
 
 	ImGui::Columns(1, "NormalShuffle");
-	if ( ImGui::Button("Shuffle", { ImGui::GetContentRegionAvailWidth(), 0 }) )
+	if (ImGui::Button("Shuffle", {ImGui::GetContentRegionAvailWidth(), 0}))
 	{
 		Shuffle();
 	}
 	ImGui::Columns(2, "CustomShuffle");
-	if ( ImGui::Button("Custom Shuffle", { ImGui::GetContentRegionAvailWidth(), 0 }) )
+	if (ImGui::Button("Custom Shuffle", {ImGui::GetContentRegionAvailWidth(), 0}))
 	{
 		CustomShuffle(_customShuffleDegree);
 	}
@@ -121,77 +118,106 @@ void AlgorithmManager::OnGuiRender()
 	ImGui::Separator();
 
 	Gui::BeginPropertyGrid("MainControllers");
+
 	ImGui::Text("Visualization Type");
 	ImGui::NextColumn();
 	ImGui::PushItemWidth(-1);
-	if ( ImGui::Combo("##Visualization Type", &_activeVisTypeIndex, _visTypeNames.data(), _visTypeNames.size()) )
+	if (ImGui::Combo("##Visualization Type", &_activeVisTypeIndex, _visTypeNames.data(), _visTypeNames.size()))
 	{
 		SetVisType(static_cast<Algorithm::VisType>(_activeVisTypeIndex));
 	}
 	ImGui::NextColumn();
 
-
-	if ( Gui::Property("Sleep delay (microseconds)", _sleepDelayMicroseconds, 0.0f, 1000000.0f, 1.0f,
-					   Gui::PropertyFlag_Slider | Gui::PropertyFlag_Logarithmic) )
+	if (Gui::Property("Sleep delay (microseconds)", _sleepDelayMicroseconds, 0.0f, 1000000.0f, 1.0f,
+	                  Gui::PropertyFlag_Slider | Gui::PropertyFlag_Logarithmic))
 	{
 		SetSleepDelay(sf::microseconds(_sleepDelayMicroseconds));
-	}
-
-	if ( Gui::Property("Elements", _elements, "%.0f", 1, 10000, 1,
-					   Gui::PropertyFlag_Slider | Gui::PropertyFlag_Logarithmic) )
-	{
-		_wantSoftResize = true;
-	}
-
-	if ( Gui::Property("Spectrum", _spectrum) )
-	{
-		_spectrum ? ActivateSpectrum() : DeactivateSpectrum();
 	}
 
 	Gui::EndPropertyGrid();
 
 	ImGui::Separator();
 
+	Gui::BeginPropertyGrid("Elements");
+
+
+	if (Gui::Property("Elements", _elements, "%.0f", 1, 10000, 1,
+	                  Gui::PropertyFlag_Slider | Gui::PropertyFlag_Logarithmic))
+	{
+		_wantSoftResize = true;
+	}
+
+	ImGui::Text("Generator");
+	ImGui::NextColumn();
+	ImGui::PushItemWidth(-1);
+	if (ImGui::Combo("##Generator", &_numberGeneratorTypeInt, _numberGeneratorTypeComboBoxNames.data(),
+	                 _numberGeneratorTypeComboBoxNames.size()))
+	{
+		SetNumberGeneratorType(static_cast<Algorithm::NumberGeneratorType>(_numberGeneratorTypeInt));
+	}
+	ImGui::NextColumn();
+
+	if (_numberGeneratorTypeInt == static_cast<int>(Algorithm::NumberGeneratorType::Random))
+	{
+		Gui::Property("Generate", [this]()
+		{
+			Resize(_elements);
+		}, true);
+	}
+
+	Gui::EndPropertyGrid();
+
+	ImGui::Separator();
+
+	Gui::BeginPropertyGrid("Palette");
+
+	if (Gui::Property("Use Palette", _usePalette))
+	{
+		UsePalette(_usePalette);
+	}
+	ImGui::Text("Palette");
+	ImGui::NextColumn();
+	ImGui::PushItemWidth(-1);
+	if (ImGui::Combo("##Palette", &_activePaletteInt, _paletteComboBoxNames.data(), _paletteComboBoxNames.size()))
+	{
+		SetPalette(static_cast<Algorithm::Palette>(_activePaletteInt));
+	}
+	ImGui::NextColumn();
+	Gui::EndPropertyGrid();
+	ImGui::Dummy({1.0f, 2.0f});
+
+
+	Gui::Image(GetCurrentPaletteTexture(), sf::Vector2f(ImGui::GetContentRegionAvailWidth(), 9.0f));
+
+	ImGui::Separator();
+
 	ImGui::Text("Algorithms");
 	Gui::BeginPropertyGrid("Checkboxes");
 
-	Algorithm *lastActive = nullptr;
-	for ( auto *algorithm : _algorithms )
+	for (auto& algorithm : _algorithms)
 	{
 		bool active = algorithm->IsActive();
-		if ( Gui::Property(algorithm->GetName().c_str(), active) )
+		if (Gui::Property(algorithm->GetName(), active))
 		{
 			active ? Activate(algorithm) : Deactivate(algorithm);
-		}
-
-		if ( algorithm->IsActive() )
-		{
-			lastActive = algorithm;
-		}
-	}
-	if ( GetActiveContainers() == 1 && lastActive && lastActive->GetName() == "Gnome Sort" )
-	{
-		if ( !_gnomeActive )
-		{
-
 		}
 	}
 
 	Gui::EndPropertyGrid();
 }
 
-void AlgorithmManager::OnViewportResize(const sf::Vector2f &size)
+void AlgorithmManager::OnViewportResize(const sf::Vector2f& size)
 {
 	_wantNewDrawContainers = true;
 }
 
-void AlgorithmManager::Add(Algorithm *algorithm)
+void AlgorithmManager::Add(Unique<Algorithm> algorithm)
 {
-	_algorithms.emplace_back(algorithm);
+	_algorithms.emplace_back(Move(algorithm));
 	_algorithms.back()->Activate();
 }
 
-void AlgorithmManager::Activate(Algorithm *algorithm)
+void AlgorithmManager::Activate(const Unique<Algorithm>& algorithm)
 {
 	algorithm->Activate();
 	_wantNewDrawContainers = true;
@@ -199,7 +225,7 @@ void AlgorithmManager::Activate(Algorithm *algorithm)
 	OnAlgorithmStateChange();
 }
 
-void AlgorithmManager::Deactivate(Algorithm *algorithm)
+void AlgorithmManager::Deactivate(const Unique<Algorithm>& algorithm)
 {
 	algorithm->Deactivate();
 	_wantNewDrawContainers = true;
@@ -207,25 +233,17 @@ void AlgorithmManager::Deactivate(Algorithm *algorithm)
 	OnAlgorithmStateChange();
 }
 
-void AlgorithmManager::ActivateSpectrum() noexcept
+void AlgorithmManager::UsePalette(bool use)
 {
-	for ( auto &algorithm : _algorithms )
+	for (auto& algorithm : _algorithms)
 	{
-		algorithm->ActivateSpectrum();
-	}
-}
-
-void AlgorithmManager::DeactivateSpectrum() noexcept
-{
-	for ( auto &algorithm : _algorithms )
-	{
-		algorithm->DeactivateSpectrum();
+		algorithm->UsePalette(use);
 	}
 }
 
 void AlgorithmManager::Start()
 {
-	for ( auto &algorithm : _algorithms )
+	for (auto& algorithm : _algorithms)
 	{
 		algorithm->Start();
 	}
@@ -233,7 +251,7 @@ void AlgorithmManager::Start()
 
 void AlgorithmManager::Restart()
 {
-	for ( auto &algorithm : _algorithms )
+	for (auto& algorithm : _algorithms)
 	{
 		algorithm->Restart();
 	}
@@ -241,7 +259,7 @@ void AlgorithmManager::Restart()
 
 void AlgorithmManager::Pause()
 {
-	for ( auto &algorithm : _algorithms )
+	for (auto& algorithm : _algorithms)
 	{
 		algorithm->Pause();
 	}
@@ -249,7 +267,7 @@ void AlgorithmManager::Pause()
 
 void AlgorithmManager::Resume()
 {
-	for ( auto &algorithm : _algorithms )
+	for (auto& algorithm : _algorithms)
 	{
 		algorithm->Resume();
 	}
@@ -257,7 +275,7 @@ void AlgorithmManager::Resume()
 
 void AlgorithmManager::Reset()
 {
-	for ( auto &algorithm : _algorithms )
+	for (auto& algorithm : _algorithms)
 	{
 		algorithm->Reset();
 	}
@@ -265,7 +283,7 @@ void AlgorithmManager::Reset()
 
 void AlgorithmManager::Resize(size_t size)
 {
-	for ( auto &algorithm : _algorithms )
+	for (auto& algorithm : _algorithms)
 	{
 		algorithm->Reset();
 		algorithm->Resize(size);
@@ -274,7 +292,7 @@ void AlgorithmManager::Resize(size_t size)
 
 void AlgorithmManager::SoftResize(size_t size)
 {
-	for ( auto &algorithm : _algorithms )
+	for (auto& algorithm : _algorithms)
 	{
 		algorithm->Reset();
 		algorithm->SoftResize(size);
@@ -283,10 +301,10 @@ void AlgorithmManager::SoftResize(size_t size)
 
 void AlgorithmManager::Shuffle()
 {
-	std::random_device rd;
-	std::mt19937 generator(rd()); // Set a common random seed
+	Random::Device rd;
+	const Random::Engine generator(rd()); // Set a common random seed
 
-	for ( auto &algorithm : _algorithms )
+	for (auto& algorithm : _algorithms)
 	{
 		algorithm->Shuffle(generator);
 	}
@@ -295,19 +313,19 @@ void AlgorithmManager::Shuffle()
 void AlgorithmManager::CustomShuffle(int degree)
 {
 	_algorithms.front()->Reset();
-	ArrayList<Element> &newElements = _algorithms.front()->GetRestartElements();
+	ArrayList<Element>& newElements = _algorithms.front()->GetRestartElements();
 
-	auto degreePecentage = static_cast<float>(degree) / 100.0f;
+	const auto degreePecentage = static_cast<float>(degree) / 100.0f;
 	const int noElements = newElements.size();
 
-	for ( int i = 0; i < newElements.size(); i++ )
+	for (int i = 0; i < newElements.size(); i++)
 	{
 		// 10 iterations of swapping
-		for ( int j = 0; j < 10; j++ )
+		for (int j = 0; j < 10; j++)
 		{
-			int newIndex = i + Random::Integer(static_cast<int>(-degreePecentage * noElements),
-											   static_cast<int>(degreePecentage * noElements));
-			if ( newIndex >= 0 && newIndex < noElements )
+			const int newIndex = i + Random::Integer(static_cast<int>(-degreePecentage * noElements),
+			                                         static_cast<int>(degreePecentage * noElements));
+			if (newIndex >= 0 && newIndex < noElements)
 			{
 				std::swap(newElements[i], newElements[newIndex]);
 			}
@@ -316,7 +334,7 @@ void AlgorithmManager::CustomShuffle(int degree)
 
 	_algorithms.front()->GetElements() = newElements;
 
-	for ( int i = 1; i < _algorithms.size(); i++ )
+	for (int i = 1; i < _algorithms.size(); i++)
 	{
 		_algorithms[i]->Reset();
 		_algorithms[i]->GetRestartElements() = newElements;
@@ -326,18 +344,17 @@ void AlgorithmManager::CustomShuffle(int degree)
 
 void AlgorithmManager::SetSleepDelay(sf::Time delay)
 {
-	for ( auto &algorithm : _algorithms )
-		algorithm->SetSleepDelay(delay);
+	for (auto& algorithm : _algorithms) algorithm->SetSleepDelay(delay);
 }
 
 void AlgorithmManager::SetVisType(Algorithm::VisType visType)
 {
-	if ( visType == _visType )
+	if (visType == _visType)
 	{
 		return;
 	}
 
-	for ( auto &algorithm : _algorithms )
+	for (auto& algorithm : _algorithms)
 	{
 		algorithm->SetVisType(visType);
 	}
@@ -345,16 +362,34 @@ void AlgorithmManager::SetVisType(Algorithm::VisType visType)
 	OnAlgorithmStateChange();
 }
 
-void AlgorithmManager::GenerateDrawContainers(const Scene &scene)
+void AlgorithmManager::SetPalette(Algorithm::Palette palette)
+{
+	for (auto& algorithm : _algorithms)
+	{
+		algorithm->SetPalette(palette);
+	}
+}
+
+void AlgorithmManager::SetNumberGeneratorType(Algorithm::NumberGeneratorType numberGeneratorType)
+{
+	for (auto& algorithm : _algorithms)
+	{
+		algorithm->Reset();
+		algorithm->SetNumberGeneratorType(numberGeneratorType);
+		algorithm->Resize(_elements);
+	}
+}
+
+void AlgorithmManager::GenerateDrawContainers(const Scene& scene)
 {
 	_drawContainers.clear();
 
-	sf::FloatRect container(-scene.GetCamera().GetOffset(), scene.GetViewportPane().GetViewportSize());
+	const sf::FloatRect container(-scene.GetCamera().GetOffset(), scene.GetViewportPane().GetViewportSize());
 
 	int nWidth, nHeight;
-	int nActiveContainers = GetActiveContainers();
+	const int nActiveContainers = GetActiveContainers();
 
-	switch ( nActiveContainers )
+	switch (nActiveContainers)
 	{
 	case 1:
 	{
@@ -369,11 +404,6 @@ void AlgorithmManager::GenerateDrawContainers(const Scene &scene)
 		break;
 	}
 	case 3:
-	{
-		nWidth = 2;
-		nHeight = 2;
-		break;
-	}
 	case 4:
 	{
 		nWidth = 2;
@@ -381,11 +411,6 @@ void AlgorithmManager::GenerateDrawContainers(const Scene &scene)
 		break;
 	}
 	case 5:
-	{
-		nWidth = 3;
-		nHeight = 2;
-		break;
-	}
 	case 6:
 	{
 		nWidth = 3;
@@ -393,17 +418,7 @@ void AlgorithmManager::GenerateDrawContainers(const Scene &scene)
 		break;
 	}
 	case 7:
-	{
-		nWidth = 3;
-		nHeight = 3;
-		break;
-	}
 	case 8:
-	{
-		nWidth = 3;
-		nHeight = 3;
-		break;
-	}
 	case 9:
 	{
 		nWidth = 3;
@@ -411,47 +426,62 @@ void AlgorithmManager::GenerateDrawContainers(const Scene &scene)
 		break;
 	}
 	default:
+	{
+		nWidth = 0;
+		nHeight = 0;
 		break;
 	}
-	sf::Vector2f size(container.width / static_cast<float>(nWidth), container.height / static_cast<float>(nWidth));
-	sf::Vector2f padding(15.0f, 40.0f);
-	sf::Vector2f divide(container.width / nWidth, container.height / nHeight);
-	for ( int y = 0, nBoxes = 0; y < nHeight && nBoxes < nActiveContainers; y++ )
+	}
+	const sf::Vector2f size(container.width / static_cast<float>(nWidth),
+	                        container.height / static_cast<float>(nWidth));
+	const sf::Vector2f padding(15.0f, 40.0f);
+	const sf::Vector2f divide(container.width / nWidth, container.height / nHeight);
+	for (int y = 0, nBoxes = 0; y < nHeight && nBoxes < nActiveContainers; y++)
 	{
 		float extraOffsetY = 0.0f;
-		if ( y == 0 )
+		if (y == 0)
 		{
-			float difference = nWidth - nHeight;
+			const float difference = nWidth - nHeight;
 			extraOffsetY = difference > 0 ? size.y * difference / 2.0f : 0.0f;
 		}
-		for ( int x = 0; x < nWidth && nBoxes < nActiveContainers; x++, nBoxes++ )
+		for (int x = 0; x < nWidth && nBoxes < nActiveContainers; x++, nBoxes++)
 		{
 			float extraOffsetX = 0.0f;
-			if ( y == nHeight - 1 )
+			if (y == nHeight - 1)
 			{
-				float extraSpace = (nWidth * nHeight) - nActiveContainers;
+				const float extraSpace = (nWidth * nHeight) - nActiveContainers;
 				extraOffsetX = extraSpace > 0 ? divide.x * extraSpace - (divide.x * extraSpace) / 2.0f : 0.0f;
 			}
 			_drawContainers.emplace_back(sf::FloatRect(sf::Vector2f(container.left + x * divide.x + extraOffsetX,
-																	container.top + y * divide.y + extraOffsetY) +
-													   padding, size - padding * 2.0f));
+			                                                        container.top + y * divide.y + extraOffsetY) +
+			                                           padding, size - padding * 2.0f));
 		}
 	}
 }
 
 int AlgorithmManager::GetActiveContainers()
 {
-	return std::count_if(_algorithms.begin(), _algorithms.end(), [](auto &alg)
-						 { return alg->IsActive(); });
+	return std::count_if(_algorithms.begin(), _algorithms.end(), [](auto& alg)
+	{
+		return alg->IsActive();
+	});
+}
+
+const sf::Texture& AlgorithmManager::GetCurrentPaletteTexture()
+{
+	const auto image = _algorithms[0]->GetCurrentPaletteImage();
+	static sf::Texture texture;
+	texture.loadFromImage(image);
+	return texture;
 }
 
 void AlgorithmManager::OnAlgorithmStateChange()
 {
-	if ( GetActiveContainers() == 1 && _visType == Algorithm::VisType::Image )
+	if (GetActiveContainers() == 1 && _visType == Algorithm::VisType::Image)
 	{
-		for ( auto *algorithm : _algorithms )
+		for (auto& algorithm : _algorithms)
 		{
-			if ( algorithm->IsActive() && algorithm->GetName() == "Gnome Sort" )
+			if (algorithm->IsActive() && algorithm->GetName() == "Gnome Sort")
 			{
 				algorithm->SetImage("res/Images/gnomed.png");
 				_gnomeSound.play();
@@ -460,12 +490,12 @@ void AlgorithmManager::OnAlgorithmStateChange()
 			}
 		}
 	}
-	else if ( _gnomeActive )
+	else if (_gnomeActive)
 	{
 		_gnomeSound.stop();
-		for ( auto *algorithm : _algorithms )
+		for (auto& algorithm : _algorithms)
 		{
-			if ( algorithm->GetName() == "Gnome Sort" )
+			if (algorithm->GetName() == "Gnome Sort")
 			{
 				algorithm->SetImage("res/Images/sample_image_forest.jpg");
 				break;

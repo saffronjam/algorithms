@@ -3,13 +3,13 @@
 
 namespace Se
 {
-Application *CreateApplication()
+Application* CreateApplication()
 {
-	return new ProjectApplication({ "Algorithms", 1700, 720 });
+	return new ProjectApplication({"Algorithms", 1700, 720});
 }
 
-ProjectApplication::ProjectApplication(const Properties &properties)
-	: Application(properties),
+ProjectApplication::ProjectApplication(const Properties& properties) :
+	Application(properties),
 	_projectLayer(new ProjectLayer)
 {
 }
