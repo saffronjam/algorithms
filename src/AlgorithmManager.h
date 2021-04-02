@@ -34,10 +34,10 @@ public:
 	void OnGuiRender();
 	void OnViewportResize(const sf::Vector2f& size);
 
-	void Add(Algorithm* algorithm);
+	void Add(Unique<Algorithm> algorithm);
 
-	void Activate(Algorithm* algorithm);
-	void Deactivate(Algorithm* algorithm);
+	void Activate(const Unique<Algorithm>& algorithm);
+	void Deactivate(const Unique<Algorithm>& algorithm);
 
 	void ActivateSpectrum() noexcept;
 	void DeactivateSpectrum() noexcept;
@@ -56,10 +56,10 @@ public:
 
 	Algorithm::VisType GetVisType() const noexcept { return _visType; }
 
-	void SetSleepDelay(sf::Time seconds);
+	void SetSleepDelay(sf::Time delay);
 	void SetVisType(Algorithm::VisType visType);
 
-	const ArrayList<Algorithm*>& GetAlgorithms() const noexcept { return _algorithms; }
+	const ArrayList<Unique<Algorithm>>& GetAlgorithms() const noexcept { return _algorithms; }
 
 private:
 	void GenerateDrawContainers(const Scene& scene);
@@ -68,7 +68,7 @@ private:
 	void OnAlgorithmStateChange();
 
 private:
-	ArrayList<Algorithm*> _algorithms;
+	ArrayList<Unique<Algorithm>> _algorithms;
 	ArrayList<sf::FloatRect> _drawContainers;
 
 	// A cache used for getter

@@ -4,15 +4,15 @@ namespace Se
 {
 AlgorithmManager::AlgorithmManager()
 {
-	Add(new BubbleSort());
-	Add(new SelectionSort());
-	Add(new InsertionSort());
-	Add(new GnomeSort());
-	Add(new ShellSort());
-	Add(new MergeSort());
-	Add(new HeapSort());
-	Add(new QuickSort());
-	Add(new RadixSort());
+	Add(CreateUnique<BubbleSort>());
+	Add(CreateUnique<SelectionSort>());
+	Add(CreateUnique<InsertionSort>());
+	Add(CreateUnique<GnomeSort>());
+	Add(CreateUnique<ShellSort>());
+	Add(CreateUnique<MergeSort>());
+	Add(CreateUnique<HeapSort>());
+	Add(CreateUnique<QuickSort>());
+	Add(CreateUnique<RadixSort>());
 
 	_visTypeNames.push_back("Bars");
 	_visTypeNames.push_back("Number Line");
@@ -22,7 +22,7 @@ AlgorithmManager::AlgorithmManager()
 	_visTypeNames.push_back("Scatter Plot");
 	_visTypeNames.push_back("Image");
 
-	for (const auto* algorithm : _algorithms)
+	for (const auto& algorithm : _algorithms)
 	{
 		_algorithmNames.push_back(algorithm->GetName().c_str());
 	}
@@ -35,10 +35,6 @@ AlgorithmManager::AlgorithmManager()
 AlgorithmManager::~AlgorithmManager()
 {
 	Reset();
-	for (auto& algorithm : _algorithms)
-	{
-		delete algorithm;
-	}
 	_algorithms.clear();
 }
 
@@ -155,25 +151,13 @@ void AlgorithmManager::OnGuiRender()
 
 	ImGui::Text("Algorithms");
 	Gui::BeginPropertyGrid("Checkboxes");
-
-	Algorithm* lastActive = nullptr;
-	for (auto* algorithm : _algorithms)
+	
+	for (auto &algorithm : _algorithms)
 	{
 		bool active = algorithm->IsActive();
 		if (Gui::Property(algorithm->GetName(), active))
 		{
 			active ? Activate(algorithm) : Deactivate(algorithm);
-		}
-
-		if (algorithm->IsActive())
-		{
-			lastActive = algorithm;
-		}
-	}
-	if (GetActiveContainers() == 1 && lastActive && lastActive->GetName() == "Gnome Sort")
-	{
-		if (!_gnomeActive)
-		{
 		}
 	}
 
@@ -185,13 +169,13 @@ void AlgorithmManager::OnViewportResize(const sf::Vector2f& size)
 	_wantNewDrawContainers = true;
 }
 
-void AlgorithmManager::Add(Algorithm* algorithm)
+void AlgorithmManager::Add(Unique<Algorithm> algorithm)
 {
-	_algorithms.emplace_back(algorithm);
+	_algorithms.emplace_back(Move(algorithm));
 	_algorithms.back()->Activate();
 }
 
-void AlgorithmManager::Activate(Algorithm* algorithm)
+void AlgorithmManager::Activate(const Unique<Algorithm>& algorithm)
 {
 	algorithm->Activate();
 	_wantNewDrawContainers = true;
@@ -199,7 +183,7 @@ void AlgorithmManager::Activate(Algorithm* algorithm)
 	OnAlgorithmStateChange();
 }
 
-void AlgorithmManager::Deactivate(Algorithm* algorithm)
+void AlgorithmManager::Deactivate(const Unique<Algorithm>& algorithm)
 {
 	algorithm->Deactivate();
 	_wantNewDrawContainers = true;
@@ -435,7 +419,7 @@ void AlgorithmManager::OnAlgorithmStateChange()
 {
 	if (GetActiveContainers() == 1 && _visType == Algorithm::VisType::Image)
 	{
-		for (auto* algorithm : _algorithms)
+		for (auto& algorithm : _algorithms)
 		{
 			if (algorithm->IsActive() && algorithm->GetName() == "Gnome Sort")
 			{
@@ -449,7 +433,7 @@ void AlgorithmManager::OnAlgorithmStateChange()
 	else if (_gnomeActive)
 	{
 		_gnomeSound.stop();
-		for (auto* algorithm : _algorithms)
+		for (auto& algorithm : _algorithms)
 		{
 			if (algorithm->GetName() == "Gnome Sort")
 			{
