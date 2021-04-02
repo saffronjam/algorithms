@@ -3,7 +3,9 @@
 namespace Se
 {
 AlgorithmManager::AlgorithmManager() :
-	_paletteComboBoxNames({"Rainbow", "Fiery", "UV"})
+	_visTypeNames({"Bars", "Number Line", "Circles", "Hoops", "Line", "Scatter Plot", "Image"}),
+	_paletteComboBoxNames({"Rainbow", "Fiery", "UV"}),
+	_numberGeneratorTypeComboBoxNames({"Linear", "Quadratic", "Random"})
 {
 	Add(CreateUnique<BubbleSort>());
 	Add(CreateUnique<SelectionSort>());
@@ -14,14 +16,6 @@ AlgorithmManager::AlgorithmManager() :
 	Add(CreateUnique<HeapSort>());
 	Add(CreateUnique<QuickSort>());
 	Add(CreateUnique<RadixSort>());
-
-	_visTypeNames.push_back("Bars");
-	_visTypeNames.push_back("Number Line");
-	_visTypeNames.push_back("Circles");
-	_visTypeNames.push_back("Hoops");
-	_visTypeNames.push_back("Line");
-	_visTypeNames.push_back("Scatter Plot");
-	_visTypeNames.push_back("Image");
 
 	for (const auto& algorithm : _algorithms)
 	{
@@ -124,6 +118,7 @@ void AlgorithmManager::OnGuiRender()
 	ImGui::Separator();
 
 	Gui::BeginPropertyGrid("MainControllers");
+
 	ImGui::Text("Visualization Type");
 	ImGui::NextColumn();
 	ImGui::PushItemWidth(-1);
@@ -133,12 +128,18 @@ void AlgorithmManager::OnGuiRender()
 	}
 	ImGui::NextColumn();
 
-
 	if (Gui::Property("Sleep delay (microseconds)", _sleepDelayMicroseconds, 0.0f, 1000000.0f, 1.0f,
 	                  Gui::PropertyFlag_Slider | Gui::PropertyFlag_Logarithmic))
 	{
 		SetSleepDelay(sf::microseconds(_sleepDelayMicroseconds));
 	}
+
+	Gui::EndPropertyGrid();
+
+	ImGui::Separator();
+
+	Gui::BeginPropertyGrid("Elements");
+
 
 	if (Gui::Property("Elements", _elements, "%.0f", 1, 10000, 1,
 	                  Gui::PropertyFlag_Slider | Gui::PropertyFlag_Logarithmic))
@@ -146,12 +147,31 @@ void AlgorithmManager::OnGuiRender()
 		_wantSoftResize = true;
 	}
 
+	ImGui::Text("Generator");
+	ImGui::NextColumn();
+	ImGui::PushItemWidth(-1);
+	if (ImGui::Combo("##Generator", &_numberGeneratorTypeInt, _numberGeneratorTypeComboBoxNames.data(),
+	                 _numberGeneratorTypeComboBoxNames.size()))
+	{
+		SetNumberGeneratorType(static_cast<Algorithm::NumberGeneratorType>(_numberGeneratorTypeInt));
+	}
+	ImGui::NextColumn();
+
+	if (_numberGeneratorTypeInt == static_cast<int>(Algorithm::NumberGeneratorType::Random))
+	{
+		Gui::Property("Generate", [this]()
+		{
+			Resize(_elements);
+		}, true);
+	}
+
 	Gui::EndPropertyGrid();
 
 	ImGui::Separator();
 
 	Gui::BeginPropertyGrid("Palette");
-	if(Gui::Property("Use Palette", _usePalette))
+
+	if (Gui::Property("Use Palette", _usePalette))
 	{
 		UsePalette(_usePalette);
 	}
@@ -166,7 +186,7 @@ void AlgorithmManager::OnGuiRender()
 	Gui::EndPropertyGrid();
 	ImGui::Dummy({1.0f, 2.0f});
 
-	
+
 	Gui::Image(GetCurrentPaletteTexture(), sf::Vector2f(ImGui::GetContentRegionAvailWidth(), 9.0f));
 
 	ImGui::Separator();
@@ -350,6 +370,16 @@ void AlgorithmManager::SetPalette(Algorithm::Palette palette)
 	}
 }
 
+void AlgorithmManager::SetNumberGeneratorType(Algorithm::NumberGeneratorType numberGeneratorType)
+{
+	for (auto& algorithm : _algorithms)
+	{
+		algorithm->Reset();
+		algorithm->SetNumberGeneratorType(numberGeneratorType);
+		algorithm->Resize(_elements);
+	}
+}
+
 void AlgorithmManager::GenerateDrawContainers(const Scene& scene)
 {
 	_drawContainers.clear();
@@ -437,7 +467,7 @@ int AlgorithmManager::GetActiveContainers()
 	});
 }
 
-const sf::Texture &AlgorithmManager::GetCurrentPaletteTexture()
+const sf::Texture& AlgorithmManager::GetCurrentPaletteTexture()
 {
 	const auto image = _algorithms[0]->GetCurrentPaletteImage();
 	static sf::Texture texture;

@@ -40,6 +40,13 @@ public:
 		UV
 	};
 
+	enum class NumberGeneratorType
+	{
+		Linear,
+		Quadratic,
+		Random
+	};
+
 private:
 	struct TransitionColor
 	{
@@ -71,7 +78,7 @@ public:
 
 	void Resize(size_t size);
 	void SoftResize(size_t size);
-	
+
 	void SetImage(const String& filepath);
 
 	void Shuffle(Random::Engine generator);
@@ -80,11 +87,12 @@ public:
 
 	void SetSleepDelay(sf::Time delay);
 	void SetVisType(VisType visType);
+	void SetNumberGeneratorType(NumberGeneratorType numberGeneratorType);
 
 	void UsePalette(bool use);
 	void SetPalette(Palette palette);
 	const sf::Image& GetCurrentPaletteImage();
-	
+
 	ArrayList<Element>& GetElements();
 	ArrayList<Element>& GetRestartElements();
 	ArrayList<Element>& GetResetElements();
@@ -107,7 +115,10 @@ protected:
 	void PauseCheck();
 	void SleepDelay();
 
-private:	
+private:
+	Function<long(size_t)> GetGenerator();
+	long GetHighestElementValue();
+
 	sf::Vector2u GetPixelCoord(size_t index) const;
 	sf::FloatRect GetScaledPixel(size_t index, size_t max) const;
 	sf::Vector2u GetClosestPixelCoord(size_t index, size_t max) const;
@@ -118,7 +129,7 @@ private:
 	void CollectSorter();
 
 	void DrawBars(Scene& scene, const sf::FloatRect& rect);
-	void DrawNumberLine(Scene &scene, const sf::FloatRect &rect);
+	void DrawNumberLine(Scene& scene, const sf::FloatRect& rect);
 	void DrawCircles(Scene& scene, const sf::FloatRect& rect);
 	void DrawHoops(Scene& scene, const sf::FloatRect& rect);
 	void DrawLine(Scene& scene, const sf::FloatRect& rect);
@@ -152,10 +163,12 @@ protected:
 private:
 	static constexpr int MaxElements = 10000;
 	static constexpr int PaletteWidth = 2048;
-	
+
 	ArrayList<Element> _elements;
 	ArrayList<Element> _elementsRestart;
 	ArrayList<Element> _elementsReset;
+
+	NumberGeneratorType _numberGeneratorType = NumberGeneratorType::Linear;
 
 	// Shapes cache
 	sf::VertexArray _barsVA;

@@ -55,6 +55,7 @@ public:
 	void SetSleepDelay(sf::Time delay);
 	void SetVisType(Algorithm::VisType visType);
 	void SetPalette(Algorithm::Palette palette);
+	void SetNumberGeneratorType(Algorithm::NumberGeneratorType numberGeneratorType);
 
 	const ArrayList<Unique<Algorithm>>& GetAlgorithms() const { return _algorithms; }
 
@@ -86,6 +87,9 @@ private:
 
 	ArrayList<const char*> _paletteComboBoxNames;
 	int _activePaletteInt = static_cast<int>(Algorithm::Palette::Rainbow);
+
+	ArrayList<const char*> _numberGeneratorTypeComboBoxNames;
+	int _numberGeneratorTypeInt = static_cast<int>(Algorithm::NumberGeneratorType::Linear);
 
 	bool _gnomeActive = false;
 	sf::Sound _gnomeSound;

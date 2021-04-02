@@ -32,7 +32,7 @@ Algorithm::Algorithm(String name) :
 	_palettes.push_back(ImageStore::Get("Pals/rainbowLarge.png"));
 	_palettes.push_back(ImageStore::Get("Pals/fieryLarge.png"));
 	_palettes.push_back(ImageStore::Get("Pals/uvLarge.png"));
-	
+
 	_currentPalette.create(PaletteWidth, 1, _palettes[static_cast<int>(_desiredPalette)]->getPixelsPtr());
 	for (int i = 0; i < PaletteWidth; i++)
 	{
@@ -182,8 +182,6 @@ void Algorithm::Reset()
 
 void Algorithm::Resize(size_t size)
 {
-	if (_elements.size() == size) return;
-
 	_elements.clear();
 	_elementsRestart.clear();
 	_elementsReset.clear();
@@ -191,10 +189,15 @@ void Algorithm::Resize(size_t size)
 	_elementsRestart.resize(size);
 	_elementsReset.resize(size);
 
-	long n = 1;
-	std::generate(_elements.begin(), _elements.end(), [&n]
+	const auto generator = GetGenerator();
+	for (int i = 0; i < _elements.size(); i++)
 	{
-		return Element(n++);
+		_elements[i].value = generator(i);
+	}
+
+	std::sort(std::execution::par, _elements.begin(), _elements.end(), [](const Element& l, const Element& r)
+	{
+		return l.value < r.value;
 	});
 
 	_elementsRestart = _elements;
@@ -208,6 +211,7 @@ void Algorithm::Resize(size_t size)
 void Algorithm::SoftResize(size_t size)
 {
 	CollectSorter();
+	const auto generator = GetGenerator();
 	while (_elementsReset.size() != size)
 	{
 		if (size < _elementsReset.size())
@@ -216,7 +220,7 @@ void Algorithm::SoftResize(size_t size)
 		}
 		else if (size > _elementsReset.size())
 		{
-			_elementsReset.push_back(Element(_elementsReset.size() + 1));
+			_elementsReset.push_back(Element(generator(_elementsReset.size())));
 		}
 	}
 	_elements = _elementsReset;
@@ -250,6 +254,11 @@ void Algorithm::SetSleepDelay(sf::Time delay)
 void Algorithm::SetVisType(VisType visType)
 {
 	_visType = visType;
+}
+
+void Algorithm::SetNumberGeneratorType(NumberGeneratorType numberGeneratorType)
+{
+	_numberGeneratorType = numberGeneratorType;
 }
 
 void Algorithm::UsePalette(bool use)
@@ -346,6 +355,54 @@ void Algorithm::SleepDelay()
 	}
 }
 
+Function<long(size_t)> Algorithm::GetGenerator()
+{
+	switch (_numberGeneratorType)
+	{
+	case NumberGeneratorType::Linear:
+	{
+		return [](size_t index)
+		{
+			return index + 1;
+		};
+	}
+	case NumberGeneratorType::Quadratic:
+	{
+		return [](size_t index)
+		{
+			return std::pow(index, 2);
+		};
+	}
+	case NumberGeneratorType::Random:
+	{
+		return [this](size_t index) { return Random::Integer(1l, static_cast<long>(_elements.size())); };
+	}
+	}
+	SE_CORE_FALSE_ASSERT("Invalid NumberGeneratorType");
+	return {};
+}
+
+long Algorithm::GetHighestElementValue()
+{
+	switch (_numberGeneratorType)
+	{
+	case NumberGeneratorType::Linear:
+	{
+		return _elements.size();
+	}
+	case NumberGeneratorType::Quadratic:
+	{
+		return std::pow(_elements.size(), 2);
+	}
+	case NumberGeneratorType::Random:
+	{
+		return _elements.size();
+	}
+	}
+	SE_CORE_FALSE_ASSERT("Invalid NumberGeneratorType");
+	return {};
+}
+
 sf::Vector2u Algorithm::GetPixelCoord(size_t index) const
 {
 	const auto width = _image->getSize().x;
@@ -433,7 +490,7 @@ void Algorithm::DrawBars(Scene& scene, const sf::FloatRect& rect)
 {
 	sf::Vector2f size(rect.width / _elements.size(), 0.0f);
 	const sf::Vector2f positionOffset(rect.left, rect.top);
-	const float heightMult = rect.height / _elements.size();
+	const float heightMult = rect.height / GetHighestElementValue();
 
 	for (size_t i = 0; i < _barsVA.getVertexCount(); i += 4)
 	{
@@ -522,7 +579,7 @@ void Algorithm::DrawCircles(Scene& scene, const sf::FloatRect& rect)
 	sf::VertexArray vertexArray(sf::TriangleFan, 1 + 2 * _elements.size());
 	const float maxRadius = static_cast<float>(std::min(rect.width / 2, rect.height / 2));
 	const float angleDelta = 2.0f * PI<> / (_elements.size() * 2.0f);
-	const float heightMult = maxRadius / _elements.size();
+	const float heightMult = maxRadius / GetHighestElementValue();
 	const sf::Vector2f rectMid = GenUtils::Mid(rect);
 
 	vertexArray[0] = sf::Vertex(rectMid, sf::Color(255, 255, 255));
@@ -568,8 +625,8 @@ void Algorithm::DrawHoops(Scene& scene, const sf::FloatRect& rect)
 void Algorithm::DrawLine(Scene& scene, const sf::FloatRect& rect)
 {
 	sf::VertexArray line(sf::PrimitiveType::LineStrip);
-	const float yMult = rect.height / static_cast<float>(_elements.size());
 	const float xMult = rect.width / static_cast<float>(_elements.size());
+	const float yMult = rect.height / static_cast<float>(GetHighestElementValue());
 	const sf::Vector2f offset(rect.left, rect.top);
 	for (size_t i = 0; i < _elements.size(); i++)
 	{
@@ -582,8 +639,8 @@ void Algorithm::DrawLine(Scene& scene, const sf::FloatRect& rect)
 
 void Algorithm::DrawScatterPlot(Scene& scene, const sf::FloatRect& rect)
 {
-	const float yMult = rect.height / static_cast<float>(_elements.size());
 	const float xMult = rect.width / static_cast<float>(_elements.size());
+	const float yMult = rect.height / static_cast<float>(GetHighestElementValue());
 	const sf::Vector2f offset(rect.left, rect.top);
 
 	if (xMult < 1.0f)
@@ -626,7 +683,10 @@ void Algorithm::DrawImage(Scene& scene, const sf::FloatRect& rect)
 	for (size_t i = 0; i < _elements.size(); i++)
 	{
 		const auto pixelRect = GetScaledPixel(i, _elements.size());
-		const auto pixelCoord = GetClosestPixelCoord(_elements[i].value - 1, _elements.size());
+		/*const auto mappedValue = GenUtils::Map(_elements[i].value - 1, 0l, GetHighestElementValue(), 0l,
+		                                       static_cast<long>(_elements.size()));*/
+		const auto mappedValue = std::sqrt(_elements[i].value);
+		const auto pixelCoord = GetClosestPixelCoord(mappedValue, _elements.size());
 
 		const sf::IntRect nonLostPixelRect(static_cast<int>(pixelRect.left + static_cast<float>(lostRect.left)),
 		                                   static_cast<int>(pixelRect.top + static_cast<float>(lostRect.top)),
@@ -673,8 +733,9 @@ sf::Color Algorithm::GetElementColor(size_t index)
 {
 	if (_usePalette)
 	{
-		const auto &element = GetElement(index);
-		const auto mappedValue = GenUtils::Map(element.value, 0l, static_cast<long>(_elements.size()), 0l, static_cast<long>(PaletteWidth - 1));
+		const auto& element = GetElement(index);
+		const auto mappedValue = GenUtils::Map(element.value, 0l, static_cast<long>(_elements.size()), 0l,
+		                                       static_cast<long>(PaletteWidth - 1));
 		return _currentPalette.getPixel(mappedValue, 0);
 	}
 	return _elements[index].color;
