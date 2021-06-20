@@ -9,7 +9,7 @@ set(SUBDIRECTORIES_DIR "deps")
 set(INCLUDES_DIR "src")
 
 ### Saffron Engine ###
-add_subdirectory("${SUBDIRECTORIES_DIR}/Saffron")
+add_subdirectory("${SUBDIRECTORIES_DIR}/SaffronEngine2D")
 
 ### FLAGS ###
 set(CMAKE_CXX_STANDARD 17)
@@ -56,6 +56,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
     file(COPY ${SAFFRON_SHARED_BINARES} DESTINATION ${BUILD_DIR})
 
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
 else ()
     add_definitions(-D${PLATFORM_MACRO}_LINUX)
 
@@ -72,7 +74,7 @@ add_definitions()
 file(GLOB_RECURSE ALL_SOURCES "${CMAKE_SOURCE_DIR}/*.cpp")
 set(ClientSRC "${ALL_SOURCES}")
 add_executable(Client "${ClientSRC}")
-target_precompile_headers(Saffron PUBLIC "deps/Saffron/src/SaffronPCH.cpp")
+target_precompile_headers(Saffron PUBLIC "deps/SaffronEngine2D/src/SaffronPCH.cpp")
 
 ### INCLUDES ###
 target_include_directories(Client PRIVATE

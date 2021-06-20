@@ -1,14 +1,16 @@
 #include "Algorithm.h"
 
+#include <execution>
+
 #include <SFML/Graphics.hpp>
 
 namespace Se
 {
 struct ContainerRefGroup
 {
-	ArrayList<Element>& elements;
-	ArrayList<Element>& elementsRestart;
-	ArrayList<Element>& elementsReset;
+	List<Element>& elements;
+	List<Element>& elementsRestart;
+	List<Element>& elementsReset;
 };
 
 Algorithm::Algorithm(String name) :
@@ -70,7 +72,7 @@ void Algorithm::OnUpdate()
 				                         static_cast<sf::Uint8>(currentColor.a * 255.0f)
 			                         });
 		}
-		_colorTransitionTimer += Global::Clock::GetFrameTime().asSeconds();
+		_colorTransitionTimer += Global::Clock::FrameTime().asSeconds();
 	}
 }
 
@@ -134,7 +136,7 @@ void Algorithm::Deactivate()
 	_isActive = false;
 }
 
-bool Algorithm::IsActive() const
+bool Algorithm::Active() const
 {
 	return _isActive;
 }
@@ -189,15 +191,15 @@ void Algorithm::Resize(size_t size)
 	_elementsRestart.resize(size);
 	_elementsReset.resize(size);
 
-	const auto generator = GetGenerator();
+	const auto generator = Generator();
 	for (int i = 0; i < _elements.size(); i++)
 	{
-		_elements[i].value = generator(i);
+		_elements[i].Value = generator(i);
 	}
 
 	std::sort(std::execution::par, _elements.begin(), _elements.end(), [](const Element& l, const Element& r)
 	{
-		return l.value < r.value;
+		return l.Value < r.Value;
 	});
 
 	_elementsRestart = _elements;
@@ -211,7 +213,7 @@ void Algorithm::Resize(size_t size)
 void Algorithm::SoftResize(size_t size)
 {
 	CollectSorter();
-	const auto generator = GetGenerator();
+	const auto generator = Generator();
 	while (_elementsReset.size() != size)
 	{
 		if (size < _elementsReset.size())
@@ -278,29 +280,29 @@ const sf::Image& Algorithm::GetCurrentPaletteImage()
 	return _currentPalette;
 }
 
-ArrayList<Element>& Algorithm::GetElements()
+List<Element>& Algorithm::Elements()
 {
 	return _elements;
 }
 
-ArrayList<Element>& Algorithm::GetRestartElements()
+List<Element>& Algorithm::RestartElements()
 {
 	return _elementsRestart;
 }
 
-ArrayList<Element>& Algorithm::GetResetElements()
+List<Element>& Algorithm::ResetElements()
 {
 	return _elementsReset;
 }
 
 Element& Algorithm::GetElement(size_t index)
 {
-	return GetElements()[index];
+	return Elements()[index];
 }
 
 long Algorithm::GetValue(size_t index)
 {
-	return GetElements()[index].value;
+	return Elements()[index].Value;
 }
 
 void Algorithm::SetValue(size_t index, long value)
@@ -320,12 +322,12 @@ void Algorithm::SwapElements(size_t iFirst, size_t iSecond)
 
 void Algorithm::SetValue(Element& element, long value)
 {
-	element.value = value;
+	element.Value = value;
 }
 
 void Algorithm::SetColor(Element& element, const sf::Color& color)
 {
-	element.color = color;
+	element.Color = color;
 }
 
 void Algorithm::SwapElements(Element& first, Element& second)
@@ -355,7 +357,7 @@ void Algorithm::SleepDelay()
 	}
 }
 
-Function<long(size_t)> Algorithm::GetGenerator()
+Function<long(size_t)> Algorithm::Generator()
 {
 	switch (_numberGeneratorType)
 	{
@@ -378,11 +380,11 @@ Function<long(size_t)> Algorithm::GetGenerator()
 		return [this](size_t index) { return Random::Integer(1l, static_cast<long>(_elements.size())); };
 	}
 	}
-	SE_CORE_FALSE_ASSERT("Invalid NumberGeneratorType");
+	Debug::Break("Invalid NumberGeneratorType");
 	return {};
 }
 
-long Algorithm::GetHighestElementValue()
+long Algorithm::HighestElementValue()
 {
 	switch (_numberGeneratorType)
 	{
@@ -399,11 +401,11 @@ long Algorithm::GetHighestElementValue()
 		return _elements.size();
 	}
 	}
-	SE_CORE_FALSE_ASSERT("Invalid NumberGeneratorType");
+	Debug::Break("Invalid NumberGeneratorType");
 	return {};
 }
 
-sf::Vector2u Algorithm::GetPixelCoord(size_t index) const
+sf::Vector2u Algorithm::PixelCoord(size_t index) const
 {
 	const auto width = _image->getSize().x;
 	const auto x = index % width;
@@ -411,7 +413,7 @@ sf::Vector2u Algorithm::GetPixelCoord(size_t index) const
 	return sf::Vector2u(x, y);
 }
 
-sf::FloatRect Algorithm::GetScaledPixel(size_t index, size_t max) const
+sf::FloatRect Algorithm::ScaledPixel(size_t index, size_t max) const
 {
 	const float width = _image->getSize().x;
 	const float height = _image->getSize().y;
@@ -435,7 +437,7 @@ sf::FloatRect Algorithm::GetScaledPixel(size_t index, size_t max) const
 	return scaledPixel;
 }
 
-sf::Vector2u Algorithm::GetClosestPixelCoord(size_t index, size_t max) const
+sf::Vector2u Algorithm::ClosestPixelCoord(size_t index, size_t max) const
 {
 	const float width = _image->getSize().x;
 	const float height = _image->getSize().y;
@@ -490,13 +492,13 @@ void Algorithm::DrawBars(Scene& scene, const sf::FloatRect& rect)
 {
 	sf::Vector2f size(rect.width / _elements.size(), 0.0f);
 	const sf::Vector2f positionOffset(rect.left, rect.top);
-	const float heightMult = rect.height / GetHighestElementValue();
+	const float heightMult = rect.height / HighestElementValue();
 
 	for (size_t i = 0; i < _barsVA.getVertexCount(); i += 4)
 	{
-		auto color = GetElementColor(i / 4);
+		auto color = ElementColor(i / 4);
 		color.a = 255 - static_cast<float>(_elements.size()) / static_cast<float>(MaxElements) * 240;
-		const auto& value = _elements[i / 4].value;
+		const auto& value = _elements[i / 4].Value;
 		size.y = value * heightMult;
 
 		const sf::Vector2f position(positionOffset.x + size.x * (static_cast<float>(i) / 4),
@@ -527,7 +529,7 @@ void Algorithm::DrawNumberLine(Scene& scene, const sf::FloatRect& rect)
 	{
 		const size_t boxIndex = i / 4;
 
-		auto color = GetElementColor(boxIndex);
+		auto color = ElementColor(boxIndex);
 		color.a = 255 - static_cast<float>(_elements.size()) / static_cast<float>(MaxElements) * 240;
 
 		sf::Vector2f position(positionOffset.x + constainedSize * (static_cast<float>(boxIndex)),
@@ -550,7 +552,7 @@ void Algorithm::DrawNumberLine(Scene& scene, const sf::FloatRect& rect)
 			_numberLineTextList.back().setOutlineColor(sf::Color::Black);
 		}
 
-		const auto& value = _elements[boxIndex].value;
+		const auto& value = _elements[boxIndex].Value;
 		_numberLineTextList[boxIndex].setPosition(position + sf::Vector2f(constainedSize / 2.0f, 0.0f));
 		_numberLineTextList[boxIndex].setCharacterSize(constainedSize * 0.65f);
 		_numberLineTextList[boxIndex].setString(std::to_string(value));
@@ -579,18 +581,18 @@ void Algorithm::DrawCircles(Scene& scene, const sf::FloatRect& rect)
 	sf::VertexArray vertexArray(sf::TriangleFan, 1 + 2 * _elements.size());
 	const float maxRadius = static_cast<float>(std::min(rect.width / 2, rect.height / 2));
 	const float angleDelta = 2.0f * PI<> / (_elements.size() * 2.0f);
-	const float heightMult = maxRadius / GetHighestElementValue();
+	const float heightMult = maxRadius / HighestElementValue();
 	const sf::Vector2f rectMid = GenUtils::Mid(rect);
 
 	vertexArray[0] = sf::Vertex(rectMid, sf::Color(255, 255, 255));
 	for (size_t i = 0; i < _elements.size() * 2; i += 2)
 	{
-		sf::Vector2f line0 = VecUtils::Rotate(sf::Vector2f(0.0f, -_elements[i / 2].value * heightMult) + rectMid,
+		sf::Vector2f line0 = VecUtils::Rotate(sf::Vector2f(0.0f, -_elements[i / 2].Value * heightMult) + rectMid,
 		                                      angleDelta * static_cast<float>(i), rectMid);
-		sf::Vector2f line1 = VecUtils::Rotate(sf::Vector2f(0.0f, -_elements[i / 2].value * heightMult) + rectMid,
+		sf::Vector2f line1 = VecUtils::Rotate(sf::Vector2f(0.0f, -_elements[i / 2].Value * heightMult) + rectMid,
 		                                      angleDelta * static_cast<float>(i + 1), rectMid);
-		vertexArray[i + 1] = sf::Vertex(line0, GetElementColor(i / 2));
-		vertexArray[i + 2] = sf::Vertex(line1, GetElementColor(i / 2));
+		vertexArray[i + 1] = sf::Vertex(line0, ElementColor(i / 2));
+		vertexArray[i + 2] = sf::Vertex(line1, ElementColor(i / 2));
 	}
 	scene.Submit(vertexArray);
 }
@@ -609,9 +611,9 @@ void Algorithm::DrawHoops(Scene& scene, const sf::FloatRect& rect)
 
 	for (size_t i = 0; i < _elements.size(); i++)
 	{
-		const float radius = _elements[i].value * radiusMult;
+		const float radius = _elements[i].Value * radiusMult;
 
-		sf::Color color = GetElementColor(i);
+		sf::Color color = ElementColor(i);
 		color.a = 50;
 
 		_hoopsShapes[i].setOutlineColor(color);
@@ -626,13 +628,13 @@ void Algorithm::DrawLine(Scene& scene, const sf::FloatRect& rect)
 {
 	sf::VertexArray line(sf::PrimitiveType::LineStrip);
 	const float xMult = rect.width / static_cast<float>(_elements.size());
-	const float yMult = rect.height / static_cast<float>(GetHighestElementValue());
+	const float yMult = rect.height / static_cast<float>(HighestElementValue());
 	const sf::Vector2f offset(rect.left, rect.top);
 	for (size_t i = 0; i < _elements.size(); i++)
 	{
 		const float x = offset.x + static_cast<float>(i) * xMult;
-		const float y = offset.y + rect.height - _elements[i].value * yMult;
-		line.append(sf::Vertex(sf::Vector2f(x, y), GetElementColor(i)));
+		const float y = offset.y + rect.height - _elements[i].Value * yMult;
+		line.append(sf::Vertex(sf::Vector2f(x, y), ElementColor(i)));
 	}
 	scene.Submit(line);
 }
@@ -640,7 +642,7 @@ void Algorithm::DrawLine(Scene& scene, const sf::FloatRect& rect)
 void Algorithm::DrawScatterPlot(Scene& scene, const sf::FloatRect& rect)
 {
 	const float xMult = rect.width / static_cast<float>(_elements.size());
-	const float yMult = rect.height / static_cast<float>(GetHighestElementValue());
+	const float yMult = rect.height / static_cast<float>(HighestElementValue());
 	const sf::Vector2f offset(rect.left, rect.top);
 
 	if (xMult < 1.0f)
@@ -649,8 +651,8 @@ void Algorithm::DrawScatterPlot(Scene& scene, const sf::FloatRect& rect)
 		for (size_t i = 0; i < _elements.size(); i++)
 		{
 			const float x = offset.x + static_cast<float>(i) * xMult;
-			const float y = offset.y + rect.height - _elements[i].value * yMult;
-			scatterPlot.append(sf::Vertex(sf::Vector2f(x, y), GetElementColor(i)));
+			const float y = offset.y + rect.height - _elements[i].Value * yMult;
+			scatterPlot.append(sf::Vertex(sf::Vector2f(x, y), ElementColor(i)));
 		}
 		scene.Submit(scatterPlot);
 	}
@@ -659,9 +661,9 @@ void Algorithm::DrawScatterPlot(Scene& scene, const sf::FloatRect& rect)
 		sf::CircleShape circleShape(xMult / 2.0f);
 		for (size_t i = 0; i < _elements.size(); i++)
 		{
-			circleShape.setFillColor(GetElementColor(i));
+			circleShape.setFillColor(ElementColor(i));
 			const float x = offset.x + static_cast<float>(i) * xMult;
-			const float y = offset.y + rect.height - _elements[i].value * yMult;
+			const float y = offset.y + rect.height - _elements[i].Value * yMult;
 			circleShape.setPosition(x, y);
 			scene.Submit(circleShape);
 		}
@@ -682,11 +684,11 @@ void Algorithm::DrawImage(Scene& scene, const sf::FloatRect& rect)
 
 	for (size_t i = 0; i < _elements.size(); i++)
 	{
-		const auto pixelRect = GetScaledPixel(i, _elements.size());
+		const auto pixelRect = ScaledPixel(i, _elements.size());
 		/*const auto mappedValue = GenUtils::Map(_elements[i].value - 1, 0l, GetHighestElementValue(), 0l,
 		                                       static_cast<long>(_elements.size()));*/
-		const auto mappedValue = std::sqrt(_elements[i].value);
-		const auto pixelCoord = GetClosestPixelCoord(mappedValue, _elements.size());
+		const auto mappedValue = std::sqrt(_elements[i].Value);
+		const auto pixelCoord = ClosestPixelCoord(mappedValue, _elements.size());
 
 		const sf::IntRect nonLostPixelRect(static_cast<int>(pixelRect.left + static_cast<float>(lostRect.left)),
 		                                   static_cast<int>(pixelRect.top + static_cast<float>(lostRect.top)),
@@ -729,16 +731,16 @@ void Algorithm::DrawImage(Scene& scene, const sf::FloatRect& rect)
 	scene.Submit(renderTextureSprite);
 }
 
-sf::Color Algorithm::GetElementColor(size_t index)
+sf::Color Algorithm::ElementColor(size_t index)
 {
 	if (_usePalette)
 	{
 		const auto& element = GetElement(index);
-		const auto mappedValue = GenUtils::Map(element.value, 0l, static_cast<long>(_elements.size()), 0l,
+		const auto mappedValue = GenUtils::Map(element.Value, 0l, static_cast<long>(_elements.size()), 0l,
 		                                       static_cast<long>(PaletteWidth - 1));
 		return _currentPalette.getPixel(mappedValue, 0);
 	}
-	return _elements[index].color;
+	return _elements[index].Color;
 }
 
 bool Algorithm::VerifyElements()

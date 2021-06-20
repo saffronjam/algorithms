@@ -9,13 +9,13 @@ HeapSort::HeapSort() :
 
 void HeapSort::Sort()
 {
-	for (long i = static_cast<long>(GetElements().size() / 2 - 1); i >= 0 && _state != State::BeingCollected; i--)
+	for (long i = static_cast<long>(Elements().size() / 2 - 1); i >= 0 && _state != State::BeingCollected; i--)
 	{
 		PauseCheck();
-		Heapify(GetElements().size(), i);
+		Heapify(Elements().size(), i);
 	}
 
-	for (long i = static_cast<long>(GetElements().size() - 1); i >= 0 && _state != State::BeingCollected; i--)
+	for (long i = static_cast<long>(Elements().size() - 1); i >= 0 && _state != State::BeingCollected; i--)
 	{
 		PauseCheck();
 		SwapElements(i, 0);

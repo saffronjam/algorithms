@@ -68,7 +68,7 @@ public:
 
 	void Activate();
 	void Deactivate();
-	bool IsActive() const;
+	auto Active() const -> bool;
 
 	void Start();
 	void Restart();
@@ -83,7 +83,7 @@ public:
 
 	void Shuffle(Random::Engine generator);
 
-	const String& GetName() const { return _name; }
+	auto GetName() const -> const String& { return _name; }
 
 	void SetSleepDelay(sf::Time delay);
 	void SetVisType(VisType visType);
@@ -91,18 +91,18 @@ public:
 
 	void UsePalette(bool use);
 	void SetPalette(Palette palette);
-	const sf::Image& GetCurrentPaletteImage();
+	auto GetCurrentPaletteImage() -> const sf::Image&;
 
-	ArrayList<Element>& GetElements();
-	ArrayList<Element>& GetRestartElements();
-	ArrayList<Element>& GetResetElements();
+	auto Elements() -> List<Element>&;
+	auto RestartElements() -> List<Element>&;
+	auto ResetElements() -> List<Element>&;
 
 protected:
 	virtual void Sort() = 0;
 
-	Element& GetElement(size_t index);
+	auto GetElement(size_t index) -> Element&;
 
-	long GetValue(size_t index);
+	auto GetValue(size_t index) -> long;
 
 	void SetValue(Element& element, long value);
 	void SetValue(size_t index, long value);
@@ -116,12 +116,12 @@ protected:
 	void SleepDelay();
 
 private:
-	Function<long(size_t)> GetGenerator();
-	long GetHighestElementValue();
+	auto Generator() -> Function<long(size_t)>;
+	auto HighestElementValue() -> long;
 
-	sf::Vector2u GetPixelCoord(size_t index) const;
-	sf::FloatRect GetScaledPixel(size_t index, size_t max) const;
-	sf::Vector2u GetClosestPixelCoord(size_t index, size_t max) const;
+	auto PixelCoord(size_t index) const -> sf::Vector2u;
+	auto ScaledPixel(size_t index, size_t max) const -> sf::FloatRect;
+	auto ClosestPixelCoord(size_t index, size_t max) const -> sf::Vector2u;
 
 	// Calls overridden Sort() and later OnFinish() upon finish
 	void SortThreadFn();
@@ -137,9 +137,9 @@ private:
 	void DrawImage(Scene& scene, const sf::FloatRect& rect);
 
 	// Used as a wrapper to check if drawing in spectrum mode or not
-	sf::Color GetElementColor(size_t index);
+	auto ElementColor(size_t index) -> sf::Color;
 
-	bool VerifyElements();
+	auto VerifyElements() -> bool;
 
 protected:
 	String _name;
@@ -164,17 +164,17 @@ private:
 	static constexpr int MaxElements = 10000;
 	static constexpr int PaletteWidth = 2048;
 
-	ArrayList<Element> _elements;
-	ArrayList<Element> _elementsRestart;
-	ArrayList<Element> _elementsReset;
+	List<Element> _elements;
+	List<Element> _elementsRestart;
+	List<Element> _elementsReset;
 
 	NumberGeneratorType _numberGeneratorType = NumberGeneratorType::Linear;
 
 	// Shapes cache
 	sf::VertexArray _barsVA;
-	ArrayList<sf::CircleShape> _hoopsShapes;
+	List<sf::CircleShape> _hoopsShapes;
 	sf::VertexArray _numberLineVA;
-	ArrayList<sf::Text> _numberLineTextList;
+	List<sf::Text> _numberLineTextList;
 
 	// Palette
 	sf::Texture _paletteTexture;
@@ -184,7 +184,7 @@ private:
 	Array<TransitionColor, PaletteWidth> _colorsCurrent;
 	float _colorTransitionTimer;
 	float _colorTransitionDuration;
-	ArrayList<Shared<sf::Image>> _palettes;
+	List<Shared<sf::Image>> _palettes;
 	bool _usePalette = false;
 };
 }

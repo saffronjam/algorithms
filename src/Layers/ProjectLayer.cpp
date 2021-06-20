@@ -6,7 +6,7 @@ void ProjectLayer::OnAttach(std::shared_ptr<BatchLoader>& loader)
 {
 	BaseLayer::OnAttach(loader);
 
-	_algorithmManager = std::make_shared<AlgorithmManager>();
+	_algorithmManager = CreateShared<AlgorithmManager>();
 }
 
 void ProjectLayer::OnDetach()
@@ -32,6 +32,22 @@ void ProjectLayer::OnGuiRender()
 		{
 			ImGui::MenuItem("View System", nullptr, &_viewSystem);
 			ImGui::MenuItem("View Demo", nullptr, &_viewDemo);
+			if (ImGui::BeginMenu("Theme"))
+			{
+				if (ImGui::MenuItem("Dark"))
+				{
+					Gui::SetStyle(GuiStyle::Dark);
+				}
+				if (ImGui::MenuItem("Light"))
+				{
+					Gui::SetStyle(GuiStyle::Light);
+				}
+				if (ImGui::MenuItem("Visual Studio"))
+				{
+					Gui::SetStyle(GuiStyle::VisualStudio);
+				}
+				ImGui::EndMenu();
+			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();

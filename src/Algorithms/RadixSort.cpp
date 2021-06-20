@@ -15,11 +15,11 @@ void RadixSort::Sort()
 
 void RadixSort::CountSort(size_t exponent)
 {
-	ArrayList<Element> outBucket(GetElements().size());
+	List<Element> outBucket(Elements().size());
 	std::array<size_t, 10> count = {0};
 
 	// Store count of occurrences in count[]
-	for (size_t i = 0; i < GetElements().size() && _state != State::BeingCollected; i++)
+	for (size_t i = 0; i < Elements().size() && _state != State::BeingCollected; i++)
 	{
 		PauseCheck();
 		count[(GetValue(i) / exponent) % 10]++;
@@ -34,7 +34,7 @@ void RadixSort::CountSort(size_t exponent)
 	}
 
 	// Build the output array
-	for (long i = static_cast<long>(GetElements().size() - 1); i >= 0 && _state != State::BeingCollected; i--)
+	for (long i = static_cast<long>(Elements().size() - 1); i >= 0 && _state != State::BeingCollected; i--)
 	{
 		PauseCheck();
 		outBucket[count[(GetValue(i) / exponent) % 10] - 1] = GetElement(i);
@@ -43,25 +43,25 @@ void RadixSort::CountSort(size_t exponent)
 
 	// Copy the output array to arr[], so that arr[] now
 	// contains sorted numbers according to current digit
-	for (size_t i = 0; i < GetElements().size() && _state != State::BeingCollected; i++)
+	for (size_t i = 0; i < Elements().size() && _state != State::BeingCollected; i++)
 	{
 		SetColor(i, sf::Color::Red);
 		SleepDelay();
 		SleepDelay();
 		SleepDelay();
 		PauseCheck();
-		SetValue(i, outBucket[i].value);
+		SetValue(i, outBucket[i].Value);
 		SetColor(i, sf::Color::White);
 	}
 
-	if (_state != State::BeingCollected) GetElements() = outBucket;
+	if (_state != State::BeingCollected) Elements() = outBucket;
 }
 
-long RadixSort::HighestValue()
+auto RadixSort::HighestValue() -> long
 {
-	return std::max_element(GetElements().begin(), GetElements().end(), [](const Element& first, const Element& second)
+	return std::max_element(Elements().begin(), Elements().end(), [](const Element& first, const Element& second)
 	{
-		return first.value < second.value;
-	})->value;
+		return first.Value < second.Value;
+	})->Value;
 }
 }

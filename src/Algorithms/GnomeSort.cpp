@@ -9,7 +9,7 @@ GnomeSort::GnomeSort() :
 
 void GnomeSort::Sort()
 {
-	for (int i = 0; i < GetElements().size() && _state != State::BeingCollected;)
+	for (int i = 0; i < Elements().size() && _state != State::BeingCollected;)
 	{
 		if (i == 0)
 		{

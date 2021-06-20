@@ -10,9 +10,9 @@ BubbleSort::BubbleSort() :
 void BubbleSort::Sort()
 {
 	_state = State::Sorting;
-	for (size_t i = 0; i < GetElements().size() && _state != State::BeingCollected; i++)
+	for (size_t i = 0; i < Elements().size() && _state != State::BeingCollected; i++)
 	{
-		for (size_t j = 0; j < GetElements().size() - i - 1 && _state != State::BeingCollected; j++)
+		for (size_t j = 0; j < Elements().size() - i - 1 && _state != State::BeingCollected; j++)
 		{
 			PauseCheck();
 			SetColor(j, sf::Color::Red);
@@ -27,7 +27,7 @@ void BubbleSort::Sort()
 			SetColor(j, sf::Color::White);
 			SetColor(j + 1, sf::Color::White);
 		}
-		SetColor(GetElements().size() - i - 1, sf::Color::Green);
+		SetColor(Elements().size() - i - 1, sf::Color::Green);
 	}
 }
 }

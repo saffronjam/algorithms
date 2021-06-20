@@ -24,7 +24,7 @@ AlgorithmManager::AlgorithmManager() :
 
 	Resize(_elements);
 
-	_gnomeSound = sf::Sound(*SoundBufferStore::Get("gnomed.wav"));
+	_gnomeSound = CreateUnique<sf::Sound>(*SoundBufferStore::Get("gnomed.wav", false));
 }
 
 AlgorithmManager::~AlgorithmManager()
@@ -58,7 +58,7 @@ void AlgorithmManager::OnRender(Scene& scene)
 	int i = 0;
 	for (auto& algorithm : _algorithms)
 	{
-		if (i < _drawContainers.size() && algorithm->IsActive())
+		if (i < _drawContainers.size() && algorithm->Active())
 		{
 			algorithm->Draw(scene, _drawContainers[i]);
 			algorithm->DrawName(scene, _drawContainers[i]);
@@ -129,7 +129,7 @@ void AlgorithmManager::OnGuiRender()
 	ImGui::NextColumn();
 
 	if (Gui::Property("Sleep delay (microseconds)", _sleepDelayMicroseconds, 0.0f, 1000000.0f, 1.0f,
-	                  Gui::PropertyFlag_Slider | Gui::PropertyFlag_Logarithmic))
+	                  GuiPropertyFlag_Slider | GuiPropertyFlag_Logarithmic))
 	{
 		SetSleepDelay(sf::microseconds(_sleepDelayMicroseconds));
 	}
@@ -142,7 +142,7 @@ void AlgorithmManager::OnGuiRender()
 
 
 	if (Gui::Property("Elements", _elements, "%.0f", 1, 10000, 1,
-	                  Gui::PropertyFlag_Slider | Gui::PropertyFlag_Logarithmic))
+	                  GuiPropertyFlag_Slider | GuiPropertyFlag_Logarithmic))
 	{
 		_wantSoftResize = true;
 	}
@@ -187,7 +187,7 @@ void AlgorithmManager::OnGuiRender()
 	ImGui::Dummy({1.0f, 2.0f});
 
 
-	Gui::Image(GetCurrentPaletteTexture(), sf::Vector2f(ImGui::GetContentRegionAvailWidth(), 9.0f));
+	Gui::Image(CurrentPaletteTexture(), sf::Vector2f(ImGui::GetContentRegionAvailWidth(), 9.0f));
 
 	ImGui::Separator();
 
@@ -196,7 +196,7 @@ void AlgorithmManager::OnGuiRender()
 
 	for (auto& algorithm : _algorithms)
 	{
-		bool active = algorithm->IsActive();
+		bool active = algorithm->Active();
 		if (Gui::Property(algorithm->GetName(), active))
 		{
 			active ? Activate(algorithm) : Deactivate(algorithm);
@@ -313,7 +313,7 @@ void AlgorithmManager::Shuffle()
 void AlgorithmManager::CustomShuffle(int degree)
 {
 	_algorithms.front()->Reset();
-	ArrayList<Element>& newElements = _algorithms.front()->GetRestartElements();
+	List<Element>& newElements = _algorithms.front()->RestartElements();
 
 	const auto degreePecentage = static_cast<float>(degree) / 100.0f;
 	const int noElements = newElements.size();
@@ -332,15 +332,17 @@ void AlgorithmManager::CustomShuffle(int degree)
 		}
 	}
 
-	_algorithms.front()->GetElements() = newElements;
+	_algorithms.front()->Elements() = newElements;
 
 	for (int i = 1; i < _algorithms.size(); i++)
 	{
 		_algorithms[i]->Reset();
-		_algorithms[i]->GetRestartElements() = newElements;
-		_algorithms[i]->GetElements() = newElements;
+		_algorithms[i]->RestartElements() = newElements;
+		_algorithms[i]->Elements() = newElements;
 	}
 }
+
+auto AlgorithmManager::GetVisType() const -> Algorithm::VisType { return _visType; }
 
 void AlgorithmManager::SetSleepDelay(sf::Time delay)
 {
@@ -380,14 +382,16 @@ void AlgorithmManager::SetNumberGeneratorType(Algorithm::NumberGeneratorType num
 	}
 }
 
+auto AlgorithmManager::Algorithms() const -> const List<Unique<Algorithm>>& { return _algorithms; }
+
 void AlgorithmManager::GenerateDrawContainers(const Scene& scene)
 {
 	_drawContainers.clear();
 
-	const sf::FloatRect container(-scene.GetCamera().GetOffset(), scene.GetViewportPane().GetViewportSize());
+	const sf::FloatRect container(-scene.Camera().Offset(), scene.ViewportPane().ViewportSize());
 
 	int nWidth, nHeight;
-	const int nActiveContainers = GetActiveContainers();
+	const int nActiveContainers = ActiveContainers();
 
 	switch (nActiveContainers)
 	{
@@ -459,15 +463,15 @@ void AlgorithmManager::GenerateDrawContainers(const Scene& scene)
 	}
 }
 
-int AlgorithmManager::GetActiveContainers()
+int AlgorithmManager::ActiveContainers()
 {
 	return std::count_if(_algorithms.begin(), _algorithms.end(), [](auto& alg)
 	{
-		return alg->IsActive();
+		return alg->Active();
 	});
 }
 
-const sf::Texture& AlgorithmManager::GetCurrentPaletteTexture()
+const sf::Texture& AlgorithmManager::CurrentPaletteTexture()
 {
 	const auto image = _algorithms[0]->GetCurrentPaletteImage();
 	static sf::Texture texture;
@@ -477,14 +481,14 @@ const sf::Texture& AlgorithmManager::GetCurrentPaletteTexture()
 
 void AlgorithmManager::OnAlgorithmStateChange()
 {
-	if (GetActiveContainers() == 1 && _visType == Algorithm::VisType::Image)
+	if (ActiveContainers() == 1 && _visType == Algorithm::VisType::Image)
 	{
 		for (auto& algorithm : _algorithms)
 		{
-			if (algorithm->IsActive() && algorithm->GetName() == "Gnome Sort")
+			if (algorithm->Active() && algorithm->GetName() == "Gnome Sort")
 			{
 				algorithm->SetImage("res/Images/gnomed.png");
-				_gnomeSound.play();
+				_gnomeSound->play();
 				_gnomeActive = true;
 				break;
 			}
@@ -492,7 +496,7 @@ void AlgorithmManager::OnAlgorithmStateChange()
 	}
 	else if (_gnomeActive)
 	{
-		_gnomeSound.stop();
+		_gnomeSound->stop();
 		for (auto& algorithm : _algorithms)
 		{
 			if (algorithm->GetName() == "Gnome Sort")

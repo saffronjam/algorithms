@@ -9,7 +9,7 @@ MergeSort::MergeSort() :
 
 void MergeSort::Sort()
 {
-	Split(0, GetElements().size() - 1);
+	Split(0, Elements().size() - 1);
 }
 
 void MergeSort::Split(size_t iStart, size_t iEnd)
@@ -25,7 +25,7 @@ void MergeSort::Split(size_t iStart, size_t iEnd)
 
 void MergeSort::Merge(size_t iLeftStart, size_t iLeftEnd, size_t iRightStart, size_t iRightEnd)
 {
-	ArrayList<long> sorted;
+	List<long> sorted;
 
 	size_t iCurrLeft = iLeftStart;
 	size_t iCurrRight = iRightStart;
