@@ -454,8 +454,8 @@ sf::Vector2u Algorithm::ClosestPixelCoord(size_t index, size_t max) const
 		index = newMax - 1;
 	}
 
-	const Uint32 x = scaledPixelWidth * (index % static_cast<int>(nPixelsX));
-	const Uint32 y = scaledPixelHeight * std::floor(index / nPixelsX);
+	const uint x = scaledPixelWidth * (index % static_cast<int>(nPixelsX));
+	const uint y = scaledPixelHeight * std::floor(index / nPixelsX);
 
 	return {x, y};
 }

@@ -16,6 +16,6 @@ public:
 	void OnUpdate() override;
 
 private:
-	std::shared_ptr<ProjectLayer> _projectLayer;
+	Shared<ProjectLayer> _projectLayer;
 };
 }
