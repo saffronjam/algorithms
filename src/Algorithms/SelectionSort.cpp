@@ -9,12 +9,12 @@ SelectionSort::SelectionSort() :
 
 void SelectionSort::Sort()
 {
-	for (size_t i = 0; i < GetElements().size() - 1 && _state != State::BeingCollected; i++)
+	for (size_t i = 0; i < Elements().size() - 1 && _state != State::BeingCollected; i++)
 	{
 		PauseCheck();
 		size_t indexFound = i;
 		SetColor(i, sf::Color::Blue);
-		for (size_t j = i + 1; j < GetElements().size() && _state != State::BeingCollected; j++)
+		for (size_t j = i + 1; j < Elements().size() && _state != State::BeingCollected; j++)
 		{
 			PauseCheck();
 			SetColor(j, sf::Color::Yellow);
@@ -26,7 +26,7 @@ void SelectionSort::Sort()
 			SleepDelay();
 		}
 		SwapElements(i, indexFound);
-		for (size_t j = i + 1; j < GetElements().size(); j++)
+		for (size_t j = i + 1; j < Elements().size(); j++)
 		{
 			SetColor(j, sf::Color::White);
 		}

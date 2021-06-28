@@ -9,7 +9,7 @@ QuickSort::QuickSort() :
 
 void QuickSort::Sort()
 {
-	Quick(0, GetElements().size() - 1lu);
+	Quick(0, Elements().size() - 1lu);
 }
 
 long QuickSort::Partition(long start, long end)
@@ -26,7 +26,7 @@ long QuickSort::Partition(long start, long end)
 		PauseCheck();
 		SetColor(i, sf::Color::Red);
 		SleepDelay();
-		if (GetValue(i) < pivot->value)
+		if (GetValue(i) < pivot->Value)
 		{
 			iS++;
 			SwapElements(iS, i);

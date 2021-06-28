@@ -7,11 +7,11 @@ struct Element
 	Element() = default;
 
 	explicit Element(long value, sf::Color color = sf::Color::White) :
-		value(value),
-		color(color)
+		Value(value),
+		Color(color)
 	{
 	}
 
-	long value = 0;
-	sf::Color color = sf::Color::White;
+	long Value = 0;
+	sf::Color Color = sf::Color::White;
 };

@@ -9,7 +9,7 @@ InsertionSort::InsertionSort() :
 
 void InsertionSort::Sort()
 {
-	for (size_t i = 1; i < GetElements().size() && _state != State::BeingCollected; i++)
+	for (size_t i = 1; i < Elements().size() && _state != State::BeingCollected; i++)
 	{
 		for (size_t j = i; j > 0 && _state != State::BeingCollected; j--)
 		{

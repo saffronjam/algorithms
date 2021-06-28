@@ -50,25 +50,25 @@ public:
 	void Shuffle();
 	void CustomShuffle(int degree);
 
-	Algorithm::VisType GetVisType() const { return _visType; }
+	auto GetVisType() const -> Algorithm::VisType;
 
 	void SetSleepDelay(sf::Time delay);
 	void SetVisType(Algorithm::VisType visType);
 	void SetPalette(Algorithm::Palette palette);
 	void SetNumberGeneratorType(Algorithm::NumberGeneratorType numberGeneratorType);
 
-	const ArrayList<Unique<Algorithm>>& GetAlgorithms() const { return _algorithms; }
+	auto Algorithms() const -> const List<Unique<Algorithm>>&;
 
 private:
 	void GenerateDrawContainers(const Scene& scene);
-	int GetActiveContainers();
-	const sf::Texture & GetCurrentPaletteTexture();
+	auto ActiveContainers() -> int;
+	auto CurrentPaletteTexture() -> const sf::Texture&;
 
 	void OnAlgorithmStateChange();
 
 private:
-	ArrayList<Unique<Algorithm>> _algorithms;
-	ArrayList<sf::FloatRect> _drawContainers;
+	List<Unique<Algorithm>> _algorithms;
+	List<sf::FloatRect> _drawContainers;
 
 	// A cache used for getter
 	Algorithm::VisType _visType;
@@ -81,17 +81,17 @@ private:
 	float _sleepDelayMicroseconds = 10000.0f;
 	bool _usePalette = false;
 	int _activeVisTypeIndex = static_cast<int>(Algorithm::VisType::Bars);
-	ArrayList<const char*> _visTypeNames;
-	ArrayList<const char*> _algorithmNames;
+	List<const char*> _visTypeNames;
+	List<const char*> _algorithmNames;
 	int _customShuffleDegree = 10;
 
-	ArrayList<const char*> _paletteComboBoxNames;
+	List<const char*> _paletteComboBoxNames;
 	int _activePaletteInt = static_cast<int>(Algorithm::Palette::Rainbow);
 
-	ArrayList<const char*> _numberGeneratorTypeComboBoxNames;
+	List<const char*> _numberGeneratorTypeComboBoxNames;
 	int _numberGeneratorTypeInt = static_cast<int>(Algorithm::NumberGeneratorType::Linear);
 
 	bool _gnomeActive = false;
-	sf::Sound _gnomeSound;
+	Unique<sf::Sound> _gnomeSound;
 };
 }

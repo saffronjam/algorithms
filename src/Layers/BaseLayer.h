@@ -4,18 +4,12 @@
 
 namespace Se
 {
-class BaseLayer : public Layer, public Signaller
+class BaseLayer : public Layer
 {
-public:
-	struct Signals
-	{
-		static SignalAggregate<const sf::Vector2f&> OnRenderTargetResize;
-	};
-
 public:
 	BaseLayer();
 
-	void OnAttach(std::shared_ptr<BatchLoader>& loader) override;
+	void OnAttach(Shared<BatchLoader> &loader) override;
 	void OnDetach() override;
 
 	void OnPreFrame() override;
@@ -25,10 +19,13 @@ public:
 	void OnGuiRender() override;
 
 protected:
-	virtual void OnRenderTargetResize(const sf::Vector2f& newSize);
+	virtual void OnRenderTargetResize(const sf::Vector2f &newSize);
 
 private:
-	void OnWantRenderTargetResize(const sf::Vector2f& newSize);
+	void OnWantRenderTargetResize(const sf::Vector2f &newSize);
+
+public:
+	EventSubscriberList<const sf::Vector2f &> RenderTargetResized;
 
 protected:
 	ControllableRenderTexture _controllableRenderTexture;
@@ -37,12 +34,10 @@ protected:
 	Terminal _terminal;
 	DockSpace _dockSpace;
 
-	bool _viewSystem = false;
-	bool _viewDemo = false;
-
 private:
 	bool _wantResize = false;
 	sf::Vector2f _resizeTo = VecUtils::Null<>();
 	int _framesWithNoResizeRequest = 0;
 };
+
 };
