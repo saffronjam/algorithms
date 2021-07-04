@@ -105,8 +105,6 @@ target_include_directories(Client PRIVATE
         ${SaffronIncludeDirsExt}
         )
 
-message(hello ${SaffronIncludeDirsExt})
-
 ### LIBRARIES ###
 target_link_libraries(Client PRIVATE Saffron)
 
