@@ -22,7 +22,7 @@ void RadixSort::CountSort(size_t exponent)
 	for (size_t i = 0; i < Elements().size() && _state != State::BeingCollected; i++)
 	{
 		PauseCheck();
-		count[(GetValue(i) / exponent) % 10]++;
+		count[(ValueByIndex(i) / exponent) % 10]++;
 	}
 
 	// Change count[i] so that count[i] now contains actual
@@ -37,8 +37,8 @@ void RadixSort::CountSort(size_t exponent)
 	for (long i = static_cast<long>(Elements().size() - 1); i >= 0 && _state != State::BeingCollected; i--)
 	{
 		PauseCheck();
-		outBucket[count[(GetValue(i) / exponent) % 10] - 1] = GetElement(i);
-		count[(GetValue(i) / exponent) % 10]--;
+		outBucket[count[(ValueByIndex(i) / exponent) % 10] - 1] = ElementByIndex(i);
+		count[(ValueByIndex(i) / exponent) % 10]--;
 	}
 
 	// Copy the output array to arr[], so that arr[] now

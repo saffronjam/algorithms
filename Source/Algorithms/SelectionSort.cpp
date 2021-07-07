@@ -18,7 +18,7 @@ void SelectionSort::Sort()
 		{
 			PauseCheck();
 			SetColor(j, sf::Color::Yellow);
-			if (GetValue(j) < GetValue(indexFound))
+			if (ValueByIndex(j) < ValueByIndex(indexFound))
 			{
 				indexFound = j;
 				SetColor(indexFound, sf::Color::Red);

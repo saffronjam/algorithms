@@ -5,7 +5,8 @@ namespace Se
 AlgorithmManager::AlgorithmManager() :
 	_visTypeNames({"Bars", "Number Line", "Circles", "Hoops", "Line", "Scatter Plot", "Image"}),
 	_paletteComboBoxNames({"Rainbow", "Fiery", "UV"}),
-	_numberGeneratorTypeComboBoxNames({"Linear", "Quadratic", "Random"})
+	_numberGeneratorTypeComboBoxNames({"Linear", "Quadratic", "Random"}),
+	_gnomeSound(SoundStore::Get("gnomed.wav", false))
 {
 	Add(CreateUnique<BubbleSort>());
 	Add(CreateUnique<SelectionSort>());
@@ -19,12 +20,10 @@ AlgorithmManager::AlgorithmManager() :
 
 	for (const auto& algorithm : _algorithms)
 	{
-		_algorithmNames.push_back(algorithm->GetName().c_str());
+		_algorithmNames.push_back(algorithm->Name().c_str());
 	}
 
 	Resize(_elements);
-
-	_gnomeSound = CreateUnique<sf::Sound>(*SoundBufferStore::Get("gnomed.wav", false));
 }
 
 AlgorithmManager::~AlgorithmManager()
@@ -141,8 +140,7 @@ void AlgorithmManager::OnGuiRender()
 	Gui::BeginPropertyGrid("Elements");
 
 
-	if (Gui::Property("Elements", _elements, "%.0f", 1, 10000, 1,
-	                  GuiPropertyFlag_Slider | GuiPropertyFlag_Logarithmic))
+	if (Gui::Property("Elements", _elements, "%.0f", 1, 10000, 1, GuiPropertyFlag_Slider | GuiPropertyFlag_Logarithmic))
 	{
 		_wantSoftResize = true;
 	}
@@ -197,7 +195,7 @@ void AlgorithmManager::OnGuiRender()
 	for (auto& algorithm : _algorithms)
 	{
 		bool active = algorithm->Active();
-		if (Gui::Property(algorithm->GetName(), active))
+		if (Gui::Property(algorithm->Name(), active))
 		{
 			active ? Activate(algorithm) : Deactivate(algorithm);
 		}
@@ -463,17 +461,17 @@ void AlgorithmManager::GenerateDrawContainers(const Scene& scene)
 	}
 }
 
-int AlgorithmManager::ActiveContainers()
+auto AlgorithmManager::ActiveContainers() -> int
 {
-	return std::count_if(_algorithms.begin(), _algorithms.end(), [](auto& alg)
+	return std::ranges::count_if(_algorithms, [](auto& alg)
 	{
 		return alg->Active();
 	});
 }
 
-const sf::Texture& AlgorithmManager::CurrentPaletteTexture()
+auto AlgorithmManager::CurrentPaletteTexture() -> const sf::Texture&
 {
-	const auto image = _algorithms[0]->GetCurrentPaletteImage();
+	const auto image = _algorithms[0]->PaletteImage();
 	static sf::Texture texture;
 	texture.loadFromImage(image);
 	return texture;
@@ -485,9 +483,9 @@ void AlgorithmManager::OnAlgorithmStateChange()
 	{
 		for (auto& algorithm : _algorithms)
 		{
-			if (algorithm->Active() && algorithm->GetName() == "Gnome Sort")
+			if (algorithm->Active() && algorithm->Name() == "Gnome Sort")
 			{
-				algorithm->SetImage("res/Images/gnomed.png");
+				algorithm->SetImage("gnomed.png");
 				_gnomeSound->play();
 				_gnomeActive = true;
 				break;
@@ -499,9 +497,9 @@ void AlgorithmManager::OnAlgorithmStateChange()
 		_gnomeSound->stop();
 		for (auto& algorithm : _algorithms)
 		{
-			if (algorithm->GetName() == "Gnome Sort")
+			if (algorithm->Name() == "Gnome Sort")
 			{
-				algorithm->SetImage("res/Images/sample_image_forest.jpg");
+				algorithm->SetImage("sample_image_forest.jpg");
 				break;
 			}
 		}
