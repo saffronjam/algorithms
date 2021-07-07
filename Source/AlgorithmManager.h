@@ -92,6 +92,6 @@ private:
 	int _numberGeneratorTypeInt = static_cast<int>(Algorithm::NumberGeneratorType::Linear);
 
 	bool _gnomeActive = false;
-	Unique<sf::Sound> _gnomeSound;
+	Shared<sf::Sound> _gnomeSound;
 };
 }

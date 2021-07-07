@@ -18,7 +18,7 @@ void BubbleSort::Sort()
 			SetColor(j, sf::Color::Red);
 			SetColor(j + 1, sf::Color::Red);
 
-			if (GetValue(j) > GetValue(j + 1))
+			if (ValueByIndex(j) > ValueByIndex(j + 1))
 			{
 				SwapElements(j, j + 1);
 			}

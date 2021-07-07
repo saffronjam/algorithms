@@ -1,7 +1,5 @@
 #include "Algorithm.h"
 
-#include <execution>
-
 #include <SFML/Graphics.hpp>
 
 namespace Se
@@ -115,13 +113,12 @@ void Algorithm::Draw(Scene& scene, const sf::FloatRect& rect)
 		DrawImage(scene, rect);
 		break;
 	}
-	default: break;
 	}
 }
 
 void Algorithm::DrawName(Scene& scene, const sf::FloatRect& rect)
 {
-	_nameText.setString(GetName());
+	_nameText.setString(Name());
 	_nameText.setPosition(rect.left + rect.width / 2.0f, rect.top - 35.0f);
 	scene.Submit(_nameText, TextAlign::Middle);
 }
@@ -136,7 +133,7 @@ void Algorithm::Deactivate()
 	_isActive = false;
 }
 
-bool Algorithm::Active() const
+auto Algorithm::Active() const -> bool
 {
 	return _isActive;
 }
@@ -243,9 +240,11 @@ void Algorithm::SetImage(const String& filepath)
 void Algorithm::Shuffle(Random::Engine generator)
 {
 	Reset();
-	std::shuffle(_elementsRestart.begin(), _elementsRestart.end(), generator);
+	std::ranges::shuffle(_elementsRestart, generator);
 	_elements = _elementsRestart;
 }
+
+auto Algorithm::Name() const -> const String& { return _name; }
 
 void Algorithm::SetSleepDelay(sf::Time delay)
 {
@@ -275,49 +274,49 @@ void Algorithm::SetPalette(Palette palette)
 	_colorsStart = _colorsCurrent;
 }
 
-const sf::Image& Algorithm::GetCurrentPaletteImage()
+auto Algorithm::PaletteImage() -> const sf::Image&
 {
 	return _currentPalette;
 }
 
-List<Element>& Algorithm::Elements()
+auto Algorithm::Elements() -> std::vector<Element>&
 {
 	return _elements;
 }
 
-List<Element>& Algorithm::RestartElements()
+auto Algorithm::RestartElements() -> List<Element>&
 {
 	return _elementsRestart;
 }
 
-List<Element>& Algorithm::ResetElements()
+auto Algorithm::ResetElements() -> List<Element>&
 {
 	return _elementsReset;
 }
 
-Element& Algorithm::GetElement(size_t index)
+auto Algorithm::ElementByIndex(size_t index) -> Element&
 {
 	return Elements()[index];
 }
 
-long Algorithm::GetValue(size_t index)
+auto Algorithm::ValueByIndex(size_t index) -> long
 {
 	return Elements()[index].Value;
 }
 
 void Algorithm::SetValue(size_t index, long value)
 {
-	SetValue(GetElement(index), value);
+	SetValue(ElementByIndex(index), value);
 }
 
 void Algorithm::SetColor(size_t index, const sf::Color& color)
 {
-	SetColor(GetElement(index), color);
+	SetColor(ElementByIndex(index), color);
 }
 
 void Algorithm::SwapElements(size_t iFirst, size_t iSecond)
 {
-	SwapElements(GetElement(iFirst), GetElement(iSecond));
+	SwapElements(ElementByIndex(iFirst), ElementByIndex(iSecond));
 }
 
 void Algorithm::SetValue(Element& element, long value)
@@ -357,7 +356,7 @@ void Algorithm::SleepDelay()
 	}
 }
 
-Function<long(size_t)> Algorithm::Generator()
+auto Algorithm::Generator() -> Function<long(size_t)>
 {
 	switch (_numberGeneratorType)
 	{
@@ -384,7 +383,7 @@ Function<long(size_t)> Algorithm::Generator()
 	return {};
 }
 
-long Algorithm::HighestElementValue()
+auto Algorithm::HighestElementValue() -> long
 {
 	switch (_numberGeneratorType)
 	{
@@ -405,7 +404,7 @@ long Algorithm::HighestElementValue()
 	return {};
 }
 
-sf::Vector2u Algorithm::PixelCoord(size_t index) const
+auto Algorithm::PixelCoord(size_t index) const -> sf::Vector2u
 {
 	const auto width = _image->getSize().x;
 	const auto x = index % width;
@@ -413,7 +412,7 @@ sf::Vector2u Algorithm::PixelCoord(size_t index) const
 	return sf::Vector2u(x, y);
 }
 
-sf::FloatRect Algorithm::ScaledPixel(size_t index, size_t max) const
+auto Algorithm::ScaledPixel(size_t index, size_t max) const -> sf::FloatRect
 {
 	const float width = _image->getSize().x;
 	const float height = _image->getSize().y;
@@ -437,7 +436,7 @@ sf::FloatRect Algorithm::ScaledPixel(size_t index, size_t max) const
 	return scaledPixel;
 }
 
-sf::Vector2u Algorithm::ClosestPixelCoord(size_t index, size_t max) const
+auto Algorithm::ClosestPixelCoord(size_t index, size_t max) const -> sf::Vector2u
 {
 	const float width = _image->getSize().x;
 	const float height = _image->getSize().y;
@@ -496,7 +495,7 @@ void Algorithm::DrawBars(Scene& scene, const sf::FloatRect& rect)
 
 	for (size_t i = 0; i < _barsVA.getVertexCount(); i += 4)
 	{
-		auto color = ElementColor(i / 4);
+		auto color = ElementColorByIndex(i / 4);
 		color.a = 255 - static_cast<float>(_elements.size()) / static_cast<float>(MaxElements) * 240;
 		const auto& value = _elements[i / 4].Value;
 		size.y = value * heightMult;
@@ -529,7 +528,7 @@ void Algorithm::DrawNumberLine(Scene& scene, const sf::FloatRect& rect)
 	{
 		const size_t boxIndex = i / 4;
 
-		auto color = ElementColor(boxIndex);
+		auto color = ElementColorByIndex(boxIndex);
 		color.a = 255 - static_cast<float>(_elements.size()) / static_cast<float>(MaxElements) * 240;
 
 		sf::Vector2f position(positionOffset.x + constainedSize * (static_cast<float>(boxIndex)),
@@ -591,8 +590,8 @@ void Algorithm::DrawCircles(Scene& scene, const sf::FloatRect& rect)
 		                                      angleDelta * static_cast<float>(i), rectMid);
 		sf::Vector2f line1 = VecUtils::Rotate(sf::Vector2f(0.0f, -_elements[i / 2].Value * heightMult) + rectMid,
 		                                      angleDelta * static_cast<float>(i + 1), rectMid);
-		vertexArray[i + 1] = sf::Vertex(line0, ElementColor(i / 2));
-		vertexArray[i + 2] = sf::Vertex(line1, ElementColor(i / 2));
+		vertexArray[i + 1] = sf::Vertex(line0, ElementColorByIndex(i / 2));
+		vertexArray[i + 2] = sf::Vertex(line1, ElementColorByIndex(i / 2));
 	}
 	scene.Submit(vertexArray);
 }
@@ -613,7 +612,7 @@ void Algorithm::DrawHoops(Scene& scene, const sf::FloatRect& rect)
 	{
 		const float radius = _elements[i].Value * radiusMult;
 
-		sf::Color color = ElementColor(i);
+		sf::Color color = ElementColorByIndex(i);
 		color.a = 50;
 
 		_hoopsShapes[i].setOutlineColor(color);
@@ -634,7 +633,7 @@ void Algorithm::DrawLine(Scene& scene, const sf::FloatRect& rect)
 	{
 		const float x = offset.x + static_cast<float>(i) * xMult;
 		const float y = offset.y + rect.height - _elements[i].Value * yMult;
-		line.append(sf::Vertex(sf::Vector2f(x, y), ElementColor(i)));
+		line.append(sf::Vertex(sf::Vector2f(x, y), ElementColorByIndex(i)));
 	}
 	scene.Submit(line);
 }
@@ -652,7 +651,7 @@ void Algorithm::DrawScatterPlot(Scene& scene, const sf::FloatRect& rect)
 		{
 			const float x = offset.x + static_cast<float>(i) * xMult;
 			const float y = offset.y + rect.height - _elements[i].Value * yMult;
-			scatterPlot.append(sf::Vertex(sf::Vector2f(x, y), ElementColor(i)));
+			scatterPlot.append(sf::Vertex(sf::Vector2f(x, y), ElementColorByIndex(i)));
 		}
 		scene.Submit(scatterPlot);
 	}
@@ -661,7 +660,7 @@ void Algorithm::DrawScatterPlot(Scene& scene, const sf::FloatRect& rect)
 		sf::CircleShape circleShape(xMult / 2.0f);
 		for (size_t i = 0; i < _elements.size(); i++)
 		{
-			circleShape.setFillColor(ElementColor(i));
+			circleShape.setFillColor(ElementColorByIndex(i));
 			const float x = offset.x + static_cast<float>(i) * xMult;
 			const float y = offset.y + rect.height - _elements[i].Value * yMult;
 			circleShape.setPosition(x, y);
@@ -685,10 +684,7 @@ void Algorithm::DrawImage(Scene& scene, const sf::FloatRect& rect)
 	for (size_t i = 0; i < _elements.size(); i++)
 	{
 		const auto pixelRect = ScaledPixel(i, _elements.size());
-		/*const auto mappedValue = GenUtils::Map(_elements[i].value - 1, 0l, GetHighestElementValue(), 0l,
-		                                       static_cast<long>(_elements.size()));*/
-		const auto mappedValue = std::sqrt(_elements[i].Value);
-		const auto pixelCoord = ClosestPixelCoord(mappedValue, _elements.size());
+		const auto pixelCoord = ClosestPixelCoord(_elements[i].Value - 1, _elements.size());
 
 		const sf::IntRect nonLostPixelRect(static_cast<int>(pixelRect.left + static_cast<float>(lostRect.left)),
 		                                   static_cast<int>(pixelRect.top + static_cast<float>(lostRect.top)),
@@ -718,6 +714,12 @@ void Algorithm::DrawImage(Scene& scene, const sf::FloatRect& rect)
 					pointArray[destIndex].position = sf::Vector2f(nonLostPixelRect.left + width,
 					                                              nonLostPixelRect.top + height);
 					pointArray[destIndex].color = _image->getPixel(srcX, srcY);
+
+					auto tintBlend = ElementColorByIndex(i);
+					tintBlend.r = (255 - tintBlend.r) * 0.3f;
+					tintBlend.g = (255 - tintBlend.g) * 0.3f;
+					tintBlend.b = (255 - tintBlend.b) * 0.3f;
+					pointArray[destIndex].color += tintBlend;
 				}
 			}
 		}
@@ -731,11 +733,11 @@ void Algorithm::DrawImage(Scene& scene, const sf::FloatRect& rect)
 	scene.Submit(renderTextureSprite);
 }
 
-sf::Color Algorithm::ElementColor(size_t index)
+auto Algorithm::ElementColorByIndex(size_t index) -> sf::Color
 {
 	if (_usePalette)
 	{
-		const auto& element = GetElement(index);
+		const auto& element = ElementByIndex(index);
 		const auto mappedValue = GenUtils::Map(element.Value, 0l, static_cast<long>(_elements.size()), 0l,
 		                                       static_cast<long>(PaletteWidth - 1));
 		return _currentPalette.getPixel(mappedValue, 0);
@@ -743,7 +745,7 @@ sf::Color Algorithm::ElementColor(size_t index)
 	return _elements[index].Color;
 }
 
-bool Algorithm::VerifyElements()
+auto Algorithm::VerifyElements() -> bool
 {
 	for (auto& element : _elements)
 	{
@@ -752,7 +754,7 @@ bool Algorithm::VerifyElements()
 	bool alreadySorted = true;
 	for (size_t i = 0; i < _elements.size() - 1 && _state != State::BeingCollected; i++)
 	{
-		if (GetValue(i) < GetValue(i + 1))
+		if (ValueByIndex(i) < ValueByIndex(i + 1))
 		{
 			if (_visType != VisType::Image)
 			{

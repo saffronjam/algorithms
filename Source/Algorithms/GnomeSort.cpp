@@ -16,7 +16,7 @@ void GnomeSort::Sort()
 			SetColor(i, sf::Color::Cyan);
 			i++;
 		}
-		if (GetValue(i) >= GetValue(i - 1) && _state != State::BeingCollected)
+		if (ValueByIndex(i) >= ValueByIndex(i - 1) && _state != State::BeingCollected)
 		{
 			PauseCheck();
 			SetColor(i, sf::Color::Cyan);

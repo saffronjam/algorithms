@@ -14,7 +14,7 @@ void QuickSort::Sort()
 
 long QuickSort::Partition(long start, long end)
 {
-	Element* pivot = &GetElement(end);
+	Element* pivot = &ElementByIndex(end);
 	long iS = start - 1;
 
 	for (long i = static_cast<long>(start); i <= end - 1 && _state != State::BeingCollected; i++)
@@ -26,7 +26,7 @@ long QuickSort::Partition(long start, long end)
 		PauseCheck();
 		SetColor(i, sf::Color::Red);
 		SleepDelay();
-		if (GetValue(i) < pivot->Value)
+		if (ValueByIndex(i) < pivot->Value)
 		{
 			iS++;
 			SwapElements(iS, i);
