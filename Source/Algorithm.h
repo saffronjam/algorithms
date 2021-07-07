@@ -83,7 +83,7 @@ public:
 
 	void Shuffle(Random::Engine generator);
 
-	auto GetName() const -> const String& { return _name; }
+	auto Name() const -> const String&;
 
 	void SetSleepDelay(sf::Time delay);
 	void SetVisType(VisType visType);
@@ -91,7 +91,7 @@ public:
 
 	void UsePalette(bool use);
 	void SetPalette(Palette palette);
-	auto GetCurrentPaletteImage() -> const sf::Image&;
+	auto PaletteImage() -> const sf::Image&;
 
 	auto Elements() -> List<Element>&;
 	auto RestartElements() -> List<Element>&;
@@ -100,9 +100,8 @@ public:
 protected:
 	virtual void Sort() = 0;
 
-	auto GetElement(size_t index) -> Element&;
-
-	auto GetValue(size_t index) -> long;
+	auto ElementByIndex(size_t index) -> Element&;
+	auto ValueByIndex(size_t index) -> long;
 
 	void SetValue(Element& element, long value);
 	void SetValue(size_t index, long value);
@@ -137,7 +136,7 @@ private:
 	void DrawImage(Scene& scene, const sf::FloatRect& rect);
 
 	// Used as a wrapper to check if drawing in spectrum mode or not
-	auto ElementColor(size_t index) -> sf::Color;
+	auto ElementColorByIndex(size_t index) -> sf::Color;
 
 	auto VerifyElements() -> bool;
 

@@ -15,13 +15,13 @@ void ShellSort::Sort()
 		{
 			SetColor(i, sf::Color::Red);
 			PauseCheck();
-			const Element tmp = GetElement(i);
+			const Element tmp = ElementByIndex(i);
 			size_t j;
-			for (j = i; j >= gap && GetValue(j - gap) > tmp.Value && _state != State::BeingCollected; j -= gap)
+			for (j = i; j >= gap && ValueByIndex(j - gap) > tmp.Value && _state != State::BeingCollected; j -= gap)
 			{
 				SetColor(j, sf::Color::Red);
 				SetColor(j - gap, sf::Color::Red);
-				SetValue(j, GetValue(j - gap));
+				SetValue(j, ValueByIndex(j - gap));
 				PauseCheck();
 				SleepDelay();
 				SetColor(j, sf::Color::White);

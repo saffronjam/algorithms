@@ -14,7 +14,7 @@ void InsertionSort::Sort()
 		for (size_t j = i; j > 0 && _state != State::BeingCollected; j--)
 		{
 			PauseCheck();
-			if (GetValue(j) < GetValue(j - 1))
+			if (ValueByIndex(j) < ValueByIndex(j - 1))
 			{
 				SetColor(j, sf::Color::Red);
 				SetColor(j - 1, sf::Color::Yellow);

@@ -44,22 +44,22 @@ void MergeSort::Merge(size_t iLeftStart, size_t iLeftEnd, size_t iRightStart, si
 
 		if (iCurrLeft == iLeftEnd + 1)
 		{
-			sorted.push_back(GetValue(iCurrRight));
+			sorted.push_back(ValueByIndex(iCurrRight));
 			iCurrRight++;
 		}
 		else if (iCurrRight == iRightEnd + 1)
 		{
-			sorted.push_back(GetValue(iCurrLeft));
+			sorted.push_back(ValueByIndex(iCurrLeft));
 			iCurrLeft++;
 		}
-		else if (GetValue(iCurrLeft) <= GetValue(iCurrRight))
+		else if (ValueByIndex(iCurrLeft) <= ValueByIndex(iCurrRight))
 		{
-			sorted.push_back(GetValue(iCurrLeft));
+			sorted.push_back(ValueByIndex(iCurrLeft));
 			iCurrLeft++;
 		}
-		else if (GetValue(iCurrLeft) > GetValue(iCurrRight))
+		else if (ValueByIndex(iCurrLeft) > ValueByIndex(iCurrRight))
 		{
-			sorted.push_back(GetValue(iCurrRight));
+			sorted.push_back(ValueByIndex(iCurrRight));
 			iCurrRight++;
 		}
 		SleepDelay();

@@ -38,7 +38,7 @@ void HeapSort::Heapify(size_t maxSizeCheck, size_t parent)
 	if (leftChild < maxSizeCheck && _state != State::BeingCollected)
 	{
 		SetColor(leftChild, sf::Color::Red);
-		if (GetValue(leftChild) > GetValue(largest))
+		if (ValueByIndex(leftChild) > ValueByIndex(largest))
 		{
 			largest = leftChild;
 		}
@@ -47,7 +47,7 @@ void HeapSort::Heapify(size_t maxSizeCheck, size_t parent)
 	if (rightChild < maxSizeCheck && _state != State::BeingCollected)
 	{
 		SetColor(rightChild, sf::Color::Red);
-		if (GetValue(rightChild) > GetValue(largest))
+		if (ValueByIndex(rightChild) > ValueByIndex(largest))
 		{
 			largest = rightChild;
 		}
