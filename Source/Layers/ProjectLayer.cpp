@@ -2,9 +2,9 @@
 
 namespace Se
 {
-void ProjectLayer::OnAttach(std::shared_ptr<BatchLoader>& loader)
+void ProjectLayer::OnAttach(Shared<Batch>& batch)
 {
-	BaseLayer::OnAttach(loader);
+	BaseLayer::OnAttach(batch);
 
 	_algorithmManager = CreateShared<AlgorithmManager>();
 }
