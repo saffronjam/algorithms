@@ -19,7 +19,7 @@ Visualizing Bubble Sort, Insertion Sort, Selection Sort, Shell Sort, Merge Sort,
 </p>
 
 ## Try it out (no building needed)
-Run the executable under ``examples/<platform>/`` 
+Run the executable under `Example/<Platform>/`
   
 ## Build yourself
 
