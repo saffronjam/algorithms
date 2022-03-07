@@ -6,13 +6,13 @@ namespace Se
 {
 struct ContainerRefGroup
 {
-	List<Element>& elements;
-	List<Element>& elementsRestart;
-	List<Element>& elementsReset;
+	std::vector<Element>& elements;
+	std::vector<Element>& elementsRestart;
+	std::vector<Element>& elementsReset;
 };
 
-Algorithm::Algorithm(String name) :
-	_name(Move(name)),
+Algorithm::Algorithm(std::string name) :
+	_name(std::move(name)),
 	_sleepDelay(sf::seconds(0.01f)),
 	_minorDelay(false),
 	_minorDelayTimer(0),
@@ -144,7 +144,7 @@ void Algorithm::Start()
 	{
 		CollectSorter();
 		_state = State::Sorting;
-		_sorter = Thread([this]
+		_sorter = std::thread([this]
 		{
 			SortThreadFn();
 		});
@@ -230,7 +230,7 @@ void Algorithm::SoftResize(size_t size)
 	_numberLineVA.resize(size * 4);
 }
 
-void Algorithm::SetImage(const String& filepath)
+void Algorithm::SetImage(const std::string& filepath)
 {
 	Reset();
 	_image = ImageStore::Get(filepath);
@@ -244,7 +244,7 @@ void Algorithm::Shuffle(Random::Engine generator)
 	_elements = _elementsRestart;
 }
 
-auto Algorithm::Name() const -> const String& { return _name; }
+auto Algorithm::Name() const -> const std::string& { return _name; }
 
 void Algorithm::SetSleepDelay(sf::Time delay)
 {
@@ -284,12 +284,12 @@ auto Algorithm::Elements() -> std::vector<Element>&
 	return _elements;
 }
 
-auto Algorithm::RestartElements() -> List<Element>&
+auto Algorithm::RestartElements() -> std::vector<Element>&
 {
 	return _elementsRestart;
 }
 
-auto Algorithm::ResetElements() -> List<Element>&
+auto Algorithm::ResetElements() -> std::vector<Element>&
 {
 	return _elementsReset;
 }
@@ -356,7 +356,7 @@ void Algorithm::SleepDelay()
 	}
 }
 
-auto Algorithm::Generator() -> Function<long(size_t)>
+auto Algorithm::Generator() -> std::function<long(size_t)>
 {
 	switch (_numberGeneratorType)
 	{

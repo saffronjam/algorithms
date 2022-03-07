@@ -31,10 +31,10 @@ public:
 	void OnGuiRender();
 	void OnViewportResize(const sf::Vector2f& size);
 
-	void Add(Unique<Algorithm> algorithm);
+	void Add(std::unique_ptr<Algorithm> algorithm);
 
-	void Activate(const Unique<Algorithm>& algorithm);
-	void Deactivate(const Unique<Algorithm>& algorithm);
+	void Activate(const std::unique_ptr<Algorithm>& algorithm);
+	void Deactivate(const std::unique_ptr<Algorithm>& algorithm);
 
 	void UsePalette(bool use);
 
@@ -57,7 +57,7 @@ public:
 	void SetPalette(Algorithm::Palette palette);
 	void SetNumberGeneratorType(Algorithm::NumberGeneratorType numberGeneratorType);
 
-	auto Algorithms() const -> const List<Unique<Algorithm>>&;
+	auto Algorithms() const -> const std::vector<std::unique_ptr<Algorithm>>&;
 
 private:
 	void GenerateDrawContainers(const Scene& scene);
@@ -67,8 +67,8 @@ private:
 	void OnAlgorithmStateChange();
 
 private:
-	List<Unique<Algorithm>> _algorithms;
-	List<sf::FloatRect> _drawContainers;
+	std::vector<std::unique_ptr<Algorithm>> _algorithms;
+	std::vector<sf::FloatRect> _drawContainers;
 
 	// A cache used for getter
 	Algorithm::VisType _visType;
@@ -81,17 +81,17 @@ private:
 	float _sleepDelayMicroseconds = 10000.0f;
 	bool _usePalette = false;
 	int _activeVisTypeIndex = static_cast<int>(Algorithm::VisType::Bars);
-	List<const char*> _visTypeNames;
-	List<const char*> _algorithmNames;
+	std::vector<const char*> _visTypeNames;
+	std::vector<const char*> _algorithmNames;
 	int _customShuffleDegree = 10;
 
-	List<const char*> _paletteComboBoxNames;
+	std::vector<const char*> _paletteComboBoxNames;
 	int _activePaletteInt = static_cast<int>(Algorithm::Palette::Rainbow);
 
-	List<const char*> _numberGeneratorTypeComboBoxNames;
+	std::vector<const char*> _numberGeneratorTypeComboBoxNames;
 	int _numberGeneratorTypeInt = static_cast<int>(Algorithm::NumberGeneratorType::Linear);
 
 	bool _gnomeActive = false;
-	Shared<sf::Sound> _gnomeSound;
+	std::shared_ptr<sf::Sound> _gnomeSound;
 };
 }

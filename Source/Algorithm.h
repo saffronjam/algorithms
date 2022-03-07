@@ -57,7 +57,7 @@ private:
 	};
 
 public:
-	explicit Algorithm(String name);
+	explicit Algorithm(std::string name);
 
 	virtual ~Algorithm() = default;
 
@@ -79,11 +79,11 @@ public:
 	void Resize(size_t size);
 	void SoftResize(size_t size);
 
-	void SetImage(const String& filepath);
+	void SetImage(const std::string& filepath);
 
 	void Shuffle(Random::Engine generator);
 
-	auto Name() const -> const String&;
+	auto Name() const -> const std::string&;
 
 	void SetSleepDelay(sf::Time delay);
 	void SetVisType(VisType visType);
@@ -93,9 +93,9 @@ public:
 	void SetPalette(Palette palette);
 	auto PaletteImage() -> const sf::Image&;
 
-	auto Elements() -> List<Element>&;
-	auto RestartElements() -> List<Element>&;
-	auto ResetElements() -> List<Element>&;
+	auto Elements() -> std::vector<Element>&;
+	auto RestartElements() -> std::vector<Element>&;
+	auto ResetElements() -> std::vector<Element>&;
 
 protected:
 	virtual void Sort() = 0;
@@ -115,7 +115,7 @@ protected:
 	void SleepDelay();
 
 private:
-	auto Generator() -> Function<long(size_t)>;
+	auto Generator() -> std::function<long(size_t)>;
 	auto HighestElementValue() -> long;
 
 	auto PixelCoord(size_t index) const -> sf::Vector2u;
@@ -141,11 +141,11 @@ private:
 	auto VerifyElements() -> bool;
 
 protected:
-	String _name;
+	std::string _name;
 
-	Thread _sorter;
+	std::thread _sorter;
 
-	Shared<sf::Image> _image;
+	std::shared_ptr<sf::Image> _image;
 	sf::RenderTexture _imageRenderTexture;
 
 	sf::Time _sleepDelay;
@@ -155,7 +155,7 @@ protected:
 	State _state;
 	bool _isActive;
 
-	Shared<sf::Font> _nameTextFont;
+	std::shared_ptr<sf::Font> _nameTextFont;
 	sf::Text _nameText;
 	VisType _visType;
 
@@ -163,27 +163,27 @@ private:
 	static constexpr int MaxElements = 10000;
 	static constexpr int PaletteWidth = 2048;
 
-	List<Element> _elements;
-	List<Element> _elementsRestart;
-	List<Element> _elementsReset;
+	std::vector<Element> _elements;
+	std::vector<Element> _elementsRestart;
+	std::vector<Element> _elementsReset;
 
 	NumberGeneratorType _numberGeneratorType = NumberGeneratorType::Linear;
 
 	// Shapes cache
 	sf::VertexArray _barsVA;
-	List<sf::CircleShape> _hoopsShapes;
+	std::vector<sf::CircleShape> _hoopsShapes;
 	sf::VertexArray _numberLineVA;
-	List<sf::Text> _numberLineTextList;
+	std::vector<sf::Text> _numberLineTextList;
 
 	// Palette
 	sf::Texture _paletteTexture;
 	Palette _desiredPalette = Palette::Rainbow;
 	sf::Image _currentPalette;
-	Array<TransitionColor, PaletteWidth> _colorsStart;
-	Array<TransitionColor, PaletteWidth> _colorsCurrent;
+	std::array<TransitionColor, PaletteWidth> _colorsStart;
+	std::array<TransitionColor, PaletteWidth> _colorsCurrent;
 	float _colorTransitionTimer;
 	float _colorTransitionDuration;
-	List<Shared<sf::Image>> _palettes;
+	std::vector<std::shared_ptr<sf::Image>> _palettes;
 	bool _usePalette = false;
 };
 }

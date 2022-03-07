@@ -25,7 +25,7 @@ void MergeSort::Split(size_t iStart, size_t iEnd)
 
 void MergeSort::Merge(size_t iLeftStart, size_t iLeftEnd, size_t iRightStart, size_t iRightEnd)
 {
-	List<long> sorted;
+	std::vector<long> sorted;
 
 	size_t iCurrLeft = iLeftStart;
 	size_t iCurrRight = iRightStart;

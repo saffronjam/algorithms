@@ -15,7 +15,7 @@ void RadixSort::Sort()
 
 void RadixSort::CountSort(size_t exponent)
 {
-	List<Element> outBucket(Elements().size());
+	std::vector<Element> outBucket(Elements().size());
 	std::array<size_t, 10> count = {0};
 
 	// Store count of occurrences in count[]

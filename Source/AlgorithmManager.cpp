@@ -8,15 +8,15 @@ AlgorithmManager::AlgorithmManager() :
 	_numberGeneratorTypeComboBoxNames({"Linear", "Quadratic", "Random"}),
 	_gnomeSound(SoundStore::Get("gnomed.wav", false))
 {
-	Add(CreateUnique<BubbleSort>());
-	Add(CreateUnique<SelectionSort>());
-	Add(CreateUnique<InsertionSort>());
-	Add(CreateUnique<GnomeSort>());
-	Add(CreateUnique<ShellSort>());
-	Add(CreateUnique<MergeSort>());
-	Add(CreateUnique<HeapSort>());
-	Add(CreateUnique<QuickSort>());
-	Add(CreateUnique<RadixSort>());
+	Add(std::make_unique<BubbleSort>());
+	Add(std::make_unique<SelectionSort>());
+	Add(std::make_unique<InsertionSort>());
+	Add(std::make_unique<GnomeSort>());
+	Add(std::make_unique<ShellSort>());
+	Add(std::make_unique<MergeSort>());
+	Add(std::make_unique<HeapSort>());
+	Add(std::make_unique<QuickSort>());
+	Add(std::make_unique<RadixSort>());
 
 	for (const auto& algorithm : _algorithms)
 	{
@@ -209,13 +209,13 @@ void AlgorithmManager::OnViewportResize(const sf::Vector2f& size)
 	_wantNewDrawContainers = true;
 }
 
-void AlgorithmManager::Add(Unique<Algorithm> algorithm)
+void AlgorithmManager::Add(std::unique_ptr<Algorithm> algorithm)
 {
-	_algorithms.emplace_back(Move(algorithm));
+	_algorithms.emplace_back(std::move(algorithm));
 	_algorithms.back()->Activate();
 }
 
-void AlgorithmManager::Activate(const Unique<Algorithm>& algorithm)
+void AlgorithmManager::Activate(const std::unique_ptr<Algorithm>& algorithm)
 {
 	algorithm->Activate();
 	_wantNewDrawContainers = true;
@@ -223,7 +223,7 @@ void AlgorithmManager::Activate(const Unique<Algorithm>& algorithm)
 	OnAlgorithmStateChange();
 }
 
-void AlgorithmManager::Deactivate(const Unique<Algorithm>& algorithm)
+void AlgorithmManager::Deactivate(const std::unique_ptr<Algorithm>& algorithm)
 {
 	algorithm->Deactivate();
 	_wantNewDrawContainers = true;
@@ -311,7 +311,7 @@ void AlgorithmManager::Shuffle()
 void AlgorithmManager::CustomShuffle(int degree)
 {
 	_algorithms.front()->Reset();
-	List<Element>& newElements = _algorithms.front()->RestartElements();
+	std::vector<Element>& newElements = _algorithms.front()->RestartElements();
 
 	const auto degreePecentage = static_cast<float>(degree) / 100.0f;
 	const int noElements = newElements.size();
@@ -380,7 +380,7 @@ void AlgorithmManager::SetNumberGeneratorType(Algorithm::NumberGeneratorType num
 	}
 }
 
-auto AlgorithmManager::Algorithms() const -> const List<Unique<Algorithm>>& { return _algorithms; }
+auto AlgorithmManager::Algorithms() const -> const std::vector<std::unique_ptr<Algorithm>>& { return _algorithms; }
 
 void AlgorithmManager::GenerateDrawContainers(const Scene& scene)
 {
