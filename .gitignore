@@ -41,7 +41,7 @@ RelWithDebInfo
 
 # Executables
 *.exe
-!example/windows/Client.exe
+!example/windows/*.exe
 *.out
 *.app
 
