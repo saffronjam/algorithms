@@ -2,11 +2,11 @@
 
 namespace Se
 {
-void ProjectLayer::OnAttach(Shared<Batch>& batch)
+void ProjectLayer::OnAttach(std::shared_ptr<Batch>& batch)
 {
 	BaseLayer::OnAttach(batch);
 
-	_algorithmManager = CreateShared<AlgorithmManager>();
+	_algorithmManager = std::make_shared<AlgorithmManager>();
 }
 
 void ProjectLayer::OnDetach()
