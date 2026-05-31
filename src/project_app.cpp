@@ -6,7 +6,7 @@ namespace saffron
 {
 auto CreateApplication() -> std::unique_ptr<App>
 {
-	return std::make_unique<algorithms::ProjectApp>(AppProperties::CreateFullscreen("algorithms"));
+	return std::make_unique<algorithms::ProjectApp>(AppProperties::CreateMaximized("algorithms"));
 }
 }
 
